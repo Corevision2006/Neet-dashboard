@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEET 2026 — Command Centre</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f7f6f3; --bg2:#f0ede8; --bg3:#ede9e3;
+  --card:#ffffff; --card2:#f5f3ef;
+  --teal:#0d9488; --teal2:#0f766e; --teal3:#115e59;
+  --sage:#16a34a; --coral:#e11d48; --amber:#b45309;
+  --lavender:#6d28d9; --sky:#0369a1;
+  --text:#1e293b; --text2:#64748b; --text3:#94a3b8;
+  --border:#e2ddd6; --glow:rgba(13,148,136,0.12);
+  --radius:16px; --radius2:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter','DM Sans',sans-serif;font-weight:500;min-height:100vh;overflow-x:hidden;user-select:none}
+body::before{content:'';position:fixed;top:-20%;left:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(13,148,136,0.05) 0%,transparent 70%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;bottom:-20%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(109,40,217,0.04) 0%,transparent 70%);pointer-events:none;z-index:0}
+
+/* ── HEADER ── */
+header{position:sticky;top:0;z-index:100;background:linear-gradient(135deg,#f0ede8,#f7f6f3);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);padding:0 28px}
+.header-inner{max-width:1500px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:66px;gap:16px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--teal),var(--teal3));border-radius:10px;display:grid;place-items:center;font-size:18px;box-shadow:0 2px 12px rgba(13,148,136,0.25)}
+.logo-text{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;letter-spacing:-0.5px}
+.logo-sub{font-size:10px;color:var(--teal);letter-spacing:2px;text-transform:uppercase;font-weight:500}
+.header-chips{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.chip{background:var(--card);border:1px solid var(--border);border-radius:40px;padding:7px 16px;display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:13px}
+.chip-dot{width:7px;height:7px;border-radius:50%;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.chip-val{font-weight:600}
+.today-badge{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;border-radius:40px;padding:7px 16px;font-size:11px;font-weight:700;letter-spacing:.5px}
+
+/* ── LAYOUT ── */
+.main{max-width:1500px;margin:0 auto;padding:24px 28px;position:relative;z-index:1}
+.section-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.section-title span{width:3px;height:20px;background:var(--teal);border-radius:3px;display:inline-block}
+.section-hint{font-size:11px;color:var(--text3);margin-bottom:14px}
+
+/* ── TOP ROW ── */
+.top-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s}
+.stat-card:hover{border-color:var(--teal3);box-shadow:0 0 30px var(--glow)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ac,var(--teal))}
+.stat-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:6px}
+.stat-value{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600;line-height:1;margin-bottom:2px}
+.stat-sub{font-size:11px;color:var(--text2)}
+
+/* ── MAIN GRID ── */
+.main-grid{display:grid;grid-template-columns:1fr 370px;gap:20px;margin-bottom:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:box-shadow .3s}
+.card:hover{box-shadow:0 8px 40px rgba(0,0,0,.10)}
+
+/* ── SUBJECTS ── */
+.subject-grid{display:flex;flex-direction:column;gap:14px}
+.subject-row{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:15px 18px;display:grid;grid-template-columns:190px 1fr auto;align-items:center;gap:16px;transition:background .2s,border-color .2s}
+.subject-row:hover{background:var(--card2);border-color:var(--text3)}
+.subject-name{display:flex;align-items:center;gap:10px}
+.subject-icon{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.subject-name-text{font-size:13px;font-weight:700}
+.subject-name-sub{font-size:10px;color:var(--text2);margin-top:2px}
+.progress-nums{display:flex;justify-content:space-between;margin-bottom:5px;font-size:11px;color:var(--text2)}
+.progress-nums strong{color:var(--text);font-family:'JetBrains Mono',monospace}
+.bar-bg{height:7px;background:var(--bg);border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.subject-controls{display:flex;align-items:center;gap:6px}
+.ctrl-btn{width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:16px;cursor:pointer;display:grid;place-items:center;transition:all .2s;line-height:1}
+.ctrl-btn:hover{background:var(--card2);border-color:var(--teal3);color:var(--teal)}
+.ctrl-input{width:58px;background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;text-align:center;padding:5px 3px;outline:none;transition:border-color .2s}
+.ctrl-input:focus{border-color:var(--teal3)}
+.add-btn{background:linear-gradient(135deg,var(--teal),var(--teal2));border:none;border-radius:7px;color:#fff;font-size:11px;font-weight:700;padding:7px 12px;cursor:pointer;transition:opacity .2s,transform .1s;white-space:nowrap}
+.add-btn:hover{opacity:.85}
+.add-btn:active{transform:scale(.97)}
+
+/* ── RIGHT PANEL ── */
+.right-panel{display:flex;flex-direction:column;gap:16px}
+
+/* QUOTE */
+.quote-card{background:linear-gradient(135deg,#e8f5f3,#f0faf8);border:1px solid #c5e8e4;border-radius:var(--radius);padding:24px;position:relative;overflow:hidden}
+.quote-card::before{content:'"';position:absolute;top:-10px;left:14px;font-family:'Playfair Display',serif;font-size:90px;color:var(--teal);opacity:.15;line-height:1}
+.quote-text{font-family:'Playfair Display',serif;font-size:13px;line-height:1.7;color:var(--text);margin-bottom:12px;position:relative;z-index:1;min-height:70px;transition:opacity .4s}
+.quote-author{font-size:10px;color:var(--teal);font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.quote-nav{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.quote-dot{width:5px;height:5px;border-radius:50%;background:var(--border);cursor:pointer;transition:background .2s,transform .2s}
+.quote-dot.active{background:var(--teal);transform:scale(1.4)}
+
+/* ── TIMETABLE ── */
+.timetable-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;flex:1}
+.timetable-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.timetable-title{font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}
+.cur-badge{background:var(--teal);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:99px;letter-spacing:.5px}
+.tt-hint{font-size:10px;color:var(--text3);padding:8px 18px 4px;font-style:italic}
+.slot-list{padding:8px;display:flex;flex-direction:column;gap:3px;max-height:320px;overflow-y:auto}
+.slot-list::-webkit-scrollbar{width:3px}
+.slot-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.slot-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;transition:background .2s;cursor:context-menu;position:relative;border:1px solid transparent}
+.slot-item:hover{background:var(--bg3);border-color:var(--border)}
+.slot-item.active-slot{background:rgba(13,148,136,.08);border:1px solid rgba(13,148,136,.2)}
+.slot-item.break-slot{opacity:.55}
+.slot-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.slot-time{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text2);width:82px;flex-shrink:0}
+.slot-name{font-size:11px;font-weight:600;color:var(--text);flex:1}
+.now-tag{font-size:9px;color:var(--teal);font-weight:700;white-space:nowrap}
+.edit-hint{font-size:9px;color:var(--text3);position:absolute;right:8px;bottom:2px;opacity:0;transition:opacity .2s}
+.slot-item:hover .edit-hint{opacity:1}
+
+/* ── CONTEXT MENU ── */
+.ctx-menu{position:fixed;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px;z-index:500;min-width:190px;box-shadow:0 8px 30px rgba(0,0,0,.12);animation:ctxIn .15s ease}
+@keyframes ctxIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.ctx-item{display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;transition:background .15s}
+.ctx-item:hover{background:rgba(13,148,136,.08);color:var(--teal)}
+.ctx-item.danger:hover{background:rgba(251,113,133,.12);color:var(--coral)}
+.ctx-sep{height:1px;background:var(--border);margin:4px 0}
+
+/* ── EDIT MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(30,41,59,.45);backdrop-filter:blur(8px);z-index:300;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:36px;width:440px;max-width:92vw;transform:scale(.9);transition:transform .3s;position:relative}
+.overlay.open .modal{transform:scale(1)}
+.modal h2{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:6px}
+.modal p{color:var(--text2);font-size:12px;margin-bottom:24px;line-height:1.6}
+.modal-close{position:absolute;top:16px;right:16px;width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:16px;display:grid;place-items:center;transition:all .2s}
+.modal-close:hover{background:var(--card2);color:var(--text)}
+.form-group{margin-bottom:18px}
+.form-label{display:block;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 14px;outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--teal3)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-btns{display:flex;gap:10px;margin-top:24px}
+.btn{flex:1;border:none;border-radius:9px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .1s;font-family:'DM Sans',sans-serif}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff}
+.btn-secondary{background:var(--bg3);border:1px solid var(--border);color:var(--text2)}
+.btn-danger{background:rgba(251,113,133,.15);border:1px solid rgba(251,113,133,.3);color:var(--coral)}
+
+/* ── BOTTOM ROW: FOCUS + POMODORO ── */
+.timers-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+
+/* FOCUS TIMER */
+.focus-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;text-align:center;position:relative;overflow:hidden}
+.focus-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(13,148,136,0.05),transparent 70%);pointer-events:none}
+.focus-ring-wrap{position:relative;width:160px;height:160px;margin:0 auto 20px}
+.focus-svg{width:160px;height:160px;transform:rotate(-90deg)}
+.focus-track{fill:none;stroke:var(--bg3);stroke-width:10}
+.focus-fill{fill:none;stroke:url(#focusGrad);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.focus-time-display{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.focus-big{font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:600;color:var(--teal);line-height:1}
+.focus-session-label{font-size:10px;color:var(--text2);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+.focus-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
+.fstat{background:var(--bg3);border-radius:9px;padding:12px 8px;text-align:center}
+.fstat-val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--teal);line-height:1;margin-bottom:3px}
+.fstat-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px}
+.focus-controls{display:flex;gap:10px;justify-content:center}
+.fc-btn{border:none;border-radius:10px;padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px}
+.fc-btn.start{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff}
+.fc-btn.start:hover{opacity:.85}
+.fc-btn.pause{background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);color:var(--amber)}
+.fc-btn.stop{background:rgba(251,113,133,.12);border:1px solid rgba(251,113,133,.25);color:var(--coral)}
+.focus-status{font-size:12px;color:var(--text2);margin-bottom:16px;min-height:18px}
+.focus-running-dot{display:inline-block;width:7px;height:7px;background:var(--sage);border-radius:50%;margin-right:5px;animation:pulse 1s infinite}
+
+/* POMODORO */
+.pomo-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;text-align:center;position:relative;overflow:hidden}
+.pomo-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(109,40,217,.04),transparent 70%);pointer-events:none}
+.pomo-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;transition:color .4s}
+.pomo-ring-wrap{position:relative;width:160px;height:160px;margin:0 auto 16px}
+.pomo-svg{width:160px;height:160px;transform:rotate(-90deg)}
+.pomo-track{fill:none;stroke:var(--bg3);stroke-width:10}
+.pomo-fill{fill:none;stroke:url(#pomoGrad);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke .5s}
+.pomo-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.pomo-time{font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:600;line-height:1}
+.pomo-sublabel{font-size:9px;color:var(--text2);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+.pomo-sessions{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
+.pomo-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--border);transition:all .3s}
+.pomo-dot.done{background:var(--lavender);border-color:var(--lavender)}
+.pomo-dot.current{background:transparent;border-color:var(--lavender);box-shadow:0 0 8px rgba(109,40,217,0.4)}
+.pomo-controls{display:flex;gap:8px;justify-content:center;margin-bottom:16px}
+.pc-btn{border:none;border-radius:9px;padding:9px 20px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.pc-btn.pstart{background:linear-gradient(135deg,var(--lavender),#4c1d95);color:#fff}
+.pc-btn.pstart:hover{opacity:.85}
+.pc-btn.pskip{background:var(--bg3);border:1px solid var(--border);color:var(--text2)}
+.pc-btn.preset{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.2);color:var(--coral)}
+.pomo-settings{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pomo-set-item{background:var(--bg3);border-radius:8px;padding:10px;display:flex;align-items:center;justify-content:space-between}
+.pomo-set-label{font-size:10px;color:var(--text2)}
+.pomo-set-val{display:flex;align-items:center;gap:6px}
+.pomo-set-val button{width:22px;height:22px;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:5px;cursor:pointer;font-size:12px;display:grid;place-items:center}
+.pomo-set-val span{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--teal);min-width:24px;text-align:center}
+.pomo-total{font-size:11px;color:var(--text3);margin-top:10px}
+.pomo-total strong{color:var(--lavender);font-weight:700}
+
+/* ── BOTTOM CHAPTERS ── */
+.chapters-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+.chapter-list{display:flex;flex-direction:column;gap:5px;max-height:280px;overflow-y:auto;padding-right:4px}
+.chapter-list::-webkit-scrollbar{width:3px}
+.chapter-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.chapter-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s}
+.chapter-item:hover{background:var(--card2)}
+.chapter-item.done{border-color:rgba(134,239,172,.25)}
+.chapter-check{width:18px;height:18px;border-radius:5px;border:2px solid var(--border);display:grid;place-items:center;transition:all .2s;flex-shrink:0;font-size:10px}
+.chapter-item.done .chapter-check{background:var(--sage);border-color:var(--sage);color:#fff;font-weight:700}
+.chapter-text{font-size:11px;color:var(--text);flex:1;transition:color .2s}
+.chapter-item.done .chapter-text{color:var(--text2);text-decoration:line-through}
+.chapter-tag{font-size:9px;padding:2px 7px;border-radius:99px;font-weight:600;white-space:nowrap}
+.inorg-q-input{width:48px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;text-align:center;padding:3px;outline:none}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--card);border:1px solid var(--teal);border-radius:12px;padding:14px 22px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;box-shadow:0 4px 20px rgba(13,148,136,.15);transform:translateY(100px);opacity:0;transition:all .4s cubic-bezier(.4,0,.2,1);z-index:999}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* CELEBRATE MODAL */
+.celebrate{text-align:center;padding:12px 0}
+.celebrate-emoji{font-size:56px;margin-bottom:12px;display:block;animation:bounce .6s ease-in-out infinite alternate}
+@keyframes bounce{to{transform:translateY(-10px)}}
+.celebrate h2{font-family:'Playfair Display',serif;font-size:24px;margin-bottom:10px}
+.celebrate p{color:var(--text2);font-size:13px;line-height:1.6;margin-bottom:20px}
+
+/* ACTIONS */
+.actions-bar{display:flex;gap:10px;justify-content:flex-end;padding-bottom:32px}
+.action-btn{border:1px solid var(--border);background:var(--card);color:var(--text2);border-radius:8px;padding:9px 18px;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.action-btn:hover{background:var(--card2);color:var(--text);border-color:var(--text3)}
+.action-btn.primary{background:linear-gradient(135deg,var(--teal),var(--teal2));border-color:transparent;color:#fff}
+.action-btn.primary:hover{opacity:.85}
+.action-btn.danger:hover{border-color:var(--coral);color:var(--coral)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.card,.stat-card,.timetable-card,.quote-card,.focus-card,.pomo-card{animation:fadeUp .4s ease both}
+
+/* notification */
+.notif-bar{background:rgba(13,148,136,.07);border:1px solid rgba(13,148,136,.2);border-radius:10px;padding:10px 16px;font-size:11px;color:var(--teal2);margin-bottom:20px;display:flex;align-items:center;gap:8px;font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- SVG gradients -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="focusGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d9488"/>
+      <stop offset="100%" stop-color="#16a34a"/>
+    </linearGradient>
+    <linearGradient id="pomoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6d28d9"/>
+      <stop offset="100%" stop-color="#e11d48"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- Context menu -->
+<div class="ctx-menu" id="ctx-menu" style="display:none">
+  <div class="ctx-item" onclick="ctxEdit()">✏️ Edit Time &amp; Task</div>
+  <div class="ctx-item" onclick="ctxColor()">🎨 Change Color</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" onclick="ctxStartFocus()">⏱ Start Focus Timer Here</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item danger" onclick="ctxDelete()">🗑 Remove Slot</div>
+  <div class="ctx-item" onclick="ctxAdd()">➕ Add Slot Below</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toast-icon">✅</span><span id="toast-msg">Saved!</span></div>
+
+<!-- EDIT MODAL -->
+<div class="overlay" id="edit-overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('edit-overlay')">✕</button>
+    <h2>✏️ Edit Time Slot</h2>
+    <p>Right here — just change the time and task name. No code, no stress.</p>
+    <div class="form-group">
+      <label class="form-label">Task / Subject Name</label>
+      <input class="form-input" id="edit-name" placeholder="e.g. 🧬 Biology Class 12 (150 Q)">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Display Time Text</label>
+        <input class="form-input" id="edit-time" placeholder="e.g. 5:00–6:45 AM">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Is This a Break?</label>
+        <select class="form-input" id="edit-break">
+          <option value="false">No — Study Slot</option>
+          <option value="true">Yes — Break</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Start (hour:min, 24h)</label>
+        <input class="form-input" id="edit-start" placeholder="e.g. 5:00">
+      </div>
+      <div class="form-group">
+        <label class="form-label">End (hour:min, 24h)</label>
+        <input class="form-input" id="edit-end" placeholder="e.g. 6:45">
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" onclick="closeModal('edit-overlay')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSlotEdit()">💾 Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD SLOT MODAL -->
+<div class="overlay" id="add-overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('add-overlay')">✕</button>
+    <h2>➕ Add New Time Slot</h2>
+    <p>Add a new study block or break below the selected slot.</p>
+    <div class="form-group">
+      <label class="form-label">Task / Subject Name</label>
+      <input class="form-input" id="add-name" placeholder="e.g. 📖 Revision">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Display Time</label>
+        <input class="form-input" id="add-time" placeholder="e.g. 10:00–11:00 AM">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        <select class="form-input" id="add-break">
+          <option value="false">Study Slot</option>
+          <option value="true">Break</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Start (24h, e.g. 10:00)</label>
+        <input class="form-input" id="add-start" placeholder="10:00">
+      </div>
+      <div class="form-group">
+        <label class="form-label">End (24h, e.g. 11:00)</label>
+        <input class="form-input" id="add-end" placeholder="11:00">
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" onclick="closeModal('add-overlay')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveNewSlot()">➕ Add Slot</button>
+    </div>
+  </div>
+</div>
+
+<!-- COLOR MODAL -->
+<div class="overlay" id="color-overlay">
+  <div class="modal" style="width:340px">
+    <button class="modal-close" onclick="closeModal('color-overlay')">✕</button>
+    <h2>🎨 Change Slot Color</h2>
+    <p>Pick a color for this slot's dot and highlight.</p>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:16px 0">
+      <div id="color-swatches"></div>
+    </div>
+    <input type="color" id="color-custom" style="width:100%;height:42px;border-radius:9px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;padding:2px 4px;margin-bottom:16px">
+    <div class="modal-btns">
+      <button class="btn btn-secondary" onclick="closeModal('color-overlay')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveColor()">Apply Color</button>
+    </div>
+  </div>
+</div>
+
+<!-- CELEBRATE MODAL -->
+<div class="overlay" id="celebrate-overlay">
+  <div class="modal" style="width:400px">
+    <button class="modal-close" onclick="closeModal('celebrate-overlay')">✕</button>
+    <div class="celebrate">
+      <span class="celebrate-emoji" id="cel-emoji">🎉</span>
+      <h2 id="cel-title">Target Hit!</h2>
+      <p id="cel-msg">Amazing work!</p>
+      <button class="btn btn-primary" style="width:100%" onclick="closeModal('celebrate-overlay')">Let's Keep Going! 🚀</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">🎯</div>
+      <div>
+        <div class="logo-text">NEET Command Centre</div>
+        <div class="logo-sub">2026 · Your Victory Dashboard</div>
+      </div>
+    </div>
+    <div class="header-chips">
+      <div class="chip">
+        <div class="chip-dot" style="background:var(--coral)"></div>
+        <div><div class="chip-val" id="days-left" style="color:var(--coral)">—</div><div style="font-size:9px;color:var(--text2);font-family:DM Sans,sans-serif">Days to NEET</div></div>
+      </div>
+      <div class="chip" id="focus-chip" style="display:none">
+        <div class="chip-dot" style="background:var(--sage)"></div>
+        <div><div class="chip-val" id="header-focus" style="color:var(--sage)">00:00:00</div><div style="font-size:9px;color:var(--text2);font-family:DM Sans,sans-serif">Focus Session</div></div>
+      </div>
+      <div class="today-badge" id="today-date">Today</div>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+<!-- Hint bar -->
+<div class="notif-bar">💡 <strong>Right-click any time slot</strong> to instantly edit its name, time, or color — no code needed. Your changes save automatically.</div>
+
+<!-- Stats -->
+<div class="top-row">
+  <div class="stat-card" style="--ac:var(--teal)">
+    <div class="stat-label">🏁 Study Day</div>
+    <div class="stat-value" id="day-num" style="color:var(--teal)">—</div>
+    <div class="stat-sub">of 25 days</div>
+  </div>
+  <div class="stat-card" style="--ac:var(--sage)">
+    <div class="stat-label">🧬 Bio 12 Total</div>
+    <div class="stat-value" id="bio12-total" style="color:var(--sage)">0</div>
+    <div class="stat-sub">of 7,500 Q</div>
+  </div>
+  <div class="stat-card" style="--ac:var(--sky)">
+    <div class="stat-label">⚗️ PhyChem Total</div>
+    <div class="stat-value" id="phychem-total" style="color:var(--sky)">0</div>
+    <div class="stat-sub">of 3,750 Q</div>
+  </div>
+  <div class="stat-card" style="--ac:var(--amber)">
+    <div class="stat-label">⏱ Today's Focus</div>
+    <div class="stat-value" id="today-focus-stat" style="color:var(--amber)">0h 0m</div>
+    <div class="stat-sub">All-time: <span id="alltime-focus">0h</span></div>
+  </div>
+</div>
+
+<!-- Main Grid -->
+<div class="main-grid">
+  <div class="card">
+    <div class="section-title"><span></span>Today's Question Log</div>
+    <div class="subject-grid" id="subject-grid"></div>
+  </div>
+  <div class="right-panel">
+    <div class="quote-card">
+      <div class="quote-text" id="quote-text"></div>
+      <div class="quote-author">— Daily Motivation</div>
+      <div class="quote-nav" id="quote-nav"></div>
+    </div>
+    <div class="timetable-card">
+      <div class="timetable-header">
+        <div class="timetable-title">📅 Schedule <span class="cur-badge" id="cur-badge">Loading…</span></div>
+        <button onclick="ctxAdd(-1)" style="background:rgba(13,148,136,.1);border:1px solid rgba(13,148,136,.25);color:var(--teal);border-radius:7px;padding:5px 12px;font-size:11px;cursor:pointer;font-weight:700">+ Add Slot</button>
+      </div>
+      <div class="tt-hint">Right-click any slot to edit or adjust</div>
+      <div class="slot-list" id="slot-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Timers Row -->
+<div class="timers-row">
+
+  <!-- FOCUS TIMER -->
+  <div class="focus-card card">
+    <div class="section-title" style="justify-content:center"><span></span>⏱ Focus Timer</div>
+    <div class="focus-status" id="focus-status">Ready to start your focus session</div>
+    <div class="focus-ring-wrap">
+      <svg class="focus-svg" viewBox="0 0 160 160">
+        <circle class="focus-track" cx="80" cy="80" r="70"/>
+        <circle class="focus-fill" id="focus-ring" cx="80" cy="80" r="70" stroke-dasharray="439.8" stroke-dashoffset="439.8"/>
+      </svg>
+      <div class="focus-time-display">
+        <div class="focus-big" id="focus-display">00:00:00</div>
+        <div class="focus-session-label" id="focus-session-lbl">Session</div>
+      </div>
+    </div>
+    <div class="focus-stats">
+      <div class="fstat">
+        <div class="fstat-val" id="fs-today">0h 0m</div>
+        <div class="fstat-label">Today</div>
+      </div>
+      <div class="fstat">
+        <div class="fstat-val" id="fs-sessions">0</div>
+        <div class="fstat-label">Sessions</div>
+      </div>
+      <div class="fstat">
+        <div class="fstat-val" id="fs-alltime">0h</div>
+        <div class="fstat-label">All-Time</div>
+      </div>
+    </div>
+    <div class="focus-controls">
+      <button class="fc-btn start" id="focus-start-btn" onclick="focusToggle()">▶ Start Focus</button>
+      <button class="fc-btn stop" id="focus-stop-btn" onclick="focusStop()" style="display:none">⏹ Stop</button>
+    </div>
+  </div>
+
+  <!-- POMODORO -->
+  <div class="pomo-card card">
+    <div class="section-title" style="justify-content:center"><span></span>🍅 Pomodoro Timer</div>
+    <div class="pomo-label" id="pomo-mode-label" style="color:var(--lavender)">FOCUS SESSION</div>
+    <div class="pomo-ring-wrap">
+      <svg class="pomo-svg" viewBox="0 0 160 160">
+        <circle class="pomo-track" cx="80" cy="80" r="70"/>
+        <circle class="pomo-fill" id="pomo-ring" cx="80" cy="80" r="70" stroke-dasharray="439.8" stroke-dashoffset="0"/>
+      </svg>
+      <div class="pomo-inner">
+        <div class="pomo-time" id="pomo-display" style="color:var(--lavender)">25:00</div>
+        <div class="pomo-sublabel" id="pomo-sub">Ready</div>
+      </div>
+    </div>
+    <div class="pomo-sessions" id="pomo-session-dots"></div>
+    <div class="pomo-controls">
+      <button class="pc-btn pstart" id="pomo-btn" onclick="pomoToggle()">▶ Start</button>
+      <button class="pc-btn pskip" onclick="pomoSkip()">⏭ Skip</button>
+      <button class="pc-btn preset" onclick="pomoReset()">↺ Reset</button>
+    </div>
+    <div class="pomo-settings">
+      <div class="pomo-set-item">
+        <span class="pomo-set-label">🧠 Focus (min)</span>
+        <div class="pomo-set-val">
+          <button onclick="adjustPomo('work',-5)">−</button>
+          <span id="pomo-work-val">25</span>
+          <button onclick="adjustPomo('work',5)">+</button>
+        </div>
+      </div>
+      <div class="pomo-set-item">
+        <span class="pomo-set-label">☕ Break (min)</span>
+        <div class="pomo-set-val">
+          <button onclick="adjustPomo('break',-1)">−</button>
+          <span id="pomo-break-val">5</span>
+          <button onclick="adjustPomo('break',1)">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="pomo-total">Completed today: <strong id="pomo-done">0</strong> sessions · <strong id="pomo-focus-time">0 min</strong> focus</div>
+  </div>
+</div>
+
+<!-- Chapter trackers -->
+<div class="chapters-row">
+  <div class="card">
+    <div class="section-title"><span></span>🌿 Biology Class 11 — Rapid Revision</div>
+    <div class="section-hint">Click to mark revised · Target: 1 chapter/day</div>
+    <div class="chapter-list" id="bio11-list"></div>
+  </div>
+  <div class="card">
+    <div class="section-title"><span></span>🧪 Inorganic Chemistry — 700 Q</div>
+    <div class="section-hint">Type questions done per chapter · Total: 700 Q</div>
+    <div class="chapter-list" id="inorg-list"></div>
+  </div>
+</div>
+
+<!-- Actions -->
+<div class="actions-bar">
+  <button class="action-btn danger" onclick="confirmReset()">🗑 Reset Today</button>
+  <button class="action-btn" onclick="exportSummary()">📋 Copy Summary</button>
+  <button class="action-btn primary" onclick="saveAll()">💾 Save Everything</button>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const EXAM_DATE = new Date('2026-05-03T07:00:00');
+const START_DATE = new Date('2026-03-28');
+
+const SUBJECTS = [
+  {key:'bio12',  icon:'🧬',name:'Biology Class 12',   sub:'Target: 300 Q/day',         target:300,  total:7500,  color:'#86efac'},
+  {key:'bio11s', icon:'🌿',name:'Biology Class 11',   sub:'Target: 1 topic/day',        target:1,    total:25,    color:'#6ee7b7', unit:'topics'},
+  {key:'phychem',icon:'⚗️',name:'Physical Chemistry', sub:'Target: 150 Q/day (3.5 hrs)',target:150,  total:3750,  color:'#7dd3fc'},
+  {key:'orgchem',icon:'🔗',name:'Organic Chemistry',  sub:'Days 1–8: ~100 Q/day',       target:100,  total:800,   color:'#fde68a'},
+  {key:'inorg',  icon:'🧪',name:'Inorganic Chemistry',sub:'Target: 28 Q/day',           target:28,   total:700,   color:'#fdba74'},
+  {key:'physics',icon:'⚡',name:'Physics PYQ',         sub:'1 paper/day + full review', target:1,    total:25,    color:'#fbbf24', unit:'papers'},
+];
+
+const BIO11 = ['The Living World','Biological Classification','Plant Kingdom','Animal Kingdom','Morphology of Flowering Plants','Anatomy of Flowering Plants','Structural Organisation in Animals','Cell: The Unit of Life','Biomolecules','Cell Cycle and Cell Division','Transport in Plants','Mineral Nutrition','Photosynthesis in Higher Plants','Respiration in Plants','Plant Growth and Development','Digestion and Absorption','Breathing and Exchange of Gases','Body Fluids and Circulation','Excretory Products and Elimination','Locomotion and Movement','Neural Control and Coordination','Chemical Coordination and Integration'];
+
+const INORG_CH = [
+  {name:'s-Block Elements',         target:100},
+  {name:'p-Block Elements (Gr 13-14)',target:100},
+  {name:'p-Block Elements (Gr 15-18)',target:150},
+  {name:'d and f Block Elements',   target:80},
+  {name:'Coordination Compounds',   target:150},
+  {name:'Metallurgy',               target:50},
+  {name:'Hydrogen',                 target:50},
+  {name:'Periodic Properties',      target:20},
+];
+
+const COLORS = ['#2dd4bf','#86efac','#7dd3fc','#fbbf24','#fb7185','#a78bfa','#fdba74','#f472b6','#34d399','#60a5fa'];
+
+const QUOTES = [
+  "Every question you solve today is one less surprise on exam day. The work you do right now is building the doctor inside you.",
+  "You are not just preparing for NEET. You are becoming the kind of person who never gives up — and that person wins.",
+  "Consistency beats talent when talent doesn't show up every single day. Show up. Solve. Repeat.",
+  "The pain of discipline today is far less than the pain of regret later. Stay locked in.",
+  "10 focused hours today = Freedom tomorrow. Your future self is watching — don't disappoint them.",
+  "Hard days build the strongest warriors. If today felt difficult, that means you were training at your limit.",
+  "NEET rewards those who are ready. Be so ready it feels unfair to the competition.",
+  "One more question. One more step. One step closer to the rank that changes your life forever.",
+  "Trust the process. Trust your plan. Trust that every hour invested here is compounding silently.",
+  "Your competition is sleeping. The gap between average and extraordinary is built right now.",
+  "Physics, Chemistry, Biology — three mountains. You're climbing all three. That's remarkable. Keep climbing.",
+  "A doctor in the making doesn't quit when it's hard. They train harder. Neither do you.",
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+function loadState(){try{return JSON.parse(localStorage.getItem('neet2026v3')||'{}')}catch(e){return{}}}
+function saveState(s){localStorage.setItem('neet2026v3',JSON.stringify(s))}
+let S=loadState();
+if(!S.days)S.days={};
+if(!S.bio11Done)S.bio11Done={};
+if(!S.inorgDone)S.inorgDone={};
+if(!S.quoteIdx)S.quoteIdx=0;
+if(!S.focusTotal)S.focusTotal=0; // seconds all-time
+if(!S.focusToday)S.focusToday={};
+if(!S.pomoSessions)S.pomoSessions=0;
+if(!S.pomoWork)S.pomoWork=25;
+if(!S.pomoBreak)S.pomoBreak=5;
+if(!S.pomoTotalFocus)S.pomoTotalFocus=0;
+
+// Default timetable
+const DEFAULT_TT = [
+  {time:'5:00–6:45 AM',  name:'🧬 Biology Class 12 (150 Q)',  color:'#86efac',break:false,start:5*60,    end:6*60+45},
+  {time:'6:45–8:00 AM',  name:'🌿 Bio 11 Rapid Revision',     color:'#6ee7b7',break:false,start:6*60+45, end:8*60},
+  {time:'8:00–9:30 AM',  name:'🛑 BREAK — Breakfast',         color:'#4a7878',break:true, start:8*60,    end:9*60+30},
+  {time:'9:30–1:00 PM',  name:'⚗️ Physical Chemistry (150 Q)',color:'#7dd3fc',break:false,start:9*60+30, end:13*60},
+  {time:'1:00–2:15 PM',  name:'🛑 BREAK — Lunch + Rest',      color:'#4a7878',break:true, start:13*60,   end:14*60+15},
+  {time:'2:15–3:45 PM',  name:'🔗 Organic Chemistry',         color:'#fde68a',break:false,start:14*60+15,end:15*60+45},
+  {time:'3:45–4:45 PM',  name:'🧪 Inorganic Chemistry',       color:'#fdba74',break:false,start:15*60+45,end:16*60+45},
+  {time:'4:45–6:00 PM',  name:'🧬 Biology Class 12 (150 Q)',  color:'#86efac',break:false,start:16*60+45,end:18*60},
+  {time:'6:00–7:15 PM',  name:'🛑 BREAK — Evening',           color:'#4a7878',break:true, start:18*60,   end:19*60+15},
+  {time:'7:15–8:15 PM',  name:'⚡ Physics PYQ Paper',          color:'#fbbf24',break:false,start:19*60+15,end:20*60+15},
+  {time:'8:15–9:00 PM',  name:'⚡ Physics Review',             color:'#fb923c',break:false,start:20*60+15,end:21*60},
+  {time:'9:00–10:30 PM', name:'🌙 Wind Down + Dinner',         color:'#a78bfa',break:true, start:21*60,   end:22*60+30},
+];
+if(!S.timetable)S.timetable=JSON.parse(JSON.stringify(DEFAULT_TT));
+
+function todayKey(){const d=new Date();return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`}
+function getTodayData(){const k=todayKey();if(!S.days[k])S.days[k]={};return S.days[k]}
+function getTodayFocus(){const k=todayKey();if(!S.focusToday[k])S.focusToday[k]=0;return S.focusToday[k]}
+function addTodayFocus(secs){const k=todayKey();if(!S.focusToday[k])S.focusToday[k]=0;S.focusToday[k]+=secs}
+
+// ══════════════════════════════════════════
+// COUNTDOWN
+// ══════════════════════════════════════════
+function updateCountdown(){
+  const now=new Date();
+  const diff=EXAM_DATE-now;
+  const days=Math.max(0,Math.ceil(diff/(1000*60*60*24)));
+  document.getElementById('days-left').textContent=days;
+  document.getElementById('today-date').textContent=now.toLocaleDateString('en-IN',{weekday:'short',month:'short',day:'numeric'});
+  const studyDay=Math.min(25,Math.max(1,Math.round((now-START_DATE)/(1000*60*60*24))+1));
+  document.getElementById('day-num').textContent='Day '+studyDay;
+}
+
+// ══════════════════════════════════════════
+// TIMETABLE
+// ══════════════════════════════════════════
+let ctxSlotIdx=-1;
+
+function renderTimetable(){
+  const now=new Date();
+  const mins=now.getHours()*60+now.getMinutes();
+  const list=document.getElementById('slot-list');
+  let curLabel='Not started yet';
+  list.innerHTML=S.timetable.map((slot,i)=>{
+    const isCur=mins>=slot.start&&mins<slot.end;
+    if(isCur)curLabel=slot.name.replace(/^[^\w\s]+/,'').trim().split(' ').slice(0,3).join(' ');
+    return `<div class="slot-item ${isCur?'active-slot':''} ${slot.break?'break-slot':''}"
+      oncontextmenu="openCtx(event,${i})" title="Right-click to edit this slot">
+      <div class="slot-dot" style="background:${slot.color};${isCur?'box-shadow:0 0 8px '+slot.color:''}"></div>
+      <div class="slot-time">${slot.time}</div>
+      <div class="slot-name" style="color:${isCur?slot.color:'var(--text)'}">${slot.name}</div>
+      ${isCur?'<span class="now-tag">NOW</span>':''}
+      <span class="edit-hint">right-click</span>
+    </div>`;
+  }).join('');
+  document.getElementById('cur-badge').textContent=curLabel;
+}
+
+// ── CONTEXT MENU ──
+function openCtx(e,idx){
+  e.preventDefault();
+  ctxSlotIdx=idx;
+  const m=document.getElementById('ctx-menu');
+  m.style.display='block';
+  let x=e.clientX,y=e.clientY;
+  if(x+200>window.innerWidth)x=window.innerWidth-210;
+  if(y+220>window.innerHeight)y=window.innerHeight-230;
+  m.style.left=x+'px';m.style.top=y+'px';
+}
+document.addEventListener('click',()=>document.getElementById('ctx-menu').style.display='none');
+document.addEventListener('contextmenu',e=>{if(!e.target.closest('.slot-item'))document.getElementById('ctx-menu').style.display='none'});
+
+function ctxEdit(){
+  if(ctxSlotIdx<0)return;
+  const slot=S.timetable[ctxSlotIdx];
+  document.getElementById('edit-name').value=slot.name;
+  document.getElementById('edit-time').value=slot.time;
+  document.getElementById('edit-break').value=slot.break?'true':'false';
+  // convert minutes back to HH:MM
+  const toHHMM=m=>`${Math.floor(m/60).toString().padStart(2,'0')}:${(m%60).toString().padStart(2,'0')}`;
+  document.getElementById('edit-start').value=toHHMM(slot.start);
+  document.getElementById('edit-end').value=toHHMM(slot.end);
+  openModal('edit-overlay');
+}
+
+function saveSlotEdit(){
+  const slot=S.timetable[ctxSlotIdx];
+  slot.name=document.getElementById('edit-name').value||slot.name;
+  slot.time=document.getElementById('edit-time').value||slot.time;
+  slot.break=document.getElementById('edit-break').value==='true';
+  const parseTime=v=>{const[h,m]=(v||'0:0').split(':').map(Number);return h*60+(m||0)};
+  slot.start=parseTime(document.getElementById('edit-start').value);
+  slot.end=parseTime(document.getElementById('edit-end').value);
+  saveState(S);renderTimetable();closeModal('edit-overlay');showToast('✅ Slot updated!');
+}
+
+function ctxColor(){
+  if(ctxSlotIdx<0)return;
+  const sw=document.getElementById('color-swatches');
+  sw.style.cssText='display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0';
+  sw.innerHTML=COLORS.map(c=>`<div onclick="applyColor('${c}')" style="width:100%;aspect-ratio:1;border-radius:8px;background:${c};cursor:pointer;border:2px solid transparent;transition:all .2s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"></div>`).join('');
+  document.getElementById('color-custom').value=S.timetable[ctxSlotIdx].color||'#2dd4bf';
+  openModal('color-overlay');
+}
+function applyColor(c){S.timetable[ctxSlotIdx].color=c;saveState(S);renderTimetable();closeModal('color-overlay');showToast('🎨 Color updated!')}
+function saveColor(){applyColor(document.getElementById('color-custom').value)}
+
+function ctxStartFocus(){
+  if(!focusRunning){focusToggle();showToast('⏱ Focus timer started for this slot!')}
+  else{showToast('⏱ Focus timer already running!')}
+}
+
+function ctxDelete(){
+  if(ctxSlotIdx<0)return;
+  if(!confirm('Remove this slot?'))return;
+  S.timetable.splice(ctxSlotIdx,1);
+  saveState(S);renderTimetable();showToast('🗑 Slot removed');
+}
+
+function ctxAdd(afterIdx){
+  ctxSlotIdx=afterIdx!=null?afterIdx:ctxSlotIdx;
+  document.getElementById('add-name').value='';
+  document.getElementById('add-time').value='';
+  document.getElementById('add-start').value='';
+  document.getElementById('add-end').value='';
+  openModal('add-overlay');
+}
+
+function saveNewSlot(){
+  const parseTime=v=>{const[h,m]=(v||'0:0').split(':').map(Number);return h*60+(m||0)};
+  const slot={
+    name:document.getElementById('add-name').value||'New Slot',
+    time:document.getElementById('add-time').value||'00:00',
+    break:document.getElementById('add-break').value==='true',
+    color:'#2dd4bf',
+    start:parseTime(document.getElementById('add-start').value),
+    end:parseTime(document.getElementById('add-end').value),
+  };
+  const insertAt=ctxSlotIdx<0?S.timetable.length:ctxSlotIdx+1;
+  S.timetable.splice(insertAt,0,slot);
+  saveState(S);renderTimetable();closeModal('add-overlay');showToast('➕ Slot added!');
+}
+
+// ══════════════════════════════════════════
+// QUOTES
+// ══════════════════════════════════════════
+function renderQuote(){
+  const idx=S.quoteIdx%QUOTES.length;
+  const el=document.getElementById('quote-text');
+  el.style.opacity=0;
+  setTimeout(()=>{el.textContent=QUOTES[idx];el.style.opacity=1},200);
+  document.getElementById('quote-nav').innerHTML=QUOTES.map((_,i)=>`<div class="quote-dot ${i===idx?'active':''}" onclick="setQuote(${i})"></div>`).join('');
+}
+function setQuote(i){S.quoteIdx=i;saveState(S);renderQuote()}
+function nextQuote(){S.quoteIdx=(S.quoteIdx+1)%QUOTES.length;saveState(S);renderQuote()}
+setInterval(nextQuote,30000);
+
+// ══════════════════════════════════════════
+// SUBJECTS
+// ══════════════════════════════════════════
+function getTotals(){
+  const t={};
+  SUBJECTS.forEach(s=>{t[s.key]=Object.values(S.days).reduce((sum,d)=>sum+(Number(d[s.key])||0),0)});
+  return t;
+}
+function renderSubjects(){
+  const today=getTodayData();const totals=getTotals();
+  document.getElementById('subject-grid').innerHTML=SUBJECTS.map(s=>{
+    const done=Number(today[s.key]||0);
+    const pct=Math.min(100,Math.round(done/s.target*100));
+    const tDone=totals[s.key];const tPct=Math.min(100,Math.round(tDone/s.total*100));
+    return `<div class="subject-row">
+      <div class="subject-name">
+        <div class="subject-icon" style="background:${s.color}22">${s.icon}</div>
+        <div><div class="subject-name-text">${s.name}</div><div class="subject-name-sub">${s.sub}</div></div>
+      </div>
+      <div class="progress-area">
+        <div class="progress-nums">
+          <span>Today: <strong style="color:${s.color}">${done}${s.unit?' '+s.unit:' Q'}</strong> / ${s.target}${s.unit?' '+s.unit:' Q'} (${pct}%)</span>
+          <span>Total: <strong>${tDone}</strong>/${s.total}</span>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${s.color}88,${s.color})"></div></div>
+        <div class="bar-bg" style="height:4px;margin-top:5px"><div class="bar-fill" style="width:${tPct}%;background:${s.color}44"></div></div>
+        <div style="font-size:9px;color:var(--text3);margin-top:2px">Overall ${tPct}%</div>
+      </div>
+      <div class="subject-controls">
+        <button class="ctrl-btn" onclick="addQ('${s.key}',-${s.unit?1:10})">−</button>
+        <input class="ctrl-input" type="number" id="inp-${s.key}" value="${done}" min="0" onchange="setQ('${s.key}',this.value)">
+        <button class="ctrl-btn" onclick="addQ('${s.key}',${s.unit?1:10})">+</button>
+        <button class="add-btn" onclick="addQ('${s.key}',${s.unit?1:s.target})">+${s.unit?'1':s.target}</button>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('bio12-total').textContent=totals.bio12.toLocaleString();
+  document.getElementById('phychem-total').textContent=totals.phychem.toLocaleString();
+}
+function addQ(key,delta){
+  const t=getTodayData();t[key]=Math.max(0,(Number(t[key])||0)+Number(delta));
+  saveState(S);renderSubjects();checkCelebration(key,t[key]);
+}
+function setQ(key,val){
+  const t=getTodayData();t[key]=Math.max(0,Number(val)||0);
+  saveState(S);renderSubjects();checkCelebration(key,t[key]);
+}
+function checkCelebration(key,val){
+  const s=SUBJECTS.find(x=>x.key===key);
+  if(!s||val<s.target)return;
+  const msgs={bio12:'300 Biology Q done! NCERT is your best friend now. 🧬',bio11s:'Bio 11 topic revised! Rapid revision is working! 🌿',phychem:'150 Physical Chemistry Q in one day — beast mode! ⚗️',orgchem:'Organic Chemistry lecture target nailed! 🔗',inorg:'28 Inorganic Chemistry Q done! 🧪',physics:'Physics PYQ paper complete! Review every wrong Q tonight. ⚡'};
+  showCelebration('Daily Target Hit! 🎉',msgs[key]||'Target completed!');
+}
+
+// ══════════════════════════════════════════
+// BIO 11 CHAPTERS
+// ══════════════════════════════════════════
+function renderBio11(){
+  document.getElementById('bio11-list').innerHTML=BIO11.map((ch,i)=>{
+    const done=S.bio11Done[i];
+    return `<div class="chapter-item ${done?'done':''}" onclick="toggleBio11(${i})">
+      <div class="chapter-check">${done?'✓':''}</div>
+      <div class="chapter-text">${ch}</div>
+      <span class="chapter-tag" style="background:${done?'rgba(134,239,172,.15)':'rgba(255,255,255,.05)'};color:${done?'#86efac':'var(--text3)'}">${done?'Done':'Pending'}</span>
+    </div>`;
+  }).join('');
+}
+function toggleBio11(i){S.bio11Done[i]=!S.bio11Done[i];saveState(S);renderBio11();showToast(`${BIO11[i].slice(0,30)} ${S.bio11Done[i]?'✅ done!':'↩ unmarked'}`)}
+
+// ══════════════════════════════════════════
+// INORGANIC
+// ══════════════════════════════════════════
+function renderInorg(){
+  document.getElementById('inorg-list').innerHTML=INORG_CH.map((ch,i)=>{
+    const done=Number(S.inorgDone[i]||0);
+    const pct=Math.min(100,Math.round(done/ch.target*100));
+    const isDone=done>=ch.target;
+    return `<div class="chapter-item ${isDone?'done':''}">
+      <div class="chapter-check" onclick="toggleInorgDone(${i})">${isDone?'✓':''}</div>
+      <div style="flex:1">
+        <div class="chapter-text" style="text-decoration:none;color:var(--text)">${ch.name}</div>
+        <div class="bar-bg" style="height:4px;margin-top:4px"><div class="bar-fill" style="width:${pct}%;background:linear-gradient(90deg,#fdba7488,#fdba74)"></div></div>
+        <div style="font-size:9px;color:var(--text3);margin-top:2px">${done}/${ch.target} Q (${pct}%)</div>
+      </div>
+      <input class="inorg-q-input" type="number" value="${done}" min="0" max="${ch.target}" onchange="setInorg(${i},this.value)">
+    </div>`;
+  }).join('');
+}
+function setInorg(i,val){S.inorgDone[i]=Math.max(0,Number(val)||0);saveState(S);renderInorg()}
+function toggleInorgDone(i){const ch=INORG_CH[i];S.inorgDone[i]=S.inorgDone[i]>=ch.target?0:ch.target;saveState(S);renderInorg()}
+
+// ══════════════════════════════════════════
+// FOCUS TIMER
+// ══════════════════════════════════════════
+let focusRunning=false,focusInterval=null,focusSeconds=0,focusSessionSecs=0;
+const RING_CIRC=439.8;
+
+function focusToggle(){
+  if(!focusRunning){
+    focusRunning=true;
+    document.getElementById('focus-start-btn').innerHTML='⏸ Pause';
+    document.getElementById('focus-start-btn').className='fc-btn pause';
+    document.getElementById('focus-stop-btn').style.display='';
+    document.getElementById('focus-chip').style.display='';
+    document.getElementById('focus-status').innerHTML='<span class="focus-running-dot"></span>Focus session running — stay locked in!';
+    focusInterval=setInterval(focusTick,1000);
+  } else {
+    focusRunning=false;
+    clearInterval(focusInterval);
+    document.getElementById('focus-start-btn').innerHTML='▶ Resume';
+    document.getElementById('focus-start-btn').className='fc-btn start';
+    document.getElementById('focus-status').textContent='Paused — press Resume when ready';
+    saveFocusProgress();
+  }
+}
+function focusTick(){
+  focusSeconds++;focusSessionSecs++;
+  updateFocusUI();
+  if(focusSeconds%60===0)saveFocusProgress();
+}
+function focusStop(){
+  if(!confirm('Stop this focus session?'))return;
+  saveFocusProgress();
+  focusRunning=false;clearInterval(focusInterval);focusSeconds=0;
+  document.getElementById('focus-start-btn').innerHTML='▶ Start Focus';
+  document.getElementById('focus-start-btn').className='fc-btn start';
+  document.getElementById('focus-stop-btn').style.display='none';
+  document.getElementById('focus-chip').style.display='none';
+  document.getElementById('focus-status').textContent='Session ended. Great work!';
+  document.getElementById('focus-ring').style.strokeDashoffset=RING_CIRC;
+  updateFocusStats();
+  showToast('⏱ Focus session saved! '+fmtHM(focusSessionSecs));
+  focusSessionSecs=0;
+}
+function saveFocusProgress(){
+  addTodayFocus(1);S.focusTotal=(S.focusTotal||0)+1;saveState(S);
+  updateFocusStats();
+}
+function updateFocusUI(){
+  const h=String(Math.floor(focusSeconds/3600)).padStart(2,'0');
+  const m=String(Math.floor(focusSeconds%3600/60)).padStart(2,'0');
+  const s=String(focusSeconds%60).padStart(2,'0');
+  const disp=`${h}:${m}:${s}`;
+  document.getElementById('focus-display').textContent=disp;
+  document.getElementById('header-focus').textContent=disp;
+  // Ring: one full hour = full circle
+  const progress=(focusSeconds%3600)/3600;
+  document.getElementById('focus-ring').style.strokeDashoffset=RING_CIRC*(1-progress);
+  updateFocusStats();
+}
+function updateFocusStats(){
+  const todaySecs=getTodayFocus();
+  document.getElementById('fs-today').textContent=fmtHM(todaySecs);
+  document.getElementById('today-focus-stat').textContent=fmtHM(todaySecs);
+  document.getElementById('fs-alltime').textContent=fmtH(S.focusTotal||0);
+  document.getElementById('alltime-focus').textContent=fmtH(S.focusTotal||0);
+  const sessions=Object.keys(S.focusToday||{}).length;
+  document.getElementById('fs-sessions').textContent=sessions;
+  document.getElementById('focus-session-lbl').textContent=focusSeconds>=3600?'1+ hr session':'Session';
+}
+function fmtHM(s){const h=Math.floor(s/3600);const m=Math.floor(s%3600/60);return h>0?`${h}h ${m}m`:`${m}m`}
+function fmtH(s){const h=(s/3600).toFixed(1);return h+'h'}
+
+// ══════════════════════════════════════════
+// POMODORO
+// ══════════════════════════════════════════
+let pomoRunning=false,pomoInterval=null,pomoSecondsLeft=0,pomoIsBreak=false,pomoCycle=0;
+
+function initPomo(){pomoSecondsLeft=S.pomoWork*60;renderPomoDots();updatePomoUI()}
+
+function pomoToggle(){
+  if(!pomoRunning){
+    pomoRunning=true;
+    document.getElementById('pomo-btn').textContent='⏸ Pause';
+    pomoInterval=setInterval(pomoTick,1000);
+  } else {
+    pomoRunning=false;clearInterval(pomoInterval);
+    document.getElementById('pomo-btn').textContent='▶ Resume';
+  }
+}
+function pomoTick(){
+  pomoSecondsLeft--;
+  if(pomoSecondsLeft<=0){pomoComplete()}
+  else{updatePomoUI()}
+}
+function pomoComplete(){
+  pomoRunning=false;clearInterval(pomoInterval);
+  playBeep();
+  if(!pomoIsBreak){
+    pomoCycle++;S.pomoSessions=(S.pomoSessions||0)+1;
+    S.pomoTotalFocus=(S.pomoTotalFocus||0)+S.pomoWork;
+    saveState(S);
+    pomoIsBreak=true;pomoSecondsLeft=S.pomoBreak*60;
+    showToast('🍅 Pomodoro done! Take a break — '+S.pomoBreak+' minutes');
+    if(pomoCycle%4===0){setTimeout(()=>showCelebration('4 Pomodoros Done! 🍅🍅🍅🍅','Incredible focus! That\'s '+S.pomoWork*4+' minutes of pure work. Take a longer break now!'),500)}
+  } else {
+    pomoIsBreak=false;pomoSecondsLeft=S.pomoWork*60;
+    showToast('☕ Break over! Back to focus mode!');
+  }
+  renderPomoDots();updatePomoUI();updatePomoStats();
+}
+function pomoSkip(){pomoSecondsLeft=1;pomoTick()}
+function pomoReset(){
+  pomoRunning=false;clearInterval(pomoInterval);
+  pomoIsBreak=false;pomoSecondsLeft=S.pomoWork*60;pomoCycle=0;
+  document.getElementById('pomo-btn').textContent='▶ Start';
+  updatePomoUI();
+}
+function updatePomoUI(){
+  const m=String(Math.floor(pomoSecondsLeft/60)).padStart(2,'0');
+  const s=String(pomoSecondsLeft%60).padStart(2,'0');
+  document.getElementById('pomo-display').textContent=`${m}:${s}`;
+  const total=(pomoIsBreak?S.pomoBreak:S.pomoWork)*60;
+  const pct=1-(pomoSecondsLeft/total);
+  document.getElementById('pomo-ring').style.strokeDashoffset=RING_CIRC*pct;
+  const color=pomoIsBreak?'#16a34a':'#6d28d9';
+  document.getElementById('pomo-mode-label').textContent=pomoIsBreak?'☕ BREAK TIME':'🧠 FOCUS SESSION';
+  document.getElementById('pomo-mode-label').style.color=color;
+  document.getElementById('pomo-display').style.color=color;
+  document.getElementById('pomo-sub').textContent=pomoRunning?(pomoIsBreak?'Resting…':'Locked in…'):pomoIsBreak?'Break ready':'Ready';
+  updatePomoStats();
+}
+function renderPomoDots(){
+  const dots=document.getElementById('pomo-session-dots');
+  dots.innerHTML=[0,1,2,3].map(i=>`<div class="pomo-dot ${i<pomoCycle%4?'done':i===pomoCycle%4&&!pomoIsBreak?'current':''}"></div>`).join('');
+}
+function updatePomoStats(){
+  document.getElementById('pomo-done').textContent=S.pomoSessions||0;
+  document.getElementById('pomo-focus-time').textContent=(S.pomoTotalFocus||0)+' min';
+  document.getElementById('pomo-work-val').textContent=S.pomoWork;
+  document.getElementById('pomo-break-val').textContent=S.pomoBreak;
+}
+function adjustPomo(type,delta){
+  if(type==='work'){S.pomoWork=Math.max(5,Math.min(60,(S.pomoWork||25)+delta))}
+  else{S.pomoBreak=Math.max(1,Math.min(15,(S.pomoBreak||5)+delta))}
+  saveState(S);if(!pomoRunning)initPomo();updatePomoStats();
+}
+
+// beep using Web Audio
+function playBeep(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    [0,0.2,0.4].forEach(t=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.frequency.value=880;o.type='sine';
+      g.gain.setValueAtTime(0.3,ctx.currentTime+t);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+t+0.3);
+      o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+0.3);
+    });
+  }catch(e){}
+}
+
+// ══════════════════════════════════════════
+// MODALS
+// ══════════════════════════════════════════
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')}));
+function showCelebration(title,msg){
+  document.getElementById('cel-title').textContent=title;
+  document.getElementById('cel-msg').textContent=msg;
+  openModal('celebrate-overlay');
+}
+
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+let toastTimer;
+function showToast(msg){
+  document.getElementById('toast-msg').textContent=msg;
+  const t=document.getElementById('toast');t.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ══════════════════════════════════════════
+// SAVE / RESET
+// ══════════════════════════════════════════
+function saveAll(){saveState(S);showToast('💾 Everything saved!')}
+function confirmReset(){
+  if(!confirm("Reset today's question counts? Chapter progress and focus hours are kept."))return;
+  S.days[todayKey()]={};saveState(S);renderSubjects();showToast('🔄 Today\'s Q counts reset');
+}
+function exportSummary(){
+  const today=getTodayData();const totals=getTotals();
+  const bio11c=Object.values(S.bio11Done).filter(Boolean).length;
+  const inorgT=Object.values(S.inorgDone).reduce((a,b)=>a+Number(b),0);
+  const lines=[
+    `📊 NEET 2026 Progress — ${new Date().toLocaleDateString('en-IN')}`,``,`TODAY:`,
+    ...SUBJECTS.map(s=>`  ${s.icon} ${s.name}: ${today[s.key]||0} / ${s.target}`),
+    `  ⏱ Focus time today: ${fmtHM(getTodayFocus())}`,
+    `  🍅 Pomodoros done: ${S.pomoSessions||0}`,``,`OVERALL:`,
+    `  🧬 Bio 12: ${totals.bio12} / 7500`,
+    `  🌿 Bio 11 chapters revised: ${bio11c} / 22`,
+    `  ⚗️ Physical Chem: ${totals.phychem} / 3750`,
+    `  🔗 Organic Chem: ${totals.orgchem} / 800`,
+    `  🧪 Inorganic Chem: ${inorgT} / 700`,
+    `  ⚡ Physics Papers: ${totals.physics} / 25`,
+    `  ⏱ Total focus hours: ${fmtH(S.focusTotal||0)}`,``,`🚀 Keep going!`,
+  ].join('\n');
+  navigator.clipboard.writeText(lines).then(()=>showToast('📋 Summary copied!')).catch(()=>alert(lines));
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+function init(){
+  updateCountdown();renderQuote();renderTimetable();renderSubjects();
+  renderBio11();renderInorg();initPomo();updateFocusStats();
+  setInterval(updateCountdown,60000);
+  setInterval(renderTimetable,60000);
+}
+init();
+</script>
+</body>
+</html>
