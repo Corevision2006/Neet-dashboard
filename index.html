@@ -346,9 +346,139 @@ body.dark .member-row{background:rgba(255,255,255,.05)}
 .tstat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
 .tstat-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;line-height:1;margin-bottom:4px}
 .tstat-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px}
+
+/* ── SET TARGET MODAL ── */
+.step-indicator{display:flex;align-items:center;gap:0;margin-bottom:24px}
+.step-dot{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;transition:all .3s;flex-shrink:0}
+.step-dot.done{background:var(--teal);color:#fff}
+.step-dot.active{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;box-shadow:0 0 0 4px rgba(13,148,136,.2)}
+.step-dot.pending{background:var(--bg3);color:var(--text3);border:2px solid var(--border)}
+.step-line{flex:1;height:2px;background:var(--border);transition:background .3s}
+.step-line.done{background:var(--teal)}
+.step-panel{display:none}
+.step-panel.active{display:block}
+.step-title{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+.subj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:4px}
+.subj-btn{background:var(--bg3);border:2px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--text);text-align:left}
+.subj-btn:hover{border-color:var(--teal3);background:var(--card2)}
+.subj-btn.selected{border-color:var(--teal);background:rgba(13,148,136,.08);color:var(--teal)}
+.source-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;min-height:38px}
+.source-chip{background:var(--bg3);border:1.5px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;color:var(--text)}
+.source-chip:hover{border-color:var(--teal3)}
+.source-chip.selected{background:rgba(13,148,136,.1);border-color:var(--teal);color:var(--teal)}
+.source-chip .chip-del{color:var(--coral);font-size:10px;display:none;cursor:pointer;background:none;border:none;padding:0;line-height:1}
+.source-chip:hover .chip-del{display:inline}
+.source-add-row{display:flex;gap:6px;margin-top:4px}
+.target-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px}
+.ttype-btn{background:var(--bg3);border:2px solid var(--border);border-radius:9px;padding:9px 6px;text-align:center;cursor:pointer;transition:all .2s;font-size:11px;font-weight:600;color:var(--text2)}
+.ttype-btn:hover{border-color:var(--teal3)}
+.ttype-btn.selected{border-color:var(--teal);background:rgba(13,148,136,.08);color:var(--teal)}
+.ttype-icon{font-size:18px;display:block;margin-bottom:3px}
+
+/* ── TODAY'S TARGETS BAR ── */
+.targets-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;position:relative}
+.targets-bar-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.targets-bar-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.targets-bar-actions{display:flex;align-items:center;gap:6px}
+.targets-list{display:flex;flex-direction:column;gap:7px}
+.target-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:11px 14px;display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:12px;transition:border-color .2s}
+.target-item:hover{border-color:var(--teal3)}
+.target-item.done-target{border-color:rgba(134,239,172,.3);background:rgba(134,239,172,.05)}
+.target-info{min-width:0}
+.target-name{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.target-sub{font-size:10px;color:var(--text3)}
+.target-progress-wrap{min-width:160px}
+.target-nums{display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-bottom:4px}
+.target-nums strong{font-family:'JetBrains Mono',monospace;color:var(--text)}
+.target-progress-bg{height:5px;background:var(--bg);border-radius:99px;overflow:hidden}
+.target-progress-fill{height:100%;border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.target-controls{display:flex;align-items:center;gap:4px}
+.tctrl{width:26px;height:26px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;cursor:pointer;display:grid;place-items:center;transition:all .2s;line-height:1}
+.tctrl:hover{background:var(--card2);border-color:var(--teal3);color:var(--teal)}
+.tctrl.del:hover{border-color:var(--coral);color:var(--coral)}
+.t-achieved-input{width:52px;background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;text-align:center;padding:4px 3px;outline:none;transition:border-color .2s}
+.t-achieved-input:focus{border-color:var(--teal3)}
+.targets-empty{text-align:center;padding:14px;color:var(--text3);font-size:12px}
+.target-badge{font-size:9px;padding:2px 8px;border-radius:99px;font-weight:700;white-space:nowrap}
+
+/* ── FLOATING WIDGET ── */
+.fw{position:fixed;bottom:80px;right:28px;width:300px;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 48px rgba(0,0,0,.15);z-index:990;transition:transform .3s,opacity .3s;user-select:none}
+.fw.hidden{transform:translateY(20px) scale(.95);opacity:0;pointer-events:none}
+.fw-drag{background:linear-gradient(135deg,var(--teal),var(--teal2));border-radius:16px 16px 0 0;padding:10px 14px;cursor:move;display:flex;align-items:center;justify-content:space-between}
+.fw-title{color:#fff;font-size:11px;font-weight:700;letter-spacing:.5px;display:flex;align-items:center;gap:6px}
+.fw-close{background:rgba(255,255,255,.2);border:none;color:#fff;width:20px;height:20px;border-radius:5px;cursor:pointer;font-size:11px;display:grid;place-items:center}
+.fw-body{padding:12px 14px;max-height:280px;overflow-y:auto}
+.fw-body::-webkit-scrollbar{width:3px}
+.fw-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.fw-summary{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.fw-stat{text-align:center}
+.fw-stat-val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;line-height:1}
+.fw-stat-lbl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.fw-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)}
+.fw-row:last-child{border-bottom:none}
+.fw-row-name{font-size:10px;font-weight:600;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fw-row-pct{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;white-space:nowrap;min-width:36px;text-align:right}
+.fw-mini-bar{height:3px;background:var(--bg3);border-radius:99px;overflow:hidden;width:50px;flex-shrink:0}
+.fw-mini-fill{height:100%;border-radius:99px;transition:width .5s}
+.fw-toggle{position:fixed;bottom:80px;right:28px;width:46px;height:46px;background:linear-gradient(135deg,var(--teal),var(--teal2));border:none;border-radius:12px;color:#fff;font-size:18px;cursor:pointer;box-shadow:0 4px 20px rgba(13,148,136,.35);z-index:989;display:grid;place-items:center;transition:all .2s}
+.fw-toggle:hover{transform:scale(1.08)}
+.fw-toggle-badge{position:absolute;top:-5px;right:-5px;background:var(--coral);color:#fff;border-radius:99px;font-size:9px;font-weight:700;padding:2px 5px;min-width:16px;text-align:center;line-height:1.4}
+body.dark .fw{background:var(--card);border-color:var(--border)}
+
+/* ── FOCUS GOAL PRESETS ── */
+.goal-preset-btn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;transition:all .2s}
+.goal-preset-btn:hover{border-color:var(--teal3);color:var(--teal)}
+.goal-preset-btn.active{background:linear-gradient(135deg,var(--teal),var(--teal2));border-color:transparent;color:#fff}
+
+/* ── TEST BLOCK ── */
+.test-block-card{padding:24px}
+.test-list{display:flex;flex-direction:column;gap:8px;min-height:40px}
+.test-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg3);border-radius:10px;border:1px solid var(--border);transition:background .2s}
+.test-item:hover{background:var(--card2)}
+.test-item-left{display:flex;align-items:center;gap:10px}
+.test-item-name{font-size:12px;font-weight:600;color:var(--text)}
+.test-item-date{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace}
+.test-item-status{font-size:10px;padding:3px 9px;border-radius:5px;font-weight:700}
+.test-status-planned{background:rgba(14,165,233,.12);color:var(--sky)}
+.test-status-done{background:rgba(22,163,74,.12);color:var(--sage)}
+.test-status-skipped{background:rgba(100,116,139,.1);color:var(--text2)}
+.test-item-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:4px;border-radius:5px;transition:all .2s}
+.test-item-del:hover{color:var(--coral);background:rgba(225,29,72,.1)}
+
+/* ── SCORE LOG ── */
+.score-row{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg3);border-radius:12px;border:1px solid var(--border);transition:background .2s}
+.score-row:hover{background:var(--card2)}
+.score-code-badge{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;padding:5px 12px;border-radius:7px;min-width:46px;text-align:center}
+.score-name{font-size:12px;font-weight:600;color:var(--text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.score-date-lbl{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;white-space:nowrap}
+.score-pct-bar{display:flex;align-items:center;gap:8px;min-width:120px}
+.score-pct-num{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;min-width:42px;text-align:right}
+.score-del-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:15px;padding:4px;border-radius:6px;transition:all .2s;flex-shrink:0}
+.score-del-btn:hover{color:var(--coral);background:rgba(225,29,72,.1)}
 </style>
 </head>
 <body>
+
+<!-- FLOATING TARGETS WIDGET -->
+<div class="fw hidden" id="fw">
+  <div class="fw-drag" id="fw-drag">
+    <div class="fw-title">🎯 Today's Targets</div>
+    <button class="fw-close" onclick="hideWidget()">✕</button>
+  </div>
+  <div class="fw-body">
+    <div class="fw-summary" id="fw-summary">
+      <div class="fw-stat"><div class="fw-stat-val" id="fw-done" style="color:var(--sage)">0</div><div class="fw-stat-lbl">Done</div></div>
+      <div class="fw-stat"><div class="fw-stat-val" id="fw-pct" style="color:var(--teal)">0%</div><div class="fw-stat-lbl">Overall</div></div>
+      <div class="fw-stat"><div class="fw-stat-val" id="fw-rem" style="color:var(--coral)">0</div><div class="fw-stat-lbl">Remaining</div></div>
+    </div>
+    <div id="fw-list"></div>
+    <div id="fw-empty" style="text-align:center;padding:14px;font-size:11px;color:var(--text3);display:none">No targets yet — set one above! 🎯</div>
+  </div>
+</div>
+<button class="fw-toggle" id="fw-toggle-btn" onclick="toggleWidget()" title="Toggle Targets Widget" style="display:none">
+  🎯
+  <span class="fw-toggle-badge" id="fw-badge" style="display:none"></span>
+</button>
 
 <!-- SVG gradients -->
 <svg width="0" height="0" style="position:absolute">
@@ -375,6 +505,96 @@ body.dark .member-row{background:rgba(255,255,255,.05)}
 
 <!-- Toast -->
 <div class="toast" id="toast"><span id="toast-msg">Saved!</span></div>
+
+<!-- SET TARGET MODAL -->
+<div class="overlay" id="target-overlay">
+  <div class="modal" style="width:500px;max-height:90vh;overflow-y:auto">
+    <button class="modal-close" onclick="closeModal('target-overlay')">✕</button>
+    <h2>🎯 Set Daily Target</h2>
+    <p>Define what you want to achieve today — step by step.</p>
+
+    <!-- Step Indicator -->
+    <div class="step-indicator">
+      <div class="step-dot active" id="sd1">1</div>
+      <div class="step-line" id="sl1"></div>
+      <div class="step-dot pending" id="sd2">2</div>
+      <div class="step-line" id="sl2"></div>
+      <div class="step-dot pending" id="sd3">3</div>
+    </div>
+
+    <!-- STEP 1: Subject -->
+    <div class="step-panel active" id="step-1">
+      <div class="step-title">📚 Step 1 — Choose Subject</div>
+      <div class="subj-grid" id="subj-grid"></div>
+    </div>
+
+    <!-- STEP 2: Source -->
+    <div class="step-panel" id="step-2">
+      <div class="step-title">📂 Step 2 — Choose Study Source</div>
+      <div class="source-list" id="source-list"></div>
+      <div class="source-add-row">
+        <input class="form-input" id="new-source-inp" placeholder="Add custom source…" style="flex:1;font-size:12px;padding:7px 12px">
+        <button class="btn btn-primary" style="flex:0 0 auto;padding:7px 14px;font-size:12px" onclick="addCustomSource()">+ Add</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Task + Target -->
+    <div class="step-panel" id="step-3">
+      <div class="step-title">✏️ Step 3 — Task &amp; Target</div>
+      <div class="form-group">
+        <label class="form-label">Task Description <span style="color:var(--text3);font-weight:400;text-transform:none">(what you'll do today)</span></label>
+        <input class="form-input" id="target-task-inp" placeholder="e.g. Complete aldehyde chapter problems">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Target Type</label>
+        <div class="target-type-grid">
+          <div class="ttype-btn selected" data-type="questions" onclick="selectTargetType(this,'questions')"><span class="ttype-icon">❓</span>Questions</div>
+          <div class="ttype-btn" data-type="time" onclick="selectTargetType(this,'time')"><span class="ttype-icon">⏱</span>Minutes</div>
+          <div class="ttype-btn" data-type="tasks" onclick="selectTargetType(this,'tasks')"><span class="ttype-icon">☑️</span>Topics</div>
+          <div class="ttype-btn" data-type="pages" onclick="selectTargetType(this,'pages')"><span class="ttype-icon">📄</span>Pages</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="target-val-label">Target Value (number of questions)</label>
+        <input class="form-input" type="number" id="target-val-inp" placeholder="e.g. 100" min="1" style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700">
+      </div>
+    </div>
+
+    <!-- Nav Buttons -->
+    <div class="modal-btns" style="margin-top:20px">
+      <button class="btn btn-secondary" id="target-back-btn" onclick="targetStep(-1)" style="display:none">← Back</button>
+      <button class="btn btn-secondary" onclick="closeModal('target-overlay')">Cancel</button>
+      <button class="btn btn-primary" id="target-next-btn" onclick="targetStep(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT TARGET MODAL -->
+<div class="overlay" id="edit-target-overlay">
+  <div class="modal" style="width:420px">
+    <button class="modal-close" onclick="closeModal('edit-target-overlay')">✕</button>
+    <h2>✏️ Edit Target</h2>
+    <input type="hidden" id="edit-target-id">
+    <div class="form-group">
+      <label class="form-label">Task Description</label>
+      <input class="form-input" id="edit-target-task">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Attempted / Done</label>
+        <input class="form-input" type="number" id="edit-target-achieved" min="0" style="font-family:'JetBrains Mono',monospace">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Total Target</label>
+        <input class="form-input" type="number" id="edit-target-value" min="1" style="font-family:'JetBrains Mono',monospace">
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" onclick="closeModal('edit-target-overlay')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEditTarget()">💾 Save Changes</button>
+    </div>
+  </div>
+</div>
 
 <!-- EDIT MODAL -->
 <div class="overlay" id="edit-overlay">
@@ -538,9 +758,17 @@ body.dark .member-row{background:rgba(255,255,255,.05)}
         <div><div class="chip-val" id="header-focus" style="color:var(--sage)">00:00:00</div><div style="font-size:9px;color:var(--text2);font-family:DM Sans,sans-serif">Focus Session</div></div>
       </div>
       <div class="today-badge" id="today-date">Today</div>
+      <div class="chip" id="focus-goal-chip" style="display:none;border-color:rgba(13,148,136,.3)">
+        <div class="chip-dot" style="background:var(--teal)"></div>
+        <div><div class="chip-val" id="hdr-focus-goal-pct" style="color:var(--teal)">0%</div><div style="font-size:9px;color:var(--text2);font-family:DM Sans,sans-serif">of <span id="hdr-focus-goal-hrs">10</span>h goal</div></div>
+      </div>
+      <button class="hdr-btn" onclick="switchTab('focus')" style="border-color:rgba(13,148,136,.35);color:var(--teal)">⏳ Focus Goal</button>
+      <button class="hdr-btn" onclick="switchTab('tests')" style="border-color:rgba(109,40,217,.35);color:var(--lavender)">📋 Tests</button>
+      <button class="hdr-btn" onclick="switchTab('scores')" style="border-color:rgba(225,29,72,.3);color:var(--coral)">🏆 Scores</button>
       <button class="hdr-btn" onclick="openModal('group-overlay')">👥 <span id="group-code-lbl">Group</span></button>
       <button class="hdr-btn" onclick="openModal('journal-overlay')">📝 Journal</button>
       <button class="hdr-btn" id="dark-btn" onclick="toggleDark()">🌙 Dark</button>
+      <button class="hdr-btn" onclick="openSetTarget()" style="background:linear-gradient(135deg,var(--teal),var(--teal2));border-color:transparent;color:#fff;font-weight:700">🎯 Set Target</button>
     </div>
   </div>
 </header>
@@ -552,11 +780,32 @@ body.dark .member-row{background:rgba(255,255,255,.05)}
   <button class="tab-btn active" id="tab-btn-q" onclick="switchTab('q')">📊 Q Practice &amp; Focus</button>
   <button class="tab-btn" id="tab-btn-ncert" onclick="switchTab('ncert')">📖 NCERT Chapter Tracker</button>
   <button class="tab-btn" id="tab-btn-rapid" onclick="switchTab('rapid')">⚡ Rapid Revision Tracker</button>
+  <button class="tab-btn" id="tab-btn-focus" onclick="switchTab('focus')" style="background:linear-gradient(135deg,rgba(13,148,136,.15),rgba(13,148,136,.05));border-color:rgba(13,148,136,.3)">⏳ Daily Focus Goal</button>
+  <button class="tab-btn" id="tab-btn-tests" onclick="switchTab('tests')" style="background:linear-gradient(135deg,rgba(109,40,217,.12),rgba(109,40,217,.04));border-color:rgba(109,40,217,.3)">📋 Test Planner</button>
+  <button class="tab-btn" id="tab-btn-scores" onclick="switchTab('scores')" style="background:linear-gradient(135deg,rgba(225,29,72,.1),rgba(225,29,72,.03));border-color:rgba(225,29,72,.25)">🏆 Score Tracker</button>
 </div>
 
 <!-- TAB 1: Q PRACTICE & FOCUS -->
 <div id="tab-q" class="tab-panel active">
 <div class="notif-bar">💡 <strong>Right-click any time slot</strong> to edit · <strong>🎙 Click mic</strong> on any subject to enter by voice · Group leaderboard neeche dekho 👇</div>
+
+<!-- TODAY'S TARGETS BAR -->
+<div class="targets-bar" id="targets-bar">
+  <div class="targets-bar-header">
+    <div class="targets-bar-title">
+      <span style="width:3px;height:18px;background:var(--teal);border-radius:3px;display:inline-block"></span>
+      🎯 Today's Targets
+      <span id="targets-summary-badge" style="font-size:10px;color:var(--text3);font-weight:500"></span>
+    </div>
+    <div class="targets-bar-actions">
+      <button onclick="openSetTarget()" style="background:linear-gradient(135deg,var(--teal),var(--teal2));border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:700;padding:6px 14px;cursor:pointer;display:flex;align-items:center;gap:5px">+ New Target</button>
+      <button onclick="toggleWidget()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text2);font-size:11px;font-weight:600;padding:6px 10px;cursor:pointer" title="Float widget">📌</button>
+    </div>
+  </div>
+  <div class="targets-list" id="targets-list">
+    <div class="targets-empty" id="targets-empty">No targets set for today — click <strong>+ New Target</strong> to get started! 🚀</div>
+  </div>
+</div>
 
 <!-- Stats -->
 <div class="top-row">
@@ -860,7 +1109,334 @@ body.dark .member-row{background:rgba(255,255,255,.05)}
   </div>
 </div><!-- /tab-rapid -->
 
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 4: DAILY FOCUS GOAL                                -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="tab-focus" class="tab-panel">
+  <div class="notif-bar" style="border-color:rgba(13,148,136,.3);background:rgba(13,148,136,.07);color:#0f766e">⏳ <strong>Daily Focus Goal</strong> — Apna daily padhai ka target set karo (e.g. 10 ghante). Focus timer se automatically track hoga!</div>
+
+  <!-- Goal Setup Card -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+    <div class="card" style="padding:32px">
+      <div class="section-title"><span style="background:var(--teal)"></span>🎯 Aaj Ka Focus Goal Set Karo</div>
+      <div style="margin-bottom:20px">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:10px;font-weight:600">Kitne ghante padhna hai aaj? (hours mein)</div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;gap:8px;flex-wrap:wrap" id="goal-quick-btns">
+            <button onclick="setFocusGoal(6)"  class="goal-preset-btn">6h</button>
+            <button onclick="setFocusGoal(8)"  class="goal-preset-btn">8h</button>
+            <button onclick="setFocusGoal(10)" class="goal-preset-btn active">10h</button>
+            <button onclick="setFocusGoal(12)" class="goal-preset-btn">12h</button>
+            <button onclick="setFocusGoal(14)" class="goal-preset-btn">14h</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="number" id="custom-goal-inp" placeholder="Custom" min="1" max="20" style="width:80px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;text-align:center;padding:8px 6px;outline:none" oninput="setFocusGoal(parseInt(this.value)||10)">
+            <span style="font-size:12px;color:var(--text2)">ghante</span>
+          </div>
+        </div>
+      </div>
+      <!-- Big Ring -->
+      <div style="text-align:center;padding:20px 0">
+        <div style="position:relative;width:200px;height:200px;margin:0 auto">
+          <svg width="200" height="200" viewBox="0 0 200 200" style="transform:rotate(-90deg)">
+            <defs><linearGradient id="goalGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#0d9488"/><stop offset="100%" style="stop-color:#0f766e"/></linearGradient></defs>
+            <circle cx="100" cy="100" r="85" fill="none" stroke="var(--bg3)" stroke-width="14"/>
+            <circle cx="100" cy="100" r="85" fill="none" stroke="url(#goalGrad)" stroke-width="14" stroke-linecap="round"
+              stroke-dasharray="534" id="goal-ring" stroke-dashoffset="534" style="transition:stroke-dashoffset 1s ease"/>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;color:var(--teal);line-height:1" id="goal-pct-big">0%</div>
+            <div style="font-size:11px;color:var(--text2);margin-top:4px" id="goal-time-done">0h 0m done</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px" id="goal-time-left">0h left</div>
+          </div>
+        </div>
+        <div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <div style="background:var(--bg3);border-radius:10px;padding:12px;text-align:center">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--teal)" id="goal-done-mins">0</div>
+            <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px">Min Done</div>
+          </div>
+          <div style="background:var(--bg3);border-radius:10px;padding:12px;text-align:center">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--amber)" id="goal-target-hrs">10</div>
+            <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px">Target Hrs</div>
+          </div>
+          <div style="background:var(--bg3);border-radius:10px;padding:12px;text-align:center">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--sage)" id="goal-streak-days">0</div>
+            <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px">Goal Streak</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7-day Goal History -->
+    <div class="card" style="padding:28px">
+      <div class="section-title"><span style="background:var(--amber)"></span>📅 Last 7 Days — Focus History</div>
+      <div id="focus-goal-history" style="display:flex;flex-direction:column;gap:10px;margin-top:8px"></div>
+      <div style="margin-top:20px;padding:14px;background:var(--bg3);border-radius:12px;border:1px solid var(--border)">
+        <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:6px">💡 Tips for 10+ Hour Days</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">
+          🌅 <strong>Subah uthte hi</strong> — 30 min padho bina phone ke<br>
+          🍅 <strong>Pomodoro use karo</strong> — 25 min focus + 5 min break<br>
+          📵 <strong>Phone band</strong> — session ke during alag rakh do<br>
+          🥤 <strong>Hydrated raho</strong> — pani peete raho<br>
+          🌙 <strong>10 PM tak</strong> — raat ko force mat karo, sleep important hai
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Monthly Heatmap -->
+  <div class="card" style="padding:24px;margin-bottom:20px">
+    <div class="section-title"><span style="background:var(--teal)"></span>🗓️ Monthly Focus Heatmap — Har Din Ka Record</div>
+    <div id="focus-monthly-heatmap" style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:12px"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:10px;color:var(--text3)">
+      <span>Less</span>
+      <div style="width:14px;height:14px;border-radius:4px;background:var(--bg3);border:1px solid var(--border)"></div>
+      <div style="width:14px;height:14px;border-radius:4px;background:rgba(13,148,136,.3)"></div>
+      <div style="width:14px;height:14px;border-radius:4px;background:rgba(13,148,136,.6)"></div>
+      <div style="width:14px;height:14px;border-radius:4px;background:var(--teal)"></div>
+      <span>More</span>
+    </div>
+  </div>
+</div><!-- /tab-focus -->
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 5: TEST PLANNER                                     -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="tab-tests" class="tab-panel">
+  <div class="notif-bar" style="border-color:rgba(109,40,217,.3);background:rgba(109,40,217,.07);color:#6d28d9">📋 <strong>Test Planner</strong> — Har test block ko unique code milega (C1, C2…). Date set karo, plan karo, aur Score Tracker pe jaake result save karo!</div>
+
+  <!-- 4 Blocks -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+    <!-- Block 1 -->
+    <div class="card test-block-card" style="border-left:4px solid var(--teal)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;border-radius:10px;padding:8px 16px;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;letter-spacing:2px">C1</div>
+          <div>
+            <div style="font-size:14px;font-weight:700" id="block1-name">Block 1 — Physics</div>
+            <div style="font-size:10px;color:var(--text2)">Test Block Code: <strong style="color:var(--teal);font-family:JetBrains Mono,monospace">C1</strong></div>
+          </div>
+        </div>
+        <button onclick="openTestForm(1)" style="background:linear-gradient(135deg,var(--teal),var(--teal2));border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:700;padding:7px 14px;cursor:pointer">+ Add Test</button>
+      </div>
+      <div id="block1-tests" class="test-list"></div>
+      <div style="margin-top:12px;padding:10px;background:var(--bg3);border-radius:9px;border:1px solid var(--border)">
+        <div style="font-size:10px;color:var(--text2);font-weight:600;margin-bottom:6px">Block 1 contains:</div>
+        <div style="font-size:11px;color:var(--text)">Physics And Measurement · Kinematics · Laws of Motion · Work, Energy & Power · Rotational Motion</div>
+      </div>
+    </div>
+
+    <!-- Block 2 -->
+    <div class="card test-block-card" style="border-left:4px solid var(--sky)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="background:linear-gradient(135deg,var(--sky),#0284c7);color:#fff;border-radius:10px;padding:8px 16px;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;letter-spacing:2px">C2</div>
+          <div>
+            <div style="font-size:14px;font-weight:700" id="block2-name">Block 2 — Chemistry</div>
+            <div style="font-size:10px;color:var(--text2)">Test Block Code: <strong style="color:var(--sky);font-family:JetBrains Mono,monospace">C2</strong></div>
+          </div>
+        </div>
+        <button onclick="openTestForm(2)" style="background:linear-gradient(135deg,var(--sky),#0284c7);border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:700;padding:7px 14px;cursor:pointer">+ Add Test</button>
+      </div>
+      <div id="block2-tests" class="test-list"></div>
+      <div style="margin-top:12px;padding:10px;background:var(--bg3);border-radius:9px;border:1px solid var(--border)">
+        <div style="font-size:10px;color:var(--text2);font-weight:600;margin-bottom:6px">Block 2 contains:</div>
+        <div style="font-size:11px;color:var(--text)">Solutions · Organic Chemistry Basics · Redox · Electrochemistry · Hydrocarbons · Coordination Compounds</div>
+      </div>
+    </div>
+
+    <!-- Block 3 -->
+    <div class="card test-block-card" style="border-left:4px solid var(--sage)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="background:linear-gradient(135deg,var(--sage),#15803d);color:#fff;border-radius:10px;padding:8px 16px;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;letter-spacing:2px">C3</div>
+          <div>
+            <div style="font-size:14px;font-weight:700" id="block3-name">Block 3 — Biology</div>
+            <div style="font-size:10px;color:var(--text2)">Test Block Code: <strong style="color:var(--sage);font-family:JetBrains Mono,monospace">C3</strong></div>
+          </div>
+        </div>
+        <button onclick="openTestForm(3)" style="background:linear-gradient(135deg,var(--sage),#15803d);border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:700;padding:7px 14px;cursor:pointer">+ Add Test</button>
+      </div>
+      <div id="block3-tests" class="test-list"></div>
+      <div style="margin-top:12px;padding:10px;background:var(--bg3);border-radius:9px;border:1px solid var(--border)">
+        <div style="font-size:10px;color:var(--text2);font-weight:600;margin-bottom:6px">Block 3 contains:</div>
+        <div style="font-size:11px;color:var(--text)">Cell Unit of Life · Cell Cycle · Living World · Biological Classification · Plant Kingdom · Morphology</div>
+      </div>
+    </div>
+
+    <!-- Block 4 -->
+    <div class="card test-block-card" style="border-left:4px solid var(--coral)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="background:linear-gradient(135deg,var(--coral),#be123c);color:#fff;border-radius:10px;padding:8px 16px;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;letter-spacing:2px">C4</div>
+          <div>
+            <div style="font-size:14px;font-weight:700" id="block4-name">Block 4 — Full NEET</div>
+            <div style="font-size:10px;color:var(--text2)">Test Block Code: <strong style="color:var(--coral);font-family:JetBrains Mono,monospace">C4</strong></div>
+          </div>
+        </div>
+        <button onclick="openTestForm(4)" style="background:linear-gradient(135deg,var(--coral),#be123c);border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:700;padding:7px 14px;cursor:pointer">+ Add Test</button>
+      </div>
+      <div id="block4-tests" class="test-list"></div>
+      <div style="margin-top:12px;padding:10px;background:var(--bg3);border-radius:9px;border:1px solid var(--border)">
+        <div style="font-size:10px;color:var(--text2);font-weight:600;margin-bottom:6px">Block 4 contains:</div>
+        <div style="font-size:11px;color:var(--text)">Full NEET Part Tests · All subjects combined · Animal Kingdom · Breathing · Body Fluids · Reproductive Health · Evolution</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Test Summary -->
+  <div class="card" style="padding:24px;margin-bottom:20px">
+    <div class="section-title"><span style="background:var(--lavender)"></span>📊 Test Plan Summary</div>
+    <div id="test-plan-summary" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:12px"></div>
+  </div>
+</div><!-- /tab-tests -->
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 6: SCORE TRACKER                                    -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="tab-scores" class="tab-panel">
+  <div class="notif-bar" style="border-color:rgba(225,29,72,.25);background:rgba(225,29,72,.05);color:#be123c">🏆 <strong>Score Tracker</strong> — Test ka result yahan save karo. Date, code, aur score — sab ek jagah. Progress graph bhi dekhte raho!</div>
+
+  <!-- Add Score + Stats Row -->
+  <div style="display:grid;grid-template-columns:400px 1fr;gap:20px;margin-bottom:20px">
+    <!-- Add Score Card -->
+    <div class="card" style="padding:28px">
+      <div class="section-title"><span style="background:var(--coral)"></span>➕ Score Add Karo</div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px">
+        <div>
+          <label style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;display:block">Test Code</label>
+          <select id="score-code-sel" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;padding:10px 12px;outline:none">
+            <option value="">-- Code select karo --</option>
+            <option value="C1">C1 — Block 1 (Physics)</option>
+            <option value="C2">C2 — Block 2 (Chemistry)</option>
+            <option value="C3">C3 — Block 3 (Biology)</option>
+            <option value="C4">C4 — Block 4 (Full NEET)</option>
+            <option value="PT">PT — Part Test</option>
+            <option value="MT">MT — Mock Test</option>
+            <option value="FT">FT — Full Test</option>
+          </select>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div>
+            <label style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;display:block">Score (out of)</label>
+            <div style="display:flex;gap:6px;align-items:center">
+              <input type="number" id="score-marks" placeholder="360" min="0" style="width:80px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;text-align:center;padding:9px 6px;outline:none">
+              <span style="color:var(--text2);font-size:13px">/</span>
+              <input type="number" id="score-total" placeholder="720" min="1" style="width:70px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;text-align:center;padding:9px 6px;outline:none">
+            </div>
+          </div>
+          <div>
+            <label style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;display:block">Date</label>
+            <input type="date" id="score-date" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:12px;padding:9px 10px;outline:none">
+          </div>
+        </div>
+        <div>
+          <label style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;display:block">Test Name / Note (optional)</label>
+          <input type="text" id="score-name" placeholder="e.g. Physics Part Test 1" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:12px;padding:9px 12px;outline:none">
+        </div>
+        <button onclick="addScore()" style="background:linear-gradient(135deg,var(--coral),#be123c);border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:700;padding:12px;cursor:pointer;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">🏆 Save Score</button>
+      </div>
+    </div>
+
+    <!-- Score Stats -->
+    <div class="card" style="padding:28px">
+      <div class="section-title"><span style="background:var(--sage)"></span>📈 Performance Stats</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:8px" id="score-stat-cards">
+        <div style="background:var(--bg3);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border)">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--teal)" id="ss-total">0</div>
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-top:3px">Tests</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border)">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--sage)" id="ss-best">—</div>
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-top:3px">Best %</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border)">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--amber)" id="ss-avg">—</div>
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-top:3px">Avg %</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border)">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--coral)" id="ss-trend">—</div>
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-top:3px">Trend</div>
+        </div>
+      </div>
+      <!-- Mini bar chart -->
+      <div style="margin-top:20px">
+        <div style="font-size:11px;color:var(--text2);font-weight:600;margin-bottom:10px">Recent Scores</div>
+        <div id="score-mini-chart" style="display:flex;align-items:flex-end;gap:6px;height:70px;padding-bottom:4px"></div>
+        <div style="display:flex;gap:6px;margin-top:4px" id="score-mini-labels" style="font-size:9px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Score Log Table -->
+  <div class="card" style="padding:24px;margin-bottom:20px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div class="section-title" style="margin-bottom:0"><span style="background:var(--lavender)"></span>📋 Score Log — Saare Results</div>
+      <div style="display:flex;gap:8px">
+        <select id="score-filter-code" onchange="renderScores()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:11px;padding:6px 10px;outline:none">
+          <option value="">All Codes</option>
+          <option value="C1">C1</option><option value="C2">C2</option>
+          <option value="C3">C3</option><option value="C4">C4</option>
+          <option value="PT">PT</option><option value="MT">MT</option><option value="FT">FT</option>
+        </select>
+        <select id="score-sort" onchange="renderScores()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:11px;padding:6px 10px;outline:none">
+          <option value="date-desc">Newest First</option>
+          <option value="date-asc">Oldest First</option>
+          <option value="score-desc">Highest Score</option>
+          <option value="score-asc">Lowest Score</option>
+        </select>
+      </div>
+    </div>
+    <div id="score-table-container">
+      <div id="score-empty-msg" style="text-align:center;padding:40px;color:var(--text3);font-size:13px">
+        Abhi koi score save nahi hua. Upar se pehla result add karo! 🚀
+      </div>
+      <div id="score-rows" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+  </div>
+</div><!-- /tab-scores -->
+
 </div><!-- /main -->
+
+<!-- TEST FORM MODAL -->
+<div class="overlay" id="test-form-overlay">
+  <div class="modal" style="width:460px">
+    <button class="modal-close" onclick="closeModal('test-form-overlay')">✕</button>
+    <h2 id="test-form-title">📋 Test Add Karo</h2>
+    <p>Block ke liye ek test plan karo — date, time, aur subjects.</p>
+    <input type="hidden" id="test-form-block">
+    <div class="form-group">
+      <label class="form-label">Test Name</label>
+      <input class="form-input" id="test-form-name" placeholder="e.g. C1 Part Test 1">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input type="date" class="form-input" id="test-form-date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Duration (min)</label>
+        <input type="number" class="form-input" id="test-form-dur" value="180" min="30" style="font-family:'JetBrains Mono',monospace">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <select class="form-input" id="test-form-status">
+        <option value="planned">📅 Planned</option>
+        <option value="done">✅ Completed</option>
+        <option value="skipped">⏭ Skipped</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes (optional)</label>
+      <input class="form-input" id="test-form-notes" placeholder="Focus areas, topics…">
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" onclick="closeModal('test-form-overlay')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTestPlan()">📋 Save Test</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ══════════════════════════════════════════
@@ -1331,6 +1907,10 @@ function updateFocusStats(){
   document.getElementById('fs-sessions').textContent=Object.keys(S.focusToday||{}).length;
   document.getElementById('focus-session-lbl').textContent=getFocusSecs()>=3600?'1+ hr session':'Session';
   updateStreak();
+  // Update goal chip in header
+  updateHeaderGoalChip();
+  // If focus goal tab active, refresh it
+  if(document.getElementById('tab-focus')?.classList.contains('active'))renderFocusGoal();
 }
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&focusRunning)updateFocusUI();});
 function fmtHM(s){const h=Math.floor(s/3600);const m=Math.floor(s%3600/60);return h>0?`${h}h ${m}m`:`${m}m`}
@@ -1751,18 +2331,45 @@ if(!S.rapidTracker)S.rapidTracker={};
 
 // ── TAB SWITCHING ──
 function switchTab(tab){
-  ['q','ncert','rapid'].forEach(t=>{
-    document.getElementById('tab-'+t).classList.toggle('active',t===tab);
+  ['q','ncert','rapid','focus','tests','scores'].forEach(t=>{
+    const panel=document.getElementById('tab-'+t);
+    if(panel)panel.classList.toggle('active',t===tab);
     const btn=document.getElementById('tab-btn-'+t);
-    btn.classList.remove('active','active-ncert','active-rapid');
-    if(t===tab){
-      if(tab==='ncert')btn.classList.add('active-ncert');
-      else if(tab==='rapid')btn.classList.add('active-rapid');
-      else btn.classList.add('active');
+    if(btn){
+      btn.classList.remove('active','active-ncert','active-rapid');
+      if(t===tab){
+        if(tab==='ncert')btn.classList.add('active-ncert');
+        else if(tab==='rapid')btn.classList.add('active-rapid');
+        else btn.classList.add('active');
+      }
     }
   });
   if(tab==='ncert'){renderAllTrackers('ncert');renderTrackerStats('ncert');}
   if(tab==='rapid'){renderAllTrackers('rapid');renderTrackerStats('rapid');}
+  if(tab==='focus'){
+    // initialise preset buttons
+    document.querySelectorAll('.goal-preset-btn').forEach(b=>{
+      b.classList.toggle('active',parseInt(b.textContent)===S.focusGoalHrs);
+    });
+    const ci=document.getElementById('custom-goal-inp');
+    if(ci)ci.value=S.focusGoalHrs;
+    renderFocusGoal();
+  }
+  if(tab==='tests'){
+    // Ensure summary grid has 4 children
+    const sum=document.getElementById('test-plan-summary');
+    if(sum&&!sum.children.length){
+      sum.innerHTML='<div></div><div></div><div></div><div></div>';
+    }
+    renderTestPlanner();
+  }
+  if(tab==='scores'){
+    const sd=document.getElementById('score-date');
+    if(sd&&!sd.value)sd.value=new Date().toISOString().split('T')[0];
+    renderScores();
+  }
+  // scroll to top of main on tab switch
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 // ── TRACKER RENDER ──
@@ -1849,27 +2456,704 @@ function renderTrackerStats(mode){
 }
 
 // ══════════════════════════════════════════
-// INIT
+// SET TARGET SYSTEM
+// ══════════════════════════════════════════
+const TARGET_SUBJECTS=[
+  {key:'bio12',   icon:'🧬', label:'Biology 12',          color:'#86efac'},
+  {key:'bio11s',  icon:'🌿', label:'Biology 11',           color:'#6ee7b7'},
+  {key:'phychem', icon:'⚗️', label:'Physical Chemistry',   color:'#7dd3fc'},
+  {key:'orgchem', icon:'🔗', label:'Organic Chemistry',    color:'#fde68a'},
+  {key:'inorg',   icon:'🧪', label:'Inorganic Chemistry',  color:'#fdba74'},
+  {key:'physics', icon:'⚡', label:'Physics PYQ',           color:'#fbbf24'},
+  {key:'botany',  icon:'🌱', label:'Botany',               color:'#4ade80'},
+  {key:'zoology', icon:'🦁', label:'Zoology',              color:'#f9a8d4'},
+];
+const DEFAULT_SOURCES={
+  bio12:   ['NCERT','Lectures','Notes','Summaries','Question Practice','PYQs','Test Series'],
+  bio11s:  ['NCERT','Lectures','Notes','Rapid Revision','Question Practice'],
+  phychem: ['NCERT','Lectures','Notes','Question Practice','PYQs','Test Series'],
+  orgchem: ['NCERT','Lectures','Notes','Named Reactions','Question Practice','PYQs'],
+  inorg:   ['NCERT','Lectures','Notes','Question Practice','PYQs'],
+  physics: ['NCERT','PYQ Papers','Concepts Review','Question Practice','Test Series'],
+  botany:  ['NCERT','Lectures','Notes','Rapid Revision','Question Practice'],
+  zoology: ['NCERT','Lectures','Notes','Rapid Revision','Question Practice'],
+};
+const TARGET_TYPE_LABELS={questions:'Questions',time:'Minutes',tasks:'Topics',pages:'Pages'};
+
+// State init
+if(!S.targets)S.targets=[];
+if(!S.customSources)S.customSources={};
+
+let _tStep=1, _tSubj=null, _tSource=null, _tType='questions';
+
+function openSetTarget(){
+  _tStep=1; _tSubj=null; _tSource=null; _tType='questions';
+  _renderStepIndicator();
+  _renderSubjGrid();
+  document.getElementById('target-task-inp').value='';
+  document.getElementById('target-val-inp').value='';
+  document.querySelectorAll('.ttype-btn').forEach(b=>b.classList.toggle('selected',b.dataset.type==='questions'));
+  _updateTargetNavBtns();
+  openModal('target-overlay');
+}
+
+function _renderSubjGrid(){
+  document.getElementById('subj-grid').innerHTML=TARGET_SUBJECTS.map(s=>`
+    <button class="subj-btn ${_tSubj&&_tSubj.key===s.key?'selected':''}" onclick="selectTargetSubj(${JSON.stringify(s).replace(/"/g,'&quot;')})">
+      <span style="font-size:18px">${s.icon}</span>
+      <span>${s.label}</span>
+    </button>`).join('');
+}
+
+function selectTargetSubj(s){
+  _tSubj=s;
+  document.querySelectorAll('.subj-btn').forEach(b=>b.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+}
+
+function _renderSourceList(){
+  const key=_tSubj.key;
+  const base=DEFAULT_SOURCES[key]||['NCERT','Lectures','Notes','Question Practice'];
+  const custom=S.customSources[key]||[];
+  const all=[...new Set([...base,...custom])];
+  document.getElementById('source-list').innerHTML=all.map(src=>`
+    <div class="source-chip ${_tSource===src?'selected':''}" onclick="selectSource('${src.replace(/'/g,"\\'")}')">
+      ${src}
+      ${custom.includes(src)?`<button class="chip-del" onclick="removeSource(event,'${key}','${src.replace(/'/g,"\\'")}')">✕</button>`:''}
+    </div>`).join('');
+  document.getElementById('new-source-inp').value='';
+}
+
+function selectSource(src){
+  _tSource=src;
+  document.querySelectorAll('.source-chip').forEach(c=>{
+    c.classList.toggle('selected', c.childNodes[0].textContent.trim()===src || c.textContent.trim().startsWith(src));
+  });
+}
+
+function addCustomSource(){
+  const inp=document.getElementById('new-source-inp');
+  const val=inp.value.trim();
+  if(!val||!_tSubj)return;
+  if(!S.customSources[_tSubj.key])S.customSources[_tSubj.key]=[];
+  if(!S.customSources[_tSubj.key].includes(val)){
+    S.customSources[_tSubj.key].push(val);
+    saveState(S);
+  }
+  _tSource=val;
+  _renderSourceList();
+  // re-select
+  document.querySelectorAll('.source-chip').forEach(c=>{
+    c.classList.toggle('selected', c.childNodes[0].textContent.trim()===val);
+  });
+  showToast('✅ Source added: '+val);
+}
+
+function removeSource(e,key,src){
+  e.stopPropagation();
+  if(!S.customSources[key])return;
+  S.customSources[key]=S.customSources[key].filter(s=>s!==src);
+  saveState(S);
+  if(_tSource===src)_tSource=null;
+  _renderSourceList();
+}
+
+function selectTargetType(el,type){
+  _tType=type;
+  document.querySelectorAll('.ttype-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  const labels={questions:'Target Value (number of questions)',time:'Target Value (minutes)',tasks:'Target Value (topics/tasks)',pages:'Target Value (pages)'};
+  document.getElementById('target-val-label').textContent=labels[type]||'Target Value';
+}
+
+function _renderStepIndicator(){
+  [1,2,3].forEach(n=>{
+    const dot=document.getElementById('sd'+n);
+    dot.classList.remove('active','done','pending');
+    if(n<_tStep)dot.classList.add('done');
+    else if(n===_tStep)dot.classList.add('active');
+    else dot.classList.add('pending');
+  });
+  [1,2].forEach(n=>{
+    const line=document.getElementById('sl'+n);
+    line.classList.toggle('done',n<_tStep);
+  });
+  [1,2,3].forEach(n=>{
+    document.getElementById('step-'+n).classList.toggle('active',n===_tStep);
+  });
+}
+
+function _updateTargetNavBtns(){
+  document.getElementById('target-back-btn').style.display=_tStep>1?'':'none';
+  const next=document.getElementById('target-next-btn');
+  next.textContent=_tStep===3?'✅ Save Target':'Next →';
+}
+
+function targetStep(dir){
+  if(dir===1){
+    if(_tStep===1){if(!_tSubj){showToast('⚠️ Subject choose karo!');return;}}
+    if(_tStep===2){if(!_tSource){showToast('⚠️ Source choose karo!');return;}}
+    if(_tStep===3){_saveTarget();return;}
+  }
+  _tStep=Math.max(1,Math.min(3,_tStep+dir));
+  if(_tStep===2)_renderSourceList();
+  _renderStepIndicator();
+  _updateTargetNavBtns();
+}
+
+function _saveTarget(){
+  const task=document.getElementById('target-task-inp').value.trim();
+  const val=parseInt(document.getElementById('target-val-inp').value)||0;
+  if(!task){showToast('⚠️ Task describe karo!');return;}
+  if(val<1){showToast('⚠️ Target value set karo!');return;}
+  const target={
+    id:'t_'+Date.now().toString(36),
+    date:todayKey(),
+    subject:_tSubj.label,
+    subjectKey:_tSubj.key,
+    subjectIcon:_tSubj.icon,
+    subjectColor:_tSubj.color,
+    source:_tSource,
+    task,
+    targetType:_tType,
+    targetValue:val,
+    achieved:0,
+    createdAt:Date.now()
+  };
+  S.targets.push(target);
+  saveState(S);
+  closeModal('target-overlay');
+  showToast('🎯 Target set: '+task.slice(0,30));
+  renderTargets();
+  renderFloatingWidget();
+  document.getElementById('fw-toggle-btn').style.display='grid';
+}
+
+// ── RENDER TARGETS ──
+function renderTargets(){
+  const today=todayKey();
+  const todayTargets=S.targets.filter(t=>t.date===today);
+  const list=document.getElementById('targets-list');
+  const empty=document.getElementById('targets-empty');
+  if(!todayTargets.length){
+    empty.style.display='block';list.innerHTML='';
+    document.getElementById('targets-summary-badge').textContent='';
+    return;
+  }
+  empty.style.display='none';
+  const done=todayTargets.filter(t=>t.achieved>=t.targetValue).length;
+  document.getElementById('targets-summary-badge').textContent=`— ${done}/${todayTargets.length} complete`;
+  list.innerHTML=todayTargets.map(t=>{
+    const pct=Math.min(100,Math.round(t.achieved/t.targetValue*100));
+    const isDone=t.achieved>=t.targetValue;
+    const barColor=isDone?'var(--sage)':'linear-gradient(90deg,'+t.subjectColor+'88,'+t.subjectColor+')';
+    const unit=TARGET_TYPE_LABELS[t.targetType]||'';
+    return`<div class="target-item ${isDone?'done-target':''}" id="titem-${t.id}">
+      <div class="target-info">
+        <div class="target-name">${t.subjectIcon} ${t.task}</div>
+        <div class="target-sub">${t.subject} · ${t.source||''} &nbsp;
+          <span class="target-badge" style="background:${t.subjectColor}22;color:${t.subjectColor}">${unit}</span>
+          ${isDone?'<span class="target-badge" style="background:rgba(134,239,172,.2);color:var(--sage);margin-left:4px">✅ Done</span>':''}
+        </div>
+      </div>
+      <div class="target-progress-wrap">
+        <div class="target-nums">
+          <span>Attempted: <strong>${t.achieved}</strong></span>
+          <span>Target: <strong>${t.targetValue}</strong></span>
+        </div>
+        <div class="target-progress-bg">
+          <div class="target-progress-fill" style="width:${pct}%;background:${barColor}"></div>
+        </div>
+        <div style="font-size:9px;color:var(--text3);margin-top:2px;text-align:right">${pct}% complete</div>
+      </div>
+      <div class="target-controls">
+        <button class="tctrl" onclick="adjustTarget('${t.id}',-1)" title="−1">−</button>
+        <input class="t-achieved-input" type="number" value="${t.achieved}" min="0" onchange="setTargetAchieved('${t.id}',this.value)" title="Attempted">
+        <button class="tctrl" onclick="adjustTarget('${t.id}',1)" title="+1">+</button>
+        <button class="tctrl" onclick="openEditTarget('${t.id}')" title="Edit">✏️</button>
+        <button class="tctrl del" onclick="deleteTarget('${t.id}')" title="Delete">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+  renderFloatingWidget();
+}
+
+function adjustTarget(id,delta){
+  const t=S.targets.find(x=>x.id===id);
+  if(!t)return;
+  t.achieved=Math.max(0,t.achieved+delta);
+  saveState(S);renderTargets();
+  if(t.achieved>=t.targetValue)showCelebration('Target Complete! 🎯',t.task+' — '+t.subject+'. Amazing work!');
+}
+
+function setTargetAchieved(id,val){
+  const t=S.targets.find(x=>x.id===id);
+  if(!t)return;
+  t.achieved=Math.max(0,parseInt(val)||0);
+  saveState(S);renderTargets();
+}
+
+function deleteTarget(id){
+  if(!confirm('Remove this target?'))return;
+  S.targets=S.targets.filter(t=>t.id!==id);
+  saveState(S);renderTargets();renderFloatingWidget();showToast('🗑 Target removed');
+}
+
+function openEditTarget(id){
+  const t=S.targets.find(x=>x.id===id);
+  if(!t)return;
+  document.getElementById('edit-target-id').value=id;
+  document.getElementById('edit-target-task').value=t.task;
+  document.getElementById('edit-target-achieved').value=t.achieved;
+  document.getElementById('edit-target-value').value=t.targetValue;
+  openModal('edit-target-overlay');
+}
+
+function saveEditTarget(){
+  const id=document.getElementById('edit-target-id').value;
+  const t=S.targets.find(x=>x.id===id);
+  if(!t)return;
+  t.task=document.getElementById('edit-target-task').value||t.task;
+  t.achieved=Math.max(0,parseInt(document.getElementById('edit-target-achieved').value)||0);
+  t.targetValue=Math.max(1,parseInt(document.getElementById('edit-target-value').value)||1);
+  saveState(S);
+  closeModal('edit-target-overlay');
+  renderTargets();
+  showToast('✅ Target updated!');
+}
+
+// ── FLOATING WIDGET ──
+let _widgetVisible=false;
+
+function renderFloatingWidget(){
+  const today=todayKey();
+  const todayTargets=S.targets.filter(t=>t.date===today);
+  const done=todayTargets.filter(t=>t.achieved>=t.targetValue).length;
+  const rem=todayTargets.length-done;
+  const overallPct=todayTargets.length?Math.round(todayTargets.reduce((s,t)=>s+Math.min(1,t.achieved/t.targetValue),0)/todayTargets.length*100):0;
+  document.getElementById('fw-done').textContent=done;
+  document.getElementById('fw-rem').textContent=rem;
+  document.getElementById('fw-pct').textContent=overallPct+'%';
+  const badge=document.getElementById('fw-badge');
+  if(rem>0){badge.style.display='block';badge.textContent=rem;}
+  else badge.style.display='none';
+  const fwList=document.getElementById('fw-list');
+  const fwEmpty=document.getElementById('fw-empty');
+  if(!todayTargets.length){fwList.innerHTML='';fwEmpty.style.display='block';return;}
+  fwEmpty.style.display='none';
+  fwList.innerHTML=todayTargets.map(t=>{
+    const pct=Math.min(100,Math.round(t.achieved/t.targetValue*100));
+    const isDone=t.achieved>=t.targetValue;
+    return`<div class="fw-row">
+      <div class="fw-row-name" title="${t.task}">${t.subjectIcon} ${t.task.slice(0,22)}…</div>
+      <div class="fw-mini-bar"><div class="fw-mini-fill" style="width:${pct}%;background:${isDone?'var(--sage)':t.subjectColor}"></div></div>
+      <div class="fw-row-pct" style="color:${isDone?'var(--sage)':pct>=50?'var(--teal)':'var(--text2)'}">${pct}%</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleWidget(){
+  _widgetVisible=!_widgetVisible;
+  document.getElementById('fw').classList.toggle('hidden',!_widgetVisible);
+  // shift position away from toggle btn if open
+  if(_widgetVisible){
+    document.getElementById('fw').style.bottom='132px';
+    renderFloatingWidget();
+  }
+}
+
+function hideWidget(){
+  _widgetVisible=false;
+  document.getElementById('fw').classList.add('hidden');
+}
+
+// Make widget draggable
+(function(){
+  let drag=false,ox=0,oy=0;
+  document.addEventListener('DOMContentLoaded',()=>{
+    const fw=document.getElementById('fw');
+    const handle=document.getElementById('fw-drag');
+    if(!handle)return;
+    handle.addEventListener('mousedown',e=>{
+      drag=true;ox=e.clientX-fw.getBoundingClientRect().left;oy=e.clientY-fw.getBoundingClientRect().top;
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove',e=>{
+      if(!drag)return;
+      fw.style.left=(e.clientX-ox)+'px';fw.style.top=(e.clientY-oy)+'px';
+      fw.style.right='auto';fw.style.bottom='auto';
+    });
+    document.addEventListener('mouseup',()=>drag=false);
+  });
+})();
+
+
+// ══════════════════════════════════════════
+// FOCUS GOAL SYSTEM
+// ══════════════════════════════════════════
+if(!S.focusGoals)S.focusGoals={};       // {date: targetSeconds}
+if(!S.focusGoalHrs)S.focusGoalHrs=10;  // default 10h
+
+function setFocusGoal(hrs){
+  if(!hrs||hrs<1||hrs>20)return;
+  S.focusGoalHrs=hrs;
+  const k=todayKey();
+  S.focusGoals[k]=hrs*3600;
+  saveState(S);
+  document.querySelectorAll('.goal-preset-btn').forEach(b=>{
+    b.classList.toggle('active',parseInt(b.textContent)===hrs);
+  });
+  const ci=document.getElementById('custom-goal-inp');
+  if(ci)ci.value=hrs;
+  renderFocusGoal();
+  updateHeaderGoalChip();
+  showToast('🎯 Goal set: '+hrs+' ghante!');
+}
+
+function renderFocusGoal(){
+  const k=todayKey();
+  const goalSecs=(S.focusGoals&&S.focusGoals[k])?S.focusGoals[k]:S.focusGoalHrs*3600;
+  const doneSecs=getTodayFocus();
+  const pct=Math.min(100,Math.round(doneSecs/goalSecs*100));
+  const doneMin=Math.floor(doneSecs/60);
+  const leftSecs=Math.max(0,goalSecs-doneSecs);
+  const leftH=Math.floor(leftSecs/3600),leftM=Math.floor((leftSecs%3600)/60);
+
+  // Ring
+  const ring=document.getElementById('goal-ring');
+  if(ring){const circ=534;ring.style.strokeDashoffset=circ-(circ*pct/100);}
+  const pgb=document.getElementById('goal-pct-big');
+  if(pgb)pgb.textContent=pct+'%';
+  if(pgb)pgb.style.color=pct>=100?'var(--sage)':pct>=60?'var(--teal)':'var(--amber)';
+  const gtd=document.getElementById('goal-time-done');
+  if(gtd)gtd.textContent=Math.floor(doneSecs/3600)+'h '+Math.floor((doneSecs%3600)/60)+'m done';
+  const gtl=document.getElementById('goal-time-left');
+  if(gtl)gtl.textContent=pct>=100?'✅ Goal achieved!':leftH+'h '+leftM+'m left';
+  const gdm=document.getElementById('goal-done-mins');
+  if(gdm)gdm.textContent=doneMin;
+  const gth=document.getElementById('goal-target-hrs');
+  if(gth)gth.textContent=Math.round(goalSecs/3600);
+
+  // Goal streak
+  let gStreak=0;
+  const now=new Date();
+  for(let i=0;i<60;i++){
+    const d=new Date(now);d.setDate(d.getDate()-i);
+    const dk=`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+    const gSec=(S.focusGoals&&S.focusGoals[dk])?S.focusGoals[dk]:S.focusGoalHrs*3600;
+    const dSec=S.focusToday&&S.focusToday[dk]?S.focusToday[dk]:0;
+    if(dSec>=gSec){gStreak++}else if(i>0)break;
+  }
+  const gsd=document.getElementById('goal-streak-days');
+  if(gsd)gsd.textContent=gStreak;
+
+  // 7-day history
+  const hist=document.getElementById('focus-goal-history');
+  if(hist){
+    hist.innerHTML=[6,5,4,3,2,1,0].map(dAgo=>{
+      const d=new Date(now);d.setDate(d.getDate()-dAgo);
+      const dk=`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+      const gSec=(S.focusGoals&&S.focusGoals[dk])?S.focusGoals[dk]:S.focusGoalHrs*3600;
+      const dSec=S.focusToday&&S.focusToday[dk]?S.focusToday[dk]:0;
+      const p=Math.min(100,Math.round(dSec/gSec*100));
+      const isToday=dk===k;
+      const dayName=d.toLocaleDateString('en-IN',{weekday:'short'});
+      const dateStr=d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+      const col=p>=100?'var(--sage)':p>=60?'var(--teal)':'var(--amber)';
+      return`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg3);border-radius:10px;border:1px solid ${isToday?'var(--teal)':'var(--border)'}">
+        <div style="width:38px;text-align:center">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase">${dayName}</div>
+          <div style="font-size:11px;font-weight:700;color:${isToday?'var(--teal)':'var(--text2)'}">${dateStr.split(' ')[0]}</div>
+        </div>
+        <div style="flex:1">
+          <div style="height:8px;background:var(--bg);border-radius:99px;overflow:hidden">
+            <div style="height:100%;width:${p}%;background:${col};border-radius:99px;transition:width .5s"></div>
+          </div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:${col};min-width:38px;text-align:right">${p}%</div>
+        <div style="font-size:10px;color:var(--text3);min-width:40px;text-align:right">${Math.floor(dSec/3600)}h${Math.floor((dSec%3600)/60)}m</div>
+        ${p>=100?'<span style="font-size:13px">✅</span>':'<span style="font-size:13px;opacity:.3">○</span>'}
+      </div>`;
+    }).join('');
+  }
+
+  // Monthly heatmap
+  const hm=document.getElementById('focus-monthly-heatmap');
+  if(hm){
+    const days=28;
+    hm.innerHTML=Array.from({length:days},(_, i)=>{
+      const d=new Date(now);d.setDate(d.getDate()-(days-1-i));
+      const dk=`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+      const gSec=(S.focusGoals&&S.focusGoals[dk])?S.focusGoals[dk]:S.focusGoalHrs*3600;
+      const dSec=S.focusToday&&S.focusToday[dk]?S.focusToday[dk]:0;
+      const p=Math.min(100,Math.round(dSec/gSec*100));
+      const isToday=dk===k;
+      const bg=p===0?'var(--bg3)':p<40?'rgba(13,148,136,.25)':p<80?'rgba(13,148,136,.55)':'var(--teal)';
+      const dayStr=d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+      return`<div title="${dayStr}: ${p}%" style="aspect-ratio:1;border-radius:5px;background:${bg};border:${isToday?'2px solid var(--teal)':'1px solid transparent'};cursor:default;transition:opacity .2s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'"></div>`;
+    }).join('');
+  }
+}
+
+function updateHeaderGoalChip(){
+  const k=todayKey();
+  const goalSecs=(S.focusGoals&&S.focusGoals[k])?S.focusGoals[k]:S.focusGoalHrs*3600;
+  const doneSecs=getTodayFocus();
+  const pct=Math.min(100,Math.round(doneSecs/goalSecs*100));
+  const chip=document.getElementById('focus-goal-chip');
+  const pctEl=document.getElementById('hdr-focus-goal-pct');
+  const hrsEl=document.getElementById('hdr-focus-goal-hrs');
+  if(chip&&pctEl&&hrsEl){
+    chip.style.display='flex';
+    pctEl.textContent=pct+'%';
+    hrsEl.textContent=Math.round(goalSecs/3600);
+    pctEl.style.color=pct>=100?'var(--sage)':pct>=60?'var(--teal)':'var(--amber)';
+  }
+}
+
+// ══════════════════════════════════════════
+// TEST PLANNER
+// ══════════════════════════════════════════
+if(!S.testPlans)S.testPlans=[];
+
+const BLOCK_COLORS={1:'var(--teal)',2:'var(--sky)',3:'var(--sage)',4:'var(--coral)'};
+const BLOCK_NAMES={1:'C1',2:'C2',3:'C3',4:'C4'};
+
+function openTestForm(block){
+  document.getElementById('test-form-block').value=block;
+  document.getElementById('test-form-title').textContent='📋 Block '+BLOCK_NAMES[block]+' Test Add Karo';
+  document.getElementById('test-form-name').value='';
+  document.getElementById('test-form-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('test-form-dur').value=180;
+  document.getElementById('test-form-status').value='planned';
+  document.getElementById('test-form-notes').value='';
+  openModal('test-form-overlay');
+}
+
+function saveTestPlan(){
+  const block=parseInt(document.getElementById('test-form-block').value);
+  const name=document.getElementById('test-form-name').value.trim()||('Test '+Date.now());
+  const date=document.getElementById('test-form-date').value;
+  const dur=parseInt(document.getElementById('test-form-dur').value)||180;
+  const status=document.getElementById('test-form-status').value;
+  const notes=document.getElementById('test-form-notes').value.trim();
+  const code=BLOCK_NAMES[block];
+  S.testPlans.push({id:'tp_'+Date.now(),block,code,name,date,dur,status,notes});
+  saveState(S);renderTestPlanner();closeModal('test-form-overlay');showToast('📋 Test saved! Code: '+code);
+}
+
+function deleteTestPlan(id){
+  if(!confirm('Remove this test?'))return;
+  S.testPlans=S.testPlans.filter(t=>t.id!==id);
+  saveState(S);renderTestPlanner();showToast('🗑 Test removed');
+}
+
+function cycleTestStatus(id){
+  const t=S.testPlans.find(x=>x.id===id);
+  if(!t)return;
+  const cycle=['planned','done','skipped'];
+  t.status=cycle[(cycle.indexOf(t.status)+1)%3];
+  saveState(S);renderTestPlanner();showToast('✅ Status updated: '+t.status);
+}
+
+function renderTestPlanner(){
+  [1,2,3,4].forEach(b=>{
+    const plans=S.testPlans.filter(t=>t.block===b).sort((a,z)=>a.date.localeCompare(z.date));
+    const el=document.getElementById('block'+b+'-tests');
+    if(!el)return;
+    if(!plans.length){el.innerHTML='<div style="font-size:11px;color:var(--text3);padding:8px 0;font-style:italic">Koi test plan nahi — + Add Test click karo</div>';return;}
+    el.innerHTML=plans.map(t=>{
+      const statusClass='test-status-'+t.status;
+      const statusLabel={planned:'📅 Planned',done:'✅ Done',skipped:'⏭ Skipped'}[t.status];
+      return`<div class="test-item">
+        <div class="test-item-left" style="flex:1;min-width:0;gap:8px">
+          <div>
+            <div class="test-item-name">${t.name}</div>
+            <div class="test-item-date">${t.date} · ${Math.floor(t.dur/60)}h${t.dur%60?t.dur%60+'m':''} ${t.notes?'· '+t.notes:''}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+          <span class="test-item-status ${statusClass}" onclick="cycleTestStatus('${t.id}')" style="cursor:pointer" title="Click to change status">${statusLabel}</span>
+          <button class="test-item-del" onclick="deleteTestPlan('${t.id}')" title="Delete">✕</button>
+        </div>
+      </div>`;
+    }).join('');
+  });
+
+  // Summary
+  const sum=document.getElementById('test-plan-summary');
+  if(sum){
+    [1,2,3,4].forEach(b=>{
+      const plans=S.testPlans.filter(t=>t.block===b);
+      const done=plans.filter(t=>t.status==='done').length;
+      const planned=plans.filter(t=>t.status==='planned').length;
+      const col=BLOCK_COLORS[b];
+      const code=BLOCK_NAMES[b];
+      sum.children[b-1]&&(sum.children[b-1].innerHTML=`
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;border-top:3px solid ${col}">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:${col}">${code}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--text)">${plans.length}</div>
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px">Tests Planned</div>
+          <div style="font-size:10px;color:var(--sage);margin-top:4px;font-weight:600">${done} done · ${planned} upcoming</div>
+        </div>`);
+    });
+    if(!sum.children.length){
+      sum.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:10px;font-size:12px;color:var(--text3)">Koi test plan nahi. Upar blocks mein + Add Test click karo!</div>';
+    }
+  }
+}
+
+// ══════════════════════════════════════════
+// SCORE TRACKER
+// ══════════════════════════════════════════
+if(!S.scores)S.scores=[];
+
+const SCORE_CODE_COLORS={
+  C1:{bg:'rgba(13,148,136,.15)',color:'var(--teal)'},
+  C2:{bg:'rgba(3,105,161,.15)',color:'var(--sky)'},
+  C3:{bg:'rgba(22,163,74,.15)',color:'var(--sage)'},
+  C4:{bg:'rgba(225,29,72,.12)',color:'var(--coral)'},
+  PT:{bg:'rgba(180,83,9,.12)',color:'var(--amber)'},
+  MT:{bg:'rgba(109,40,217,.12)',color:'var(--lavender)'},
+  FT:{bg:'rgba(249,115,22,.12)',color:'var(--orange)'},
+};
+
+function addScore(){
+  const code=document.getElementById('score-code-sel').value;
+  if(!code){showToast('❌ Code select karo!');return;}
+  const marks=parseInt(document.getElementById('score-marks').value);
+  const total=parseInt(document.getElementById('score-total').value)||720;
+  if(!marks&&marks!==0){showToast('❌ Score daalo!');return;}
+  const date=document.getElementById('score-date').value||todayKey();
+  const name=document.getElementById('score-name').value.trim()||code+' Test';
+  const pct=Math.round(marks/total*100);
+  S.scores.push({id:'sc_'+Date.now(),code,marks,total,pct,date,name});
+  saveState(S);renderScores();
+  document.getElementById('score-marks').value='';
+  document.getElementById('score-name').value='';
+  showToast('🏆 Score saved! '+marks+'/'+total+' ('+pct+'%)');
+  if(pct>=80)showCelebration('Outstanding! 🔥',name+': '+pct+'% — Bahut badhiya!');
+}
+
+function deleteScore(id){
+  if(!confirm('Remove this score?'))return;
+  S.scores=S.scores.filter(s=>s.id!==id);
+  saveState(S);renderScores();showToast('🗑 Score removed');
+}
+
+function renderScores(){
+  const filterCode=document.getElementById('score-filter-code')?.value||'';
+  const sortBy=document.getElementById('score-sort')?.value||'date-desc';
+  let scores=[...S.scores];
+  if(filterCode)scores=scores.filter(s=>s.code===filterCode);
+  scores.sort((a,b)=>{
+    if(sortBy==='date-desc')return b.date.localeCompare(a.date);
+    if(sortBy==='date-asc')return a.date.localeCompare(b.date);
+    if(sortBy==='score-desc')return b.pct-a.pct;
+    return a.pct-b.pct;
+  });
+
+  const rowsCont=document.getElementById('score-rows');
+  const emptyMsg=document.getElementById('score-empty-msg');
+  if(!rowsCont)return;
+
+  if(!scores.length){
+    rowsCont.innerHTML='';
+    if(emptyMsg)emptyMsg.style.display='block';
+  } else {
+    if(emptyMsg)emptyMsg.style.display='none';
+    rowsCont.innerHTML=scores.map(s=>{
+      const cs=SCORE_CODE_COLORS[s.code]||{bg:'rgba(100,116,139,.1)',color:'var(--text2)'};
+      const pctCol=s.pct>=80?'var(--sage)':s.pct>=60?'var(--teal)':s.pct>=40?'var(--amber)':'var(--coral)';
+      const barW=Math.min(100,s.pct);
+      const dateDisp=new Date(s.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'2-digit'});
+      return`<div class="score-row">
+        <div class="score-code-badge" style="background:${cs.bg};color:${cs.color}">${s.code}</div>
+        <div class="score-name">${s.name}</div>
+        <div class="score-date-lbl">${dateDisp}</div>
+        <div class="score-pct-bar">
+          <div style="width:80px;height:6px;background:var(--bg);border-radius:99px;overflow:hidden">
+            <div style="height:100%;width:${barW}%;background:${pctCol};border-radius:99px"></div>
+          </div>
+          <div class="score-pct-num" style="color:${pctCol}">${s.pct}%</div>
+        </div>
+        <div style="font-size:11px;color:var(--text2);white-space:nowrap">${s.marks}/${s.total}</div>
+        <button class="score-del-btn" onclick="deleteScore('${s.id}')" title="Delete">🗑</button>
+      </div>`;
+    }).join('');
+  }
+
+  // Stats
+  const allScores=S.scores;
+  const ssTotal=document.getElementById('ss-total');
+  const ssBest=document.getElementById('ss-best');
+  const ssAvg=document.getElementById('ss-avg');
+  const ssTrend=document.getElementById('ss-trend');
+  if(ssTotal)ssTotal.textContent=allScores.length;
+  if(allScores.length){
+    const best=Math.max(...allScores.map(s=>s.pct));
+    const avg=Math.round(allScores.reduce((s,x)=>s+x.pct,0)/allScores.length);
+    if(ssBest){ssBest.textContent=best+'%';ssBest.style.color=best>=80?'var(--sage)':'var(--amber)';}
+    if(ssAvg){ssAvg.textContent=avg+'%';ssAvg.style.color=avg>=60?'var(--teal)':'var(--coral)';}
+    if(ssTrend&&allScores.length>=2){
+      const sorted=[...allScores].sort((a,b)=>a.date.localeCompare(b.date));
+      const diff=sorted[sorted.length-1].pct-sorted[sorted.length-2].pct;
+      ssTrend.textContent=(diff>=0?'▲':' ▼')+Math.abs(diff)+'%';
+      ssTrend.style.color=diff>=0?'var(--sage)':'var(--coral)';
+    }
+  }
+
+  // Mini chart
+  const chart=document.getElementById('score-mini-chart');
+  const labels=document.getElementById('score-mini-labels');
+  if(chart){
+    const recent=[...S.scores].sort((a,b)=>a.date.localeCompare(b.date)).slice(-10);
+    if(!recent.length){chart.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;width:100%">Score add karo chart dekhne ke liye</div>';return;}
+    const maxPct=100;
+    chart.innerHTML=recent.map(s=>{
+      const h=Math.max(6,Math.round(s.pct/maxPct*66));
+      const cs=SCORE_CODE_COLORS[s.code]||{color:'var(--teal)'};
+      const pctCol=s.pct>=80?'var(--sage)':s.pct>=60?'var(--teal)':s.pct>=40?'var(--amber)':'var(--coral)';
+      return`<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1">
+        <div style="font-size:8px;color:var(--text3)">${s.pct}%</div>
+        <div style="height:${h}px;min-width:18px;background:${pctCol};border-radius:4px 4px 0 0;transition:height .5s;opacity:.85" title="${s.name}: ${s.pct}%"></div>
+        <div style="font-size:8px;color:${cs.color};font-family:'JetBrains Mono',monospace;font-weight:700">${s.code}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// Also patch today's focus stat card to show goal %
+const _origUpdateFocusStats=typeof updateFocusStats==='function'?updateFocusStats:null;
+function updateFocusStatsAndGoal(){
+  if(_origUpdateFocusStats)_origUpdateFocusStats();
+  updateHeaderGoalChip();
+  if(document.getElementById('tab-focus')?.classList.contains('active'))renderFocusGoal();
+}
+
 // ══════════════════════════════════════════
 function init(){
   updateCountdown();renderQuote();renderTimetable();renderSubjects();
   renderBio11();renderInorg();initPomo();updateFocusStats();
   updateStreak();renderWeekly();renderJournalHistory();updatePacePredictor();
+  renderTargets();
+  // New feature inits
+  updateHeaderGoalChip();
+  // Ensure test planner summary has 4 slots
+  const sum=document.getElementById('test-plan-summary');
+  if(sum)sum.innerHTML='<div></div><div></div><div></div><div></div>';
+  renderTestPlanner();
+  renderScores();
+  // Default date for score form
+  const sd=document.getElementById('score-date');
+  if(sd)sd.value=new Date().toISOString().split('T')[0];
+  // Show widget toggle if there are today's targets
+  const todayT=S.targets.filter(t=>t.date===todayKey());
+  if(todayT.length)document.getElementById('fw-toggle-btn').style.display='grid';
   setInterval(updateCountdown,60000);
   setInterval(renderTimetable,60000);
-  setInterval(()=>{renderWeekly();updatePacePredictor();},120000);
- if(!S.firebaseConfig){
-  S.firebaseConfig = {
-    apiKey: "AIzaSyCx5dxenYxfqqiYZVVV3E15kt3UTEZEBuU",
-    authDomain: "neet25032006.firebaseapp.com",
-    databaseURL: "https://neet25032006-default-rtdb.firebaseio.com",
-    projectId: "neet25032006",
-    storageBucket: "neet25032006.firebasestorage.app",
-    messagingSenderId: "491795804146",
-    appId: "1:491795804146:web:ab742a28f521fb961e056b"
-  };
-  saveState(S);
-}
+  setInterval(()=>{renderWeekly();updatePacePredictor();updateHeaderGoalChip();},120000);
+  // Restore Firebase + group if previously set up
   if(S.firebaseConfig){
     const ok=initFirebase(S.firebaseConfig);
     if(ok&&S.groupId){
