@@ -308,6 +308,44 @@ body.dark .member-row{background:rgba(255,255,255,.05)}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .card,.stat-card,.timetable-card,.quote-card,.focus-card,.pomo-card,.group-card,.journal-card{animation:fadeUp .4s ease both}
+
+/* ── TAB NAVIGATION ── */
+.tab-nav{display:flex;gap:6px;margin-bottom:20px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:6px;flex-wrap:wrap}
+.tab-btn{flex:1;min-width:140px;border:none;background:transparent;border-radius:10px;padding:10px 16px;font-size:12px;font-weight:700;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}
+.tab-btn:hover{background:var(--bg3);color:var(--text)}
+.tab-btn.active{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;box-shadow:0 2px 12px rgba(13,148,136,0.25)}
+.tab-btn.active-ncert{background:linear-gradient(135deg,var(--sage),#15803d);color:#fff;box-shadow:0 2px 12px rgba(22,163,74,0.25)}
+.tab-btn.active-rapid{background:linear-gradient(135deg,var(--lavender),#4c1d95);color:#fff;box-shadow:0 2px 12px rgba(109,40,217,0.25)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* ── TRACKER GRID ── */
+.tracker-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.tracker-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px}
+.tracker-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.tracker-title{font-size:13px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.tracker-sub{font-size:10px;color:var(--text3);margin-bottom:12px}
+.tracker-progress{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.tracker-progress-bar{flex:1;height:5px;background:var(--bg3);border-radius:99px;overflow:hidden}
+.tracker-progress-fill{height:100%;border-radius:99px;transition:width .6s}
+.tracker-progress-label{font-size:10px;font-family:'JetBrains Mono',monospace;font-weight:700;white-space:nowrap}
+.ch-list{display:flex;flex-direction:column;gap:4px;max-height:300px;overflow-y:auto;padding-right:4px}
+.ch-list::-webkit-scrollbar{width:3px}
+.ch-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.ch-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s;position:relative}
+.ch-row:hover{background:var(--card2);border-color:var(--text3)}
+.ch-row.read-today{border-color:rgba(13,148,136,.35);background:rgba(13,148,136,.05)}
+.ch-name{font-size:11px;font-weight:600;color:var(--text);flex:1}
+.ch-count{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.ch-date{font-size:9px;color:var(--text3);white-space:nowrap}
+.ch-plus{width:24px;height:24px;border-radius:6px;border:none;font-size:14px;cursor:pointer;display:grid;place-items:center;transition:all .2s;flex-shrink:0;font-weight:700}
+.ch-plus:hover{transform:scale(1.15)}
+.ch-dates-popup{position:absolute;right:0;top:110%;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;z-index:50;min-width:180px;box-shadow:0 8px 24px rgba(0,0,0,.12);font-size:10px;display:none}
+.ch-row:hover .ch-dates-popup{display:block}
+.tracker-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.tstat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.tstat-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;line-height:1;margin-bottom:4px}
+.tstat-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px}
 </style>
 </head>
 <body>
@@ -509,6 +547,15 @@ body.dark .member-row{background:rgba(255,255,255,.05)}
 
 <div class="main">
 
+<!-- TAB NAVIGATION -->
+<div class="tab-nav">
+  <button class="tab-btn active" id="tab-btn-q" onclick="switchTab('q')">📊 Q Practice &amp; Focus</button>
+  <button class="tab-btn" id="tab-btn-ncert" onclick="switchTab('ncert')">📖 NCERT Chapter Tracker</button>
+  <button class="tab-btn" id="tab-btn-rapid" onclick="switchTab('rapid')">⚡ Rapid Revision Tracker</button>
+</div>
+
+<!-- TAB 1: Q PRACTICE & FOCUS -->
+<div id="tab-q" class="tab-panel active">
 <div class="notif-bar">💡 <strong>Right-click any time slot</strong> to edit · <strong>🎙 Click mic</strong> on any subject to enter by voice · Group leaderboard neeche dekho 👇</div>
 
 <!-- Stats -->
@@ -688,6 +735,130 @@ body.dark .member-row{background:rgba(255,255,255,.05)}
   <button class="action-btn" onclick="exportSummary()">📋 Copy Summary</button>
   <button class="action-btn primary" onclick="saveAll()">💾 Save Everything</button>
 </div>
+
+</div><!-- /tab-q -->
+
+<!-- TAB 2: NCERT CHAPTER TRACKER -->
+<div id="tab-ncert" class="tab-panel">
+  <div class="notif-bar" style="border-color:rgba(22,163,74,.3);background:rgba(22,163,74,.07);color:#15803d">📖 Jis din chapter padho, <strong>+ Read</strong> dabao — date aur count save ho jaayega. Ek hi chapter alag alag dates ko multiple times pad sakte ho!</div>
+
+  <!-- Stats row -->
+  <div class="tracker-stats-row" id="ncert-stats-row"></div>
+
+  <!-- Botany 11 + Zoology 11 -->
+  <div class="section-title"><span style="background:var(--sage)"></span>🌿 Class 11 Biology</div>
+  <div class="tracker-grid" style="grid-template-columns:1fr 1fr;margin-bottom:20px">
+    <div class="tracker-card">
+      <div class="tracker-title">🌿 Botany — Class 11</div>
+      <div class="tracker-sub">Plant kingdom chapters</div>
+      <div class="tracker-progress"><div class="tracker-progress-bar"><div class="tracker-progress-fill" id="ncert-bot11-bar" style="background:linear-gradient(90deg,var(--sage),#15803d)"></div></div><span class="tracker-progress-label" id="ncert-bot11-pct" style="color:var(--sage)">0%</span></div>
+      <div class="ch-list" id="ncert-bot11-list"></div>
+    </div>
+    <div class="tracker-card">
+      <div class="tracker-title">🐾 Zoology — Class 11</div>
+      <div class="tracker-sub">Animal kingdom chapters</div>
+      <div class="tracker-progress"><div class="tracker-progress-bar"><div class="tracker-progress-fill" id="ncert-zoo11-bar" style="background:linear-gradient(90deg,var(--sky),#0284c7)"></div></div><span class="tracker-progress-label" id="ncert-zoo11-pct" style="color:var(--sky)">0%</span></div>
+      <div class="ch-list" id="ncert-zoo11-list"></div>
+    </div>
+  </div>
+
+  <!-- Botany 12 + Zoology 12 -->
+  <div class="section-title"><span style="background:var(--teal)"></span>🌱 Class 12 Biology</div>
+  <div class="tracker-grid" style="grid-template-columns:1fr 1fr;margin-bottom:20px">
+    <div class="tracker-card">
+      <div class="tracker-title">🌱 Botany — Class 12</div>
+      <div class="tracker-sub">Plant-related chapters</div>
+      <div class="tracker-progress"><div class="tracker-progress-bar"><div class="tracker-progress-fill" id="ncert-bot12-bar" style="background:linear-gradient(90deg,var(--teal),var(--teal2))"></div></div><span class="tracker-progress-label" id="ncert-bot12-pct" style="color:var(--teal)">0%</span></div>
+      <div class="ch-list" id="ncert-bot12-list"></div>
+    </div>
+    <div class="tracker-card">
+      <div class="tracker-title">🦁 Zoology — Class 12</div>
+      <div class="tracker-sub">Animal-related chapters</div>
+      <div class="tracker-progress"><div class="tracker-progress-bar"><div class="tracker-progress-fill" id="ncert-zoo12-bar" style="background:linear-gradient(90deg,var(--coral),#be123c)"></div></div><span class="tracker-progress-label" id="ncert-zoo12-pct" style="color:var(--coral)">0%</span></div>
+      <div class="ch-list" id="ncert-zoo12-list"></div>
+    </div>
+  </div>
+
+  <!-- Chemistry + Physics -->
+  <div class="section-title"><span style="background:var(--amber)"></span>⚗️ Chemistry &amp; Physics</div>
+  <div class="tracker-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:20px">
+    <div class="tracker-card">
+      <div class="tracker-title">🧪 Inorganic Chemistry</div>
+      <div class="tracker-sub">NCERT inorganic chapters</div>
+      <div class="tracker-progress"><div class="tracker-progress-bar"><div class="tracker-progress-fill" id="ncert-inorg-bar" style="background:linear-gradient(90deg,var(--amber),#92400e)"></div></div><span class="tracker-progress-label" id="ncert-inorg-pct" style="color:var(--amber)">0%</span></div>
+      <div class="ch-list" id="ncert-inorg-list"></div>
+    </div>
+    <div class="tracker-card">
+      <div class="tracker-title">🔗 Organic Chemistry</div>
+      <div class="tracker-sub">NCERT organic chapters</div>
+      <div class="tracker-progress"><div class="tracker-progress-bar"><div class="tracker-progress-fill" id="ncert-org-bar" style="background:linear-gradient(90deg,var(--orange),#c2410c)"></div></div><span class="tracker-progress-label" id="ncert-org-pct" style="color:var(--orange)">0%</span></div>
+      <div class="ch-list" id="ncert-org-list"></div>
+    </div>
+    <div class="tracker-card">
+      <div class="tracker-title">⚡ Physics</div>
+      <div class="tracker-sub">NCERT physics chapters</div>
+      <div class="tracker-progress"><div class="tracker-progress-bar"><div class="tracker-progress-fill" id="ncert-phys-bar" style="background:linear-gradient(90deg,#fbbf24,#b45309)"></div></div><span class="tracker-progress-label" id="ncert-phys-pct" style="color:#b45309">0%</span></div>
+      <div class="ch-list" id="ncert-phys-list"></div>
+    </div>
+  </div>
+</div><!-- /tab-ncert -->
+
+<!-- TAB 3: RAPID REVISION TRACKER -->
+<div id="tab-rapid" class="tab-panel">
+  <div class="notif-bar" style="border-color:rgba(109,40,217,.3);background:rgba(109,40,217,.07);color:var(--lavender)">⚡ Rapid Revision — NEET se pehle quick sweep. Har chapter ek baar rapidly revise karo, date note ho jaayegi!</div>
+
+  <!-- Stats row -->
+  <div class="tracker-stats-row" id="rapid-stats-row"></div>
+
+  <div class="section-title"><span style="background:var(--lavender)"></span>🌿 Class 11 Biology — Rapid Revision</div>
+  <div class="tracker-grid" style="grid-template-columns:1fr 1fr;margin-bottom:20px">
+    <div class="tracker-card">
+      <div class="tracker-title">🌿 Botany 11 — Rapid</div>
+      <div class="tracker-sub">Quick sweep each chapter</div>
+      <div class="tracker-progress"><div class="tracker-progress-bar"><div class="tracker-progress-fill" id="rapid-bot11-bar" style="background:linear-gradient(90deg,var(--lavender),#4c1d95)"></div></div><span class="tracker-progress-label" id="rapid-bot11-pct" style="color:var(--lavender)">0%</span></div>
+      <div class="ch-list" id="rapid-bot11-list"></div>
+    </div>
+    <div class="tracker-card">
+      <div class="tracker-title">🐾 Zoology 11 — Rapid</div>
+      <div class="tracker-sub">Quick sweep each chapter</div>
+      <div class="tracker-progress"><div class="tracker-progress-bar"><div class="tracker-progress-fill" id="rapid-zoo11-bar" style="background:linear-gradient(90deg,var(--lavender),#4c1d95)"></div></div><span class="tracker-progress-label" id="rapid-zoo11-pct" style="color:var(--lavender)">0%</span></div>
+      <div class="ch-list" id="rapid-zoo11-list"></div>
+    </div>
+  </div>
+
+  <div class="section-title"><span style="background:var(--lavender)"></span>🌱 Class 12 Biology — Rapid Revision</div>
+  <div class="tracker-grid" style="grid-template-columns:1fr 1fr;margin-bottom:20px">
+    <div class="tracker-card">
+      <div class="tracker-title">🌱 Botany 12 — Rapid</div>
+      <div class="tracker-progress"><div class="tracker-progress-bar"><div class="tracker-progress-fill" id="rapid-bot12-bar" style="background:linear-gradient(90deg,var(--lavender),#4c1d95)"></div></div><span class="tracker-progress-label" id="rapid-bot12-pct" style="color:var(--lavender)">0%</span></div>
+      <div class="ch-list" id="rapid-bot12-list"></div>
+    </div>
+    <div class="tracker-card">
+      <div class="tracker-title">🦁 Zoology 12 — Rapid</div>
+      <div class="tracker-progress"><div class="tracker-progress-bar"><div class="tracker-progress-fill" id="rapid-zoo12-bar" style="background:linear-gradient(90deg,var(--lavender),#4c1d95)"></div></div><span class="tracker-progress-label" id="rapid-zoo12-pct" style="color:var(--lavender)">0%</span></div>
+      <div class="ch-list" id="rapid-zoo12-list"></div>
+    </div>
+  </div>
+
+  <div class="section-title"><span style="background:var(--lavender)"></span>⚗️ Chemistry &amp; Physics — Rapid Revision</div>
+  <div class="tracker-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:20px">
+    <div class="tracker-card">
+      <div class="tracker-title">🧪 Inorganic — Rapid</div>
+      <div class="tracker-progress"><div class="tracker-progress-bar"><div class="tracker-progress-fill" id="rapid-inorg-bar" style="background:linear-gradient(90deg,var(--lavender),#4c1d95)"></div></div><span class="tracker-progress-label" id="rapid-inorg-pct" style="color:var(--lavender)">0%</span></div>
+      <div class="ch-list" id="rapid-inorg-list"></div>
+    </div>
+    <div class="tracker-card">
+      <div class="tracker-title">🔗 Organic — Rapid</div>
+      <div class="tracker-progress"><div class="tracker-progress-bar"><div class="tracker-progress-fill" id="rapid-org-bar" style="background:linear-gradient(90deg,var(--lavender),#4c1d95)"></div></div><span class="tracker-progress-label" id="rapid-org-pct" style="color:var(--lavender)">0%</span></div>
+      <div class="ch-list" id="rapid-org-list"></div>
+    </div>
+    <div class="tracker-card">
+      <div class="tracker-title">⚡ Physics — Rapid</div>
+      <div class="tracker-progress"><div class="tracker-progress-bar"><div class="tracker-progress-fill" id="rapid-phys-bar" style="background:linear-gradient(90deg,var(--lavender),#4c1d95)"></div></div><span class="tracker-progress-label" id="rapid-phys-pct" style="color:var(--lavender)">0%</span></div>
+      <div class="ch-list" id="rapid-phys-list"></div>
+    </div>
+  </div>
+</div><!-- /tab-rapid -->
 
 </div><!-- /main -->
 
@@ -1507,6 +1678,177 @@ function exportSummary(){
 }
 
 // ══════════════════════════════════════════
+// CHAPTER DATA
+// ══════════════════════════════════════════
+const CH_DATA = {
+  bot11: {label:'Botany 11', color:'var(--sage)', chapters:[
+    'The Living World','Biological Classification','Plant Kingdom',
+    'Morphology of Flowering Plants','Anatomy of Flowering Plants',
+    'Cell: The Unit of Life','Cell Cycle and Cell Division',
+    'Transport in Plants','Mineral Nutrition',
+    'Photosynthesis in Higher Plants','Respiration in Plants',
+    'Plant Growth and Development'
+  ]},
+  zoo11: {label:'Zoology 11', color:'var(--sky)', chapters:[
+    'Animal Kingdom','Structural Organisation in Animals','Biomolecules',
+    'Digestion and Absorption','Breathing and Exchange of Gases',
+    'Body Fluids and Circulation','Excretory Products and Elimination',
+    'Locomotion and Movement','Neural Control and Coordination',
+    'Chemical Coordination and Integration'
+  ]},
+  bot12: {label:'Botany 12', color:'var(--teal)', chapters:[
+    'Sexual Reproduction in Flowering Plants',
+    'Principles of Inheritance and Variation',
+    'Molecular Basis of Inheritance','Evolution',
+    'Strategies for Enhancement in Food Production',
+    'Microbes in Human Welfare',
+    'Biotechnology: Principles and Processes',
+    'Biotechnology and its Applications',
+    'Organisms and Populations','Ecosystem',
+    'Biodiversity and Conservation','Environmental Issues'
+  ]},
+  zoo12: {label:'Zoology 12', color:'var(--coral)', chapters:[
+    'Human Reproduction','Reproductive Health',
+    'Human Health and Disease','Evolution',
+    'Microbes in Human Welfare','Organisms and Populations',
+    'Ecosystem','Biodiversity and Conservation','Environmental Issues'
+  ]},
+  inorg: {label:'Inorganic Chem', color:'var(--amber)', chapters:[
+    'Some Basic Concepts of Chemistry','Structure of Atom',
+    'Classification of Elements and Periodicity',
+    'Chemical Bonding and Molecular Structure',
+    'States of Matter','Thermodynamics','Equilibrium',
+    'Redox Reactions','Hydrogen','s-Block Elements',
+    'p-Block Elements (Gr 13-14)','p-Block Elements (Gr 15-18)',
+    'd and f Block Elements','Coordination Compounds','Metallurgy'
+  ]},
+  org: {label:'Organic Chem', color:'var(--orange)', chapters:[
+    'Basic Principles and Techniques','Hydrocarbons',
+    'Environmental Chemistry','Haloalkanes and Haloarenes',
+    'Alcohols, Phenols and Ethers',
+    'Aldehydes, Ketones and Carboxylic Acids',
+    'Amines','Biomolecules','Polymers','Chemistry in Everyday Life'
+  ]},
+  phys: {label:'Physics', color:'#b45309', chapters:[
+    'Physical World & Measurement','Kinematics','Laws of Motion',
+    'Work, Energy and Power','System of Particles & Rotation',
+    'Gravitation','Properties of Bulk Matter','Thermodynamics',
+    'Kinetic Theory of Gases','Oscillations','Waves',
+    'Electric Charges and Fields','Electrostatic Potential & Capacitance',
+    'Current Electricity','Moving Charges and Magnetism',
+    'Magnetism and Matter','Electromagnetic Induction',
+    'Alternating Current','Electromagnetic Waves',
+    'Ray Optics','Wave Optics',
+    'Dual Nature of Radiation and Matter','Atoms','Nuclei',
+    'Semiconductor Electronics'
+  ]}
+};
+
+// State keys: ncertTracker & rapidTracker
+// Structure: { 'bot11_0': ['2026-4-2','2026-4-5'], 'bot11_1': ['2026-4-3'] }
+if(!S.ncertTracker)S.ncertTracker={};
+if(!S.rapidTracker)S.rapidTracker={};
+
+// ── TAB SWITCHING ──
+function switchTab(tab){
+  ['q','ncert','rapid'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',t===tab);
+    const btn=document.getElementById('tab-btn-'+t);
+    btn.classList.remove('active','active-ncert','active-rapid');
+    if(t===tab){
+      if(tab==='ncert')btn.classList.add('active-ncert');
+      else if(tab==='rapid')btn.classList.add('active-rapid');
+      else btn.classList.add('active');
+    }
+  });
+  if(tab==='ncert'){renderAllTrackers('ncert');renderTrackerStats('ncert');}
+  if(tab==='rapid'){renderAllTrackers('rapid');renderTrackerStats('rapid');}
+}
+
+// ── TRACKER RENDER ──
+function getTrackerState(mode){return mode==='ncert'?S.ncertTracker:S.rapidTracker;}
+
+function renderChapterList(mode, subject, listId, barId, pctId){
+  const store=getTrackerState(mode);
+  const data=CH_DATA[subject];
+  const todayK=todayKey();
+  let readCount=0;
+  const html=data.chapters.map((ch,i)=>{
+    const key=subject+'_'+i;
+    const dates=store[key]||[];
+    const count=dates.length;
+    const readToday=dates.includes(todayK);
+    if(count>0)readCount++;
+    const dateList=dates.length>0?dates.slice(-5).reverse().map(d=>`<div style="font-size:9px;color:var(--text2);padding:2px 0;border-bottom:1px solid var(--border)">${d}</div>`).join(''):'<div style="font-size:9px;color:var(--text3)">No reads yet</div>';
+    return`<div class="ch-row ${readToday?'read-today':''}">
+      <div class="ch-name">${ch}</div>
+      ${count>0?`<span class="ch-count" style="background:${data.color}22;color:${data.color}">${count}×</span>`:''}
+      ${dates.length>0?`<span class="ch-date">${dates[dates.length-1]}</span>`:''}
+      <button class="ch-plus" style="background:${data.color}22;color:${data.color}" onclick="logChapterRead('${mode}','${subject}',${i})" title="Mark read today">+</button>
+      <div class="ch-dates-popup"><div style="font-size:9px;font-weight:700;color:var(--text2);margin-bottom:6px">📅 Read History (last 5)</div>${dateList}</div>
+    </div>`;
+  }).join('');
+  document.getElementById(listId).innerHTML=html;
+  const pct=Math.round(readCount/data.chapters.length*100);
+  document.getElementById(barId).style.width=pct+'%';
+  document.getElementById(pctId).textContent=readCount+'/'+data.chapters.length+' ('+pct+'%)';
+}
+
+function renderAllTrackers(mode){
+  const prefix=mode+'-';
+  renderChapterList(mode,'bot11',prefix+'bot11-list',prefix+'bot11-bar',prefix+'bot11-pct');
+  renderChapterList(mode,'zoo11',prefix+'zoo11-list',prefix+'zoo11-bar',prefix+'zoo11-pct');
+  renderChapterList(mode,'bot12',prefix+'bot12-list',prefix+'bot12-bar',prefix+'bot12-pct');
+  renderChapterList(mode,'zoo12',prefix+'zoo12-list',prefix+'zoo12-bar',prefix+'zoo12-pct');
+  renderChapterList(mode,'inorg',prefix+'inorg-list',prefix+'inorg-bar',prefix+'inorg-pct');
+  renderChapterList(mode,'org',prefix+'org-list',prefix+'org-bar',prefix+'org-pct');
+  renderChapterList(mode,'phys',prefix+'phys-list',prefix+'phys-bar',prefix+'phys-pct');
+}
+
+function logChapterRead(mode, subject, idx){
+  const store=getTrackerState(mode);
+  const key=subject+'_'+idx;
+  if(!store[key])store[key]=[];
+  const todayK=todayKey();
+  // Allow multiple reads but only one per day
+  if(!store[key].includes(todayK)){
+    store[key].push(todayK);
+  } else {
+    // If already read today, allow re-adding (count how many times today)
+    store[key].push(todayK+' #'+(store[key].filter(d=>d.startsWith(todayK)).length+1));
+  }
+  saveState(S);
+  const chName=CH_DATA[subject].chapters[idx];
+  showToast('✅ '+chName.slice(0,28)+' — '+mode==='ncert'?'NCERT read':'Rapid revised'+'! 📖');
+  renderAllTrackers(mode);
+  renderTrackerStats(mode);
+  pushGroupSync();
+}
+
+function renderTrackerStats(mode){
+  const store=getTrackerState(mode);
+  const todayK=todayKey();
+  let totalCh=0,readCh=0,todayReads=0,totalReads=0;
+  Object.keys(CH_DATA).forEach(sub=>{
+    CH_DATA[sub].chapters.forEach((_,i)=>{
+      totalCh++;
+      const key=sub+'_'+i;
+      const dates=store[key]||[];
+      if(dates.length>0)readCh++;
+      totalReads+=dates.length;
+      if(dates.some(d=>d.startsWith(todayK)))todayReads++;
+    });
+  });
+  const pct=Math.round(readCh/totalCh*100);
+  const statsId=mode+'-stats-row';
+  document.getElementById(statsId).innerHTML=`
+    <div class="tstat"><div class="tstat-val" style="color:var(--teal)">${readCh}</div><div class="tstat-lbl">Chapters Read</div></div>
+    <div class="tstat"><div class="tstat-val" style="color:var(--sage)">${pct}%</div><div class="tstat-lbl">Coverage</div></div>
+    <div class="tstat"><div class="tstat-val" style="color:var(--lavender)">${todayReads}</div><div class="tstat-lbl">Today's Reads</div></div>
+    <div class="tstat"><div class="tstat-val" style="color:var(--amber)">${totalReads}</div><div class="tstat-lbl">Total Reads</div></div>`;
+}
+
+// ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
 function init(){
@@ -1517,18 +1859,6 @@ function init(){
   setInterval(renderTimetable,60000);
   setInterval(()=>{renderWeekly();updatePacePredictor();},120000);
   // Restore Firebase + group if previously set up
-  if(!S.firebaseConfig){
-  S.firebaseConfig = {
-    apiKey: "AIzaSyCx5dxenYxfqqiYZVVV3E15kt3UTEZEBuU",
-    authDomain: "neet25032006.firebaseapp.com",
-    databaseURL: "https://neet25032006-default-rtdb.firebaseio.com",
-    projectId: "neet25032006",
-    storageBucket: "neet25032006.firebasestorage.app",
-    messagingSenderId: "491795804146",
-    appId: "1:491795804146:web:ab742a28f521fb961e056b"
-  };
-  saveState(S);
-}
   if(S.firebaseConfig){
     const ok=initFirebase(S.firebaseConfig);
     if(ok&&S.groupId){
