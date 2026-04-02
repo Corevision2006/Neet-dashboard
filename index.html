@@ -941,6 +941,114 @@ body.dark .test-modal{background:var(--card);}
 .firebase-config-input:focus{border-color:var(--primary);}
 .tl-needs-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:20px;}
 
+/* ===== AI DOUBT SOLVER ===== */
+.ai-layout{display:grid;grid-template-columns:300px 1fr;gap:20px;height:calc(100vh - 160px);min-height:600px;}
+@media(max-width:900px){.ai-layout{grid-template-columns:1fr;height:auto;}}
+.ai-sidebar-panel{display:flex;flex-direction:column;gap:14px;}
+.ai-api-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;}
+.ai-api-title{font-size:12px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
+.ai-key-row{display:flex;gap:8px;}
+.ai-key-input{flex:1;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s;}
+.ai-key-input:focus{border-color:var(--primary);}
+.ai-key-save{padding:8px 13px;background:var(--primary);color:white;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;font-weight:500;}
+.ai-key-save:hover{background:#2E6358;}
+.ai-history-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;flex:1;overflow:hidden;display:flex;flex-direction:column;}
+.ai-history-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.ai-history-clear{font-size:11px;color:var(--text3);cursor:pointer;font-family:'DM Sans',sans-serif;}
+.ai-history-clear:hover{color:#C0392B;}
+.ai-history-list{overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;}
+.ai-hist-item{padding:10px 12px;border-radius:10px;background:var(--bg);cursor:pointer;transition:all .18s;border:1px solid transparent;}
+.ai-hist-item:hover{border-color:var(--primary);background:var(--primary-light);}
+.ai-hist-q{font-size:12.5px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ai-hist-meta{display:flex;align-items:center;gap:6px;margin-top:3px;}
+.ai-hist-subj{font-size:10.5px;padding:1px 7px;border-radius:20px;font-weight:600;}
+.ai-hist-time{font-size:10.5px;color:var(--text3);}
+.ai-chat-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);display:flex;flex-direction:column;overflow:hidden;}
+.ai-chat-header{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+.ai-chat-icon{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#3A7A6C,#7BAE9A);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.ai-chat-head-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--text);}
+.ai-chat-head-sub{font-size:12px;color:var(--text3);}
+.ai-subj-pills{display:flex;gap:6px;padding:12px 22px;border-bottom:1px solid var(--bg);flex-wrap:wrap;}
+.ai-spill{padding:5px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;color:var(--text2);}
+.ai-spill.active{color:white;border-color:transparent;}
+.ai-spill[data-s="Physics"].active{background:#5AADCC;}
+.ai-spill[data-s="Chemistry"].active{background:#C4922A;}
+.ai-spill[data-s="Biology"].active{background:#3A9E6C;}
+.ai-spill[data-s="All"].active{background:var(--primary);}
+.ai-messages{flex:1;overflow-y:auto;padding:20px 22px;display:flex;flex-direction:column;gap:16px;min-height:300px;}
+.ai-msg{display:flex;gap:10px;animation:fadeUp .3s ease;}
+.ai-msg.user{flex-direction:row-reverse;}
+.ai-msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px;}
+.ai-msg.user .ai-msg-avatar{background:linear-gradient(135deg,var(--primary),var(--sage));}
+.ai-msg.bot .ai-msg-avatar{background:linear-gradient(135deg,#2D4F47,#3A7A6C);}
+.ai-msg-bubble{max-width:75%;padding:12px 16px;border-radius:16px;font-size:13.5px;line-height:1.7;color:var(--text);}
+.ai-msg.user .ai-msg-bubble{background:var(--primary);color:white;border-radius:16px 4px 16px 16px;}
+.ai-msg.bot .ai-msg-bubble{background:var(--bg);border:1px solid var(--border);border-radius:4px 16px 16px 16px;}
+.ai-msg.bot .ai-msg-bubble strong{color:var(--primary);}
+.ai-msg.bot .ai-msg-bubble em{color:var(--text2);}
+.ai-typing{display:flex;gap:4px;align-items:center;padding:14px 16px;}
+.ai-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:aiBounce 1.2s infinite;}
+.ai-dot:nth-child(2){animation-delay:.2s;}
+.ai-dot:nth-child(3){animation-delay:.4s;}
+@keyframes aiBounce{0%,80%,100%{transform:translateY(0);}40%{transform:translateY(-8px);}}
+.ai-input-row{padding:16px 22px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-end;}
+.ai-input-wrap{flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:14px;padding:10px 14px;transition:border-color .2s;display:flex;align-items:flex-end;gap:10px;}
+.ai-input-wrap:focus-within{border-color:var(--primary);}
+.ai-textarea{flex:1;border:none;background:transparent;outline:none;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);resize:none;max-height:120px;min-height:24px;line-height:1.5;}
+.ai-textarea::placeholder{color:var(--text3);}
+.ai-send-btn{width:42px;height:42px;border-radius:12px;border:none;background:var(--primary);color:white;font-size:16px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ai-send-btn:hover{background:#2E6358;transform:scale(1.05);}
+.ai-send-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+.ai-quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 22px 16px;}
+.ai-quick-btn{padding:10px 12px;border-radius:10px;border:1.5px dashed var(--border);background:transparent;font-size:12.5px;color:var(--text2);cursor:pointer;transition:all .18s;text-align:left;font-family:'DM Sans',sans-serif;line-height:1.4;}
+.ai-quick-btn:hover{border-color:var(--primary);background:var(--primary-light);color:var(--primary);}
+.ai-empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;text-align:center;padding:40px 20px;}
+.ai-empty-icon{font-size:52px;margin-bottom:16px;opacity:0.5;}
+.ai-empty-title{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--text);font-weight:400;}
+.ai-empty-sub{font-size:13.5px;color:var(--text3);margin-top:6px;line-height:1.6;}
+body.dark .ai-msg.bot .ai-msg-bubble{background:var(--bg);}
+body.dark .ai-input-wrap{background:var(--bg);}
+
+/* ===== NEET PG HUB ===== */
+.pg-cat-tab{padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);font-size:12.5px;font-weight:500;cursor:pointer;color:var(--text2);transition:all .18s;font-family:'DM Sans',sans-serif;}
+.pg-cat-tab.active{background:var(--primary);color:white;border-color:var(--primary);}
+.pg-subj-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .25s;cursor:pointer;}
+.pg-subj-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--primary);}
+.pg-subj-card-top{padding:16px 18px 12px;display:flex;align-items:flex-start;gap:12px;}
+.pg-subj-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.pg-subj-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--text);line-height:1.2;}
+.pg-subj-cat{font-size:10.5px;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;margin-top:3px;padding:2px 8px;border-radius:20px;display:inline-block;}
+.pg-subj-cat.pre{background:#EEF5FF;color:#2A5FC4;}
+.pg-subj-cat.para{background:#FBF3E2;color:#C4922A;}
+.pg-subj-cat.clinical{background:#E6F4EF;color:#2D7A5E;}
+.pg-wt-bar{height:4px;background:var(--bg);border-radius:20px;overflow:hidden;margin:0 18px 12px;}
+.pg-wt-fill{height:100%;border-radius:20px;transition:width 1s ease;}
+.pg-subj-meta{display:flex;gap:10px;padding:0 18px 12px;flex-wrap:wrap;}
+.pg-meta-chip{font-size:11.5px;background:var(--bg);padding:3px 9px;border-radius:20px;color:var(--text2);}
+.pg-hy-tags{display:flex;gap:6px;padding:0 18px 14px;flex-wrap:wrap;}
+.pg-hy-tag{font-size:11px;background:#FBF3E2;color:#8A5A00;padding:2px 8px;border-radius:20px;border:1px solid #E8D0A0;}
+.pg-hy-tag.hot{background:#FDECEA;color:#8A1A00;border-color:#E8B0A0;}
+/* Modal */
+.pg-modal-header{padding:24px 28px 0;display:flex;align-items:flex-start;gap:14px;}
+.pg-modal-body{padding:20px 28px 28px;}
+.pg-topic-section{margin-bottom:18px;}
+.pg-topic-title{font-size:12px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.pg-topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:7px;}
+.pg-topic-chip{font-size:12.5px;background:var(--bg);border:1px solid var(--border);padding:6px 10px;border-radius:8px;color:var(--text);display:flex;align-items:center;gap:6px;cursor:pointer;transition:all .15s;}
+.pg-topic-chip:hover{border-color:var(--primary);background:var(--primary-light);}
+.pg-topic-chip.done{background:#E6F4EF;border-color:#A8D4C8;color:#2D7A5E;}
+.pg-topic-chip .pg-tc-check{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.pg-topic-chip.done .pg-tc-check{background:var(--primary);border-color:var(--primary);}
+.pg-hy-section{background:linear-gradient(135deg,#FBF3E2,#FDF8EE);border:1px solid #E8D0A0;border-radius:12px;padding:16px;}
+.pg-hy-title{font-size:12px;font-weight:700;color:#8A5A00;letter-spacing:0.5px;margin-bottom:10px;}
+.pg-hy-list{display:flex;flex-direction:column;gap:6px;}
+.pg-hy-item{font-size:13px;color:var(--text);display:flex;align-items:flex-start;gap:8px;line-height:1.5;}
+.pg-hy-item::before{content:'⭐';font-size:11px;margin-top:2px;flex-shrink:0;}
+.pg-prev-qs{background:var(--bg);border-radius:10px;padding:14px;}
+.pg-prev-title{font-size:12px;font-weight:700;color:var(--text3);margin-bottom:10px;letter-spacing:0.5px;}
+.pg-prev-item{font-size:12.5px;color:var(--text);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;}
+.pg-prev-item:last-child{border-bottom:none;}
+
 /* ===== LOGIN / ONBOARDING SCREEN ===== */
 #loginScreen{
   position:fixed;inset:0;z-index:9999;display:flex;
@@ -1116,25 +1224,38 @@ body.dark .test-modal{background:var(--card);}
         </div>
 
         <div class="ls-field">
-          <label>Class</label>
+          <label id="ls-class-label">Class / Stage</label>
           <select class="ls-select" id="ls-class">
             <option value="XII — Science">Class XII — Science</option>
             <option value="XI — Science">Class XI — Science</option>
-            <option value="Dropper — NEET">Dropper — NEET Repeater</option>
+            <option value="Dropper — NEET UG">Dropper — NEET UG Repeater</option>
+            <option value="MBBS Final Year">MBBS Final Year</option>
+            <option value="MBBS Intern">MBBS Intern (Internship)</option>
+            <option value="MBBS Graduate">MBBS Graduate (PG Aspirant)</option>
           </select>
         </div>
 
         <div class="ls-field">
           <label>Target Exam</label>
-          <select class="ls-select" id="ls-exam">
-            <option value="NEET 2026">NEET 2026</option>
-            <option value="NEET 2027">NEET 2027</option>
-            <option value="NEET 2025">NEET 2025</option>
+          <select class="ls-select" id="ls-exam" onchange="lsOnExamChange(this)">
+            <optgroup label="NEET UG">
+              <option value="NEET UG 2026">NEET UG 2026</option>
+              <option value="NEET UG 2027">NEET UG 2027</option>
+              <option value="NEET UG 2025">NEET UG 2025</option>
+            </optgroup>
+            <optgroup label="NEET PG / Postgraduate">
+              <option value="NEET PG 2025">NEET PG 2025</option>
+              <option value="NEET PG 2026">NEET PG 2026</option>
+              <option value="INICET 2025">INICET 2025 (AIIMS PG)</option>
+              <option value="INICET 2026">INICET 2026 (AIIMS PG)</option>
+              <option value="DNB CET 2026">DNB CET 2026</option>
+              <option value="State PG">State PG Exam</option>
+            </optgroup>
           </select>
         </div>
 
-        <div class="ls-field">
-          <label>School / Institute (Optional)</label>
+        <div class="ls-field" id="ls-school-field">
+          <label id="ls-school-label">School / Institute (Optional)</label>
           <input class="ls-input" id="ls-school" type="text" placeholder="e.g. Allen Kota, DPS Delhi"/>
         </div>
 
@@ -1206,6 +1327,16 @@ body.dark .test-modal{background:var(--card);}
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
       PDF Extractor
       <span class="nav-badge">New</span>
+    </div>
+    <div class="nav-item" onclick="navigate('aidoubt',this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="12" y1="7" x2="12" y2="13"/></svg>
+      AI Doubt Solver
+      <span class="nav-badge" style="background:#5AADCC;color:#0D2535;">AI</span>
+    </div>
+    <div class="nav-item" onclick="navigate('neetpg',this)" id="navNeetPG">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      NEET PG Hub
+      <span class="nav-badge" style="background:#D48AAD;color:#4A0020;">PG</span>
     </div>
   </div>
 
@@ -2691,6 +2822,180 @@ body.dark .test-modal{background:var(--card);}
   </div>
 </div>
 
+<!-- AI DOUBT SOLVER PAGE -->
+<div class="page" id="page-aidoubt">
+  <div style="margin-bottom:20px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;">🧠 AI Doubt Solver</h2>
+      <p style="font-size:13.5px;color:var(--text3);margin-top:3px;">NEET-focused AI tutor — Physics, Chemistry, Biology explained step by step.</p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <div style="font-size:12px;color:var(--text3);background:var(--primary-light);border:1px solid var(--primary);padding:5px 12px;border-radius:20px;">Powered by Gemini AI</div>
+    </div>
+  </div>
+  <div class="ai-layout">
+    <!-- LEFT: API + History -->
+    <div class="ai-sidebar-panel">
+      <div class="ai-api-box">
+        <div class="ai-api-title">🔑 Gemini API Key</div>
+        <div class="ai-key-row">
+          <input type="password" class="ai-key-input" id="aiApiKey" placeholder="AIza... (free from aistudio.google.com)"/>
+          <button class="ai-key-save" onclick="aiSaveKey()">Save</button>
+        </div>
+        <p style="font-size:11.5px;color:var(--text3);margin-top:7px;">Same key as PDF Extractor. Stored locally, never shared.</p>
+      </div>
+      <div class="ai-history-box">
+        <div class="ai-history-title">
+          Recent Doubts
+          <span class="ai-history-clear" onclick="aiClearHistory()">Clear all</span>
+        </div>
+        <div class="ai-history-list" id="aiHistoryList">
+          <div style="text-align:center;padding:30px 0;color:var(--text3);font-size:13px;opacity:0.6;">
+            <div style="font-size:28px;margin-bottom:8px;">💬</div>
+            Your doubts will appear here
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Chat Interface -->
+    <div class="ai-chat-panel">
+      <div class="ai-chat-header">
+        <div class="ai-chat-icon">🔬</div>
+        <div>
+          <div class="ai-chat-head-title">NEET AI Tutor</div>
+          <div class="ai-chat-head-sub">Ask anything — Physics, Chemistry, Biology</div>
+        </div>
+        <button onclick="aiNewChat()" style="margin-left:auto;padding:7px 14px;border-radius:9px;border:1.5px solid var(--border);background:var(--bg);font-size:12.5px;font-weight:500;cursor:pointer;color:var(--text2);transition:all .18s;font-family:'DM Sans',sans-serif;" onmouseover="this.style.borderColor='var(--primary)';this.style.color='var(--primary)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">+ New Chat</button>
+      </div>
+
+      <!-- Subject Filter -->
+      <div class="ai-subj-pills">
+        <div class="ai-spill active" data-s="All" onclick="aiSelSubj(this)">All Subjects</div>
+        <div class="ai-spill" data-s="Physics" onclick="aiSelSubj(this)">⚛️ Physics</div>
+        <div class="ai-spill" data-s="Chemistry" onclick="aiSelSubj(this)">🧪 Chemistry</div>
+        <div class="ai-spill" data-s="Biology" onclick="aiSelSubj(this)">🧬 Biology</div>
+      </div>
+
+      <!-- Messages Area -->
+      <div class="ai-messages" id="aiMessages">
+        <div class="ai-empty-state" id="aiEmptyState">
+          <div class="ai-empty-icon">🎯</div>
+          <div class="ai-empty-title">Ask your first doubt</div>
+          <div class="ai-empty-sub">From Newton's laws to DNA replication —<br>get NEET-level explanations instantly.</div>
+        </div>
+      </div>
+
+      <!-- Quick Prompts (shown only when empty) -->
+      <div class="ai-quick-grid" id="aiQuickGrid">
+        <button class="ai-quick-btn" onclick="aiQuickAsk(this)">⚛️ Explain the photoelectric effect for NEET</button>
+        <button class="ai-quick-btn" onclick="aiQuickAsk(this)">🧪 What is Markovnikov's rule with example?</button>
+        <button class="ai-quick-btn" onclick="aiQuickAsk(this)">🧬 Explain the lac operon model simply</button>
+        <button class="ai-quick-btn" onclick="aiQuickAsk(this)">📐 How to solve projectile motion MCQs fast?</button>
+      </div>
+
+      <!-- Input Row -->
+      <div class="ai-input-row">
+        <div class="ai-input-wrap">
+          <textarea class="ai-textarea" id="aiInput" rows="1" placeholder="Type your doubt here... (e.g. 'Explain Faraday's law with NEET questions')" onkeydown="aiHandleKey(event)" oninput="aiAutoResize(this)"></textarea>
+        </div>
+        <button class="ai-send-btn" id="aiSendBtn" onclick="aiSend()" title="Send">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEET PG HUB PAGE -->
+<div class="page" id="page-neetpg">
+  <!-- Header -->
+  <div style="margin-bottom:20px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;">🎓 NEET PG Hub</h2>
+      <p style="font-size:13.5px;color:var(--text3);margin-top:3px;">Complete syllabus, weightage & high-yield topics for NEET PG / INICET / DNB CET.</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;" id="pgExamBadges">
+      <div style="padding:6px 14px;border-radius:20px;background:#2D4F4722;border:1px solid var(--primary);font-size:12px;font-weight:600;color:var(--primary);">NEET PG Pattern: 200 Qs · 4/-1 · 3.5 hrs</div>
+      <div style="padding:6px 14px;border-radius:20px;background:#D48AAD22;border:1px solid #D48AAD;font-size:12px;font-weight:600;color:#8A2040;">INICET: 200 Qs · No -ve · 3 hrs</div>
+    </div>
+  </div>
+
+  <!-- Top Stats Row -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;" id="pgStatsRow">
+    <div class="stat-card" style="--stat-color:#D48AAD;--stat-bg:#F9EEF4;">
+      <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#8A2040" stroke-width="1.8"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+      <div class="stat-val" style="font-size:22px;">19</div>
+      <div class="stat-label">PG Subjects</div>
+      <div class="stat-change up">3 Pre-clinical · 4 Para-clinical · 12 Clinical</div>
+    </div>
+    <div class="stat-card" style="--stat-color:#5AADCC;--stat-bg:#EAF5FA;">
+      <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1A7A9A" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <div class="stat-val" style="font-size:22px;">200</div>
+      <div class="stat-label">Questions in Exam</div>
+      <div class="stat-change up">Marks: 800 max · Cutoff ~300</div>
+    </div>
+    <div class="stat-card" style="--stat-color:#E8C17A;--stat-bg:#FBF3E2;">
+      <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#C4922A" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div class="stat-val" style="font-size:22px;" id="pgSubjectsDone">0</div>
+      <div class="stat-label">Subjects Tracked</div>
+      <div class="stat-change up" id="pgSubjectsDoneSub">Add targets to track</div>
+    </div>
+    <div class="stat-card" style="--stat-color:#7BAE9A;--stat-bg:#E8F4EF;">
+      <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#3A7A6C" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="stat-val" style="font-size:22px;">3.5<span style="font-size:14px;">hr</span></div>
+      <div class="stat-label">Exam Duration</div>
+      <div class="stat-change up">~63 sec per question</div>
+    </div>
+  </div>
+
+  <!-- Exam Pattern Comparison -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:22px;">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:20px;margin-bottom:14px;">📋 Exam Pattern Comparison</div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:separate;border-spacing:0;font-size:13px;">
+        <thead>
+          <tr style="background:var(--bg);">
+            <th style="padding:10px 14px;text-align:left;border-radius:8px 0 0 8px;font-weight:600;color:var(--text2);">Feature</th>
+            <th style="padding:10px 14px;text-align:center;font-weight:600;color:var(--primary);">NEET PG</th>
+            <th style="padding:10px 14px;text-align:center;font-weight:600;color:#8A2040;">INICET (AIIMS)</th>
+            <th style="padding:10px 14px;text-align:center;border-radius:0 8px 8px 0;font-weight:600;color:#C4922A;">DNB CET</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:9px 14px;color:var(--text);border-bottom:1px solid var(--bg);">Total Questions</td><td style="text-align:center;padding:9px;border-bottom:1px solid var(--bg);">200</td><td style="text-align:center;padding:9px;border-bottom:1px solid var(--bg);">200</td><td style="text-align:center;padding:9px;border-bottom:1px solid var(--bg);">100</td></tr>
+          <tr><td style="padding:9px 14px;color:var(--text);border-bottom:1px solid var(--bg);">Marks Per Correct</td><td style="text-align:center;padding:9px;border-bottom:1px solid var(--bg);">+4</td><td style="text-align:center;padding:9px;border-bottom:1px solid var(--bg);">+3</td><td style="text-align:center;padding:9px;border-bottom:1px solid var(--bg);">+4</td></tr>
+          <tr><td style="padding:9px 14px;color:var(--text);border-bottom:1px solid var(--bg);">Negative Marking</td><td style="text-align:center;padding:9px;border-bottom:1px solid var(--bg);color:#C0392B;">-1</td><td style="text-align:center;padding:9px;border-bottom:1px solid var(--bg);color:#3A9E6C;">None ✓</td><td style="text-align:center;padding:9px;border-bottom:1px solid var(--bg);color:#C0392B;">-1</td></tr>
+          <tr><td style="padding:9px 14px;color:var(--text);border-bottom:1px solid var(--bg);">Duration</td><td style="text-align:center;padding:9px;border-bottom:1px solid var(--bg);">3.5 hrs</td><td style="text-align:center;padding:9px;border-bottom:1px solid var(--bg);">3 hrs</td><td style="text-align:center;padding:9px;border-bottom:1px solid var(--bg);">3 hrs</td></tr>
+          <tr><td style="padding:9px 14px;color:var(--text);border-bottom:1px solid var(--bg);">Conducted By</td><td style="text-align:center;padding:9px;border-bottom:1px solid var(--bg);">NBE</td><td style="text-align:center;padding:9px;border-bottom:1px solid var(--bg);">AIIMS Delhi</td><td style="text-align:center;padding:9px;border-bottom:1px solid var(--bg);">NBE</td></tr>
+          <tr><td style="padding:9px 14px;color:var(--text);">Approx Seats</td><td style="text-align:center;padding:9px;">50,000+</td><td style="text-align:center;padding:9px;">~250</td><td style="text-align:center;padding:9px;">~10,000</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Subject Filter Tabs -->
+  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+    <button class="pg-cat-tab active" data-cat="all" onclick="pgFilterCat(this)">All 19 Subjects</button>
+    <button class="pg-cat-tab" data-cat="pre" onclick="pgFilterCat(this)">🔬 Pre-Clinical (3)</button>
+    <button class="pg-cat-tab" data-cat="para" onclick="pgFilterCat(this)">🧫 Para-Clinical (4)</button>
+    <button class="pg-cat-tab" data-cat="clinical" onclick="pgFilterCat(this)">🏥 Clinical (12)</button>
+    <button class="pg-cat-tab" data-cat="high" onclick="pgFilterCat(this)">⭐ High Yield</button>
+  </div>
+
+  <!-- Subject Cards Grid -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;" id="pgSubjectGrid">
+    <!-- Populated by JS -->
+  </div>
+
+  <!-- Subject Detail Modal -->
+  <div id="pgSubjectModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9000;overflow-y:auto;" onclick="if(event.target.id==='pgSubjectModal')pgCloseSubject()">
+    <div style="background:var(--card);border-radius:var(--radius);max-width:700px;margin:40px auto;padding:0;overflow:hidden;box-shadow:var(--shadow-lg);">
+      <div id="pgSubjectModalContent"></div>
+    </div>
+  </div>
+</div>
+
 <!-- FLOATING FOCUS TIMER -->
 <div class="float-timer" id="floatTimer">
   <!-- MINIMIZED PILL -->
@@ -3046,7 +3351,7 @@ ftInit();
 
 // NAVIGATION — lazy page init
 function getGreeting(name){const h=new Date().getHours();let g=h<12?'Good Morning':h<17?'Good Afternoon':h<21?'Good Evening':'Good Night';return `${g}, <span>${name.split(' ')[0]}</span> ✦`;}
-const pageTitles={dashboard:getGreeting('Arjun'),targets:'My <span>Targets</span>',schedule:'My <span>Schedule</span>',progress:'<span>Progress</span> Analytics',notes:'Smart <span>Notes</span>',timer:'Focus <span>Timer</span>',settings:'<span>Settings</span>',profile:'My <span>Profile</span>',testlog:'Test <span>Log</span>',rankpredictor:'NEET <span>Rank Predictor</span>',studygroup:'Study <span>Group</span>',pdfextractor:'PDF <span>Extractor</span>'};
+const pageTitles={dashboard:getGreeting('Arjun'),targets:'My <span>Targets</span>',schedule:'My <span>Schedule</span>',progress:'<span>Progress</span> Analytics',notes:'Smart <span>Notes</span>',timer:'Focus <span>Timer</span>',settings:'<span>Settings</span>',profile:'My <span>Profile</span>',testlog:'Test <span>Log</span>',rankpredictor:'NEET <span>Rank Predictor</span>',studygroup:'Study <span>Group</span>',pdfextractor:'PDF <span>Extractor</span>',aidoubt:'🧠 AI <span>Doubt Solver</span>',neetpg:'🎓 NEET PG <span>Hub</span>'};
 const _pageInited={dashboard:true}; // dashboard inits on load
 function navigate(page,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -3067,6 +3372,8 @@ function navigate(page,el){
     else if(page==='schedule'){renderWeekGrid();updateWeekLabel();renderAgenda();}
     else if(page==='testlog'){renderTestLog();updateTestStats();renderWeakTopics();}
     else if(page==='rankpredictor'){setTimeout(()=>{rpUpdate();renderPyqStats('2025');},100);}
+    else if(page==='aidoubt'){aiLoadKey();aiRenderHistory();}
+    else if(page==='neetpg'){pgInit();}
   } else {
     if(page==='dashboard'){animateBars();updateDashboardStats();renderDashTodaySessions();renderDashSubjectProgress();renderDashActivity();}
   }
@@ -4889,6 +5196,7 @@ function initAppForUser(){
 
   // Apply profile to UI
   applyProfileData();
+  applyPGAwareness();
 
   // Initialize dashboard
   animateBars();
@@ -5006,6 +5314,31 @@ function renderDashTodaySessions(){
 function renderDashSubjectProgress(){
   const el = document.getElementById('subjectProgressList');
   if(!el) return;
+
+  // For NEET PG users — show PG subject progress from pgDoneTopics
+  if(isNEETPG()){
+    const pgSubjs = [
+      {name:'Pathology', color:'#E85B9A', id:'pathology'},
+      {name:'Pharmacology', color:'#F5A623', id:'pharmacology'},
+      {name:'Medicine', color:'#3A7A6C', id:'medicine'},
+      {name:'Surgery', color:'#2563EB', id:'surgery'},
+      {name:'Microbiology', color:'#3AB8A0', id:'microbiology'},
+    ];
+    const pgDone = pgDoneTopics || {};
+    el.innerHTML = pgSubjs.map(s => {
+      const subj = PG_SUBJECTS.find(x=>x.id===s.id);
+      const doneTopics = Object.keys(pgDone[s.id]||{}).length;
+      const totalTopics = subj ? subj.topics.length : 10;
+      const pct = totalTopics > 0 ? Math.round(doneTopics/totalTopics*100) : 0;
+      return `<div class="sp-item">
+        <div class="sp-header"><span class="sp-name">${s.name}</span><span class="sp-pct">${pct}%</span></div>
+        <div class="sp-track"><div class="sp-fill" style="width:${pct}%;background:${s.color};transition:width 1.2s cubic-bezier(.4,0,.2,1);"></div></div>
+      </div>`;
+    }).join('');
+    return;
+  }
+
+  // For NEET UG users — show Physics/Chemistry/Biology
   const subjects = ['Physics','Chemistry','Biology'];
   const colors = {'Physics':'#5AADCC','Chemistry':'#E8C17A','Biology':'#7BAE9A'};
   const subjectTargets = subjects.map(s=>({
@@ -5081,6 +5414,602 @@ function renderProfilePage(){
 // ---- Hook into existing save functions ----
 // Override saveTarget to also persist
 const _origSaveTarget = window.saveTarget;
+
+// =========================================================
+// ===== AI DOUBT SOLVER =====
+// =========================================================
+let aiSelectedSubj = 'All';
+let aiConversation = []; // current chat messages
+let aiIsLoading = false;
+
+const AI_NEET_SYSTEM = `You are an expert NEET UG and NEET PG tutor with 15+ years of experience. You help Indian medical/engineering aspirants understand concepts deeply.
+
+Rules:
+1. Always explain in clear, simple English with a NEET exam focus
+2. For Physics: Show formula, derivation if needed, and a solved NEET-style MCQ example
+3. For Chemistry: Give reaction with conditions, mechanism (if organic), and memory tricks
+4. For Biology: Give NCERT-based explanation, diagrams in text form (using ASCII or text descriptions), and high-yield facts
+5. Always mention if a topic is "High Yield for NEET" or which year it appeared
+6. End with 1-2 practice MCQ-style questions the student can solve
+7. Use bold text (**text**) for important terms and formulas
+8. Keep responses focused — not too long, not too short
+9. Use structured format: Concept → Explanation → Example → MCQ Practice
+10. If asked about NEET PG: include clinical correlations and PG-level details`;
+
+function aiSaveKey(){
+  const key = document.getElementById('aiApiKey').value.trim();
+  if(!key){ showToast('⚠ Enter your Gemini API key'); return; }
+  localStorage.setItem('sf_ai_gemini_key', key);
+  showToast('✓ API key saved!');
+}
+
+function aiLoadKey(){
+  const saved = localStorage.getItem('sf_ai_gemini_key');
+  if(saved){
+    const el = document.getElementById('aiApiKey');
+    if(el) el.value = saved;
+  }
+}
+
+function aiSelSubj(el){
+  document.querySelectorAll('.ai-spill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  aiSelectedSubj = el.dataset.s;
+}
+
+function aiHandleKey(e){
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); aiSend(); }
+}
+
+function aiAutoResize(el){
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function aiQuickAsk(btn){
+  document.getElementById('aiInput').value = btn.textContent.replace(/^[⚛️🧪🧬📐]\s*/,'');
+  aiSend();
+}
+
+function aiNewChat(){
+  aiConversation = [];
+  document.getElementById('aiMessages').innerHTML = `
+    <div class="ai-empty-state" id="aiEmptyState">
+      <div class="ai-empty-icon">🎯</div>
+      <div class="ai-empty-title">Ask your first doubt</div>
+      <div class="ai-empty-sub">From Newton's laws to DNA replication —<br>get NEET-level explanations instantly.</div>
+    </div>`;
+  document.getElementById('aiQuickGrid').style.display = 'grid';
+  document.getElementById('aiInput').value = '';
+  showToast('New chat started');
+}
+
+async function aiSend(){
+  if(aiIsLoading) return;
+  const input = document.getElementById('aiInput');
+  const question = input.value.trim();
+  if(!question){ showToast('⚠ Type your doubt first'); return; }
+
+  const apiKey = localStorage.getItem('sf_ai_gemini_key') || document.getElementById('aiApiKey').value.trim();
+  if(!apiKey){ showToast('⚠ Add your Gemini API key first (left panel)'); return; }
+
+  // Hide empty state & quick grid
+  const emptyState = document.getElementById('aiEmptyState');
+  if(emptyState) emptyState.remove();
+  document.getElementById('aiQuickGrid').style.display = 'none';
+
+  // Add user message to UI
+  const userInitials = (profileData && profileData.initials) ? profileData.initials : 'ME';
+  const avatarColor = (profileData && profileData.avatarColor) ? profileData.avatarColor : 'var(--primary)';
+  const subjLabel = aiSelectedSubj !== 'All' ? ` [${aiSelectedSubj}]` : '';
+  const fullQuestion = `${subjLabel ? '['+aiSelectedSubj+'] ' : ''}${question}`;
+
+  aiAddMessage('user', question, userInitials, avatarColor);
+  input.value = '';
+  input.style.height = 'auto';
+
+  // Add to conversation history
+  aiConversation.push({ role: 'user', content: fullQuestion });
+
+  // Show typing indicator
+  aiIsLoading = true;
+  document.getElementById('aiSendBtn').disabled = true;
+  const typingId = 'ai-typing-' + Date.now();
+  const msgArea = document.getElementById('aiMessages');
+  msgArea.innerHTML += `<div class="ai-msg bot" id="${typingId}">
+    <div class="ai-msg-avatar">🔬</div>
+    <div class="ai-msg-bubble"><div class="ai-typing"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div></div></div>
+  </div>`;
+  msgArea.scrollTop = msgArea.scrollHeight;
+
+  try {
+    // Build dynamic system prompt based on user type
+    const userExam = profileData ? profileData.exam : 'NEET UG';
+    const isPGUser = isNEETPG();
+    const dynamicSystem = isPGUser
+      ? AI_NEET_SYSTEM + `\n\nIMPORTANT: This student is preparing for ${userExam}. Focus on POSTGRADUATE level clinical correlations, mechanisms, and exam-style questions relevant to NEET PG / INICET / DNB CET. Include clinical vignettes, previous year question patterns, and PG-level high-yield facts.`
+      : AI_NEET_SYSTEM + `\n\nThis student is preparing for ${userExam} (NEET UG). Keep explanations at Class 11-12 / NCERT level with NEET UG exam focus.`;
+
+    // Build messages for Gemini
+    const messages = aiConversation.map(m => ({
+      role: m.role === 'user' ? 'user' : 'model',
+      parts: [{ text: m.content }]
+    }));
+
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: dynamicSystem }] },
+        contents: messages,
+        generationConfig: { temperature: 0.7, maxOutputTokens: 1200 }
+      })
+    });
+
+    const data = await res.json();
+    if(data.error) throw new Error(data.error.message);
+    const answer = data.candidates[0].content.parts[0].text;
+
+    // Remove typing indicator
+    document.getElementById(typingId)?.remove();
+
+    // Add bot response
+    aiAddMessage('bot', answer, '🔬', null);
+    aiConversation.push({ role: 'model', content: answer });
+
+    // Save to history (user's localStorage)
+    aiSaveToHistory(question, answer, aiSelectedSubj);
+
+  } catch(err) {
+    document.getElementById(typingId)?.remove();
+    aiAddMessage('bot', `❌ Error: ${err.message}. Check your API key or internet connection.`, '🔬', null);
+  }
+
+  aiIsLoading = false;
+  document.getElementById('aiSendBtn').disabled = false;
+  document.getElementById('aiMessages').scrollTop = 999999;
+}
+
+function aiAddMessage(role, text, avatarContent, avatarBg){
+  const msgArea = document.getElementById('aiMessages');
+  const formatted = role === 'bot' ? aiFormatMarkdown(text) : escapeHtml(text);
+  const avatarStyle = avatarBg ? `style="background:${avatarBg};"` : '';
+  msgArea.innerHTML += `
+    <div class="ai-msg ${role}">
+      <div class="ai-msg-avatar" ${avatarStyle}>${avatarContent}</div>
+      <div class="ai-msg-bubble">${formatted}</div>
+    </div>`;
+  msgArea.scrollTop = 999999;
+}
+
+function aiFormatMarkdown(text){
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/`(.+?)`/g,'<code style="background:rgba(58,122,108,0.12);padding:1px 5px;border-radius:4px;font-family:DM Mono,monospace;font-size:12.5px;">$1</code>')
+    .replace(/^### (.+)$/gm,'<div style="font-weight:700;font-size:14px;color:var(--primary);margin:10px 0 4px;">$1</div>')
+    .replace(/^## (.+)$/gm,'<div style="font-weight:700;font-size:15px;color:var(--text);margin:12px 0 5px;">$1</div>')
+    .replace(/^# (.+)$/gm,'<div style="font-family:Cormorant Garamond,serif;font-size:18px;font-weight:500;margin:10px 0 5px;">$1</div>')
+    .replace(/^[\-\*] (.+)$/gm,'<div style="padding-left:14px;position:relative;margin:2px 0;"><span style="position:absolute;left:0;color:var(--primary);">•</span>$1</div>')
+    .replace(/^\d+\. (.+)$/gm,'<div style="padding-left:18px;position:relative;margin:2px 0;">$1</div>')
+    .replace(/\n\n/g,'<br><br>')
+    .replace(/\n/g,'<br>');
+}
+
+function escapeHtml(t){
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function aiSaveToHistory(question, answer, subj){
+  if(!currentUser) return;
+  const key = sfKey('aiHistory');
+  let history = [];
+  try{ history = JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){}
+  history.unshift({ q: question, a: answer, subj, ts: Date.now() });
+  if(history.length > 50) history = history.slice(0,50);
+  try{ localStorage.setItem(key, JSON.stringify(history)); }catch(e){}
+  aiRenderHistory();
+}
+
+function aiRenderHistory(){
+  if(!currentUser) return;
+  const key = sfKey('aiHistory');
+  let history = [];
+  try{ history = JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){}
+  const el = document.getElementById('aiHistoryList');
+  if(!el) return;
+  if(!history.length){
+    el.innerHTML='<div style="text-align:center;padding:30px 0;color:var(--text3);font-size:13px;opacity:0.6;"><div style="font-size:28px;margin-bottom:8px;">💬</div>Your doubts will appear here</div>';
+    return;
+  }
+  const subjColors = { Physics:'#5AADCC', Chemistry:'#C4922A', Biology:'#3A9E6C', All:'var(--primary)' };
+  el.innerHTML = history.slice(0,20).map((h,i) => {
+    const ago = aiTimeAgo(h.ts);
+    const bg = subjColors[h.subj] || subjColors.All;
+    return `<div class="ai-hist-item" onclick="aiLoadHistItem(${i})">
+      <div class="ai-hist-q">${escapeHtml(h.q)}</div>
+      <div class="ai-hist-meta">
+        <span class="ai-hist-subj" style="background:${bg}22;color:${bg};">${h.subj||'General'}</span>
+        <span class="ai-hist-time">${ago}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function aiLoadHistItem(idx){
+  if(!currentUser) return;
+  const key = sfKey('aiHistory');
+  let history = [];
+  try{ history = JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){}
+  const item = history[idx];
+  if(!item) return;
+  aiNewChat();
+  const avatarBg = (profileData && profileData.avatarColor) ? profileData.avatarColor : 'var(--primary)';
+  const initials = (profileData && profileData.initials) ? profileData.initials : 'ME';
+  document.getElementById('aiQuickGrid').style.display = 'none';
+  aiAddMessage('user', item.q, initials, avatarBg);
+  aiAddMessage('bot', item.a, '🔬', null);
+  aiConversation = [{ role:'user', content:item.q }, { role:'model', content:item.a }];
+}
+
+function aiClearHistory(){
+  if(!currentUser) return;
+  if(!confirm('Clear all doubt history?')) return;
+  try{ localStorage.removeItem(sfKey('aiHistory')); }catch(e){}
+  aiRenderHistory();
+  showToast('History cleared');
+}
+
+function aiTimeAgo(ts){
+  const d = Date.now() - ts;
+  if(d < 3600000) return Math.round(d/60000) + 'm ago';
+  if(d < 86400000) return Math.round(d/3600000) + 'h ago';
+  return Math.round(d/86400000) + 'd ago';
+}
+
+// =========================================================
+// ===== NEET PG HUB =====
+// =========================================================
+
+// Helper: is current user a PG aspirant?
+function isNEETPG(){
+  if(!profileData) return false;
+  const exam = (profileData.exam||'').toLowerCase();
+  return exam.includes('pg') || exam.includes('inicet') || exam.includes('dnb') || exam.includes('state pg');
+}
+
+// Login form dynamic change
+function lsOnExamChange(sel){
+  const val = sel.value;
+  const isPG = val.includes('PG') || val.includes('INICET') || val.includes('DNB') || val.includes('State PG');
+  const classLabel = document.getElementById('ls-class-label');
+  const schoolLabel = document.getElementById('ls-school-label');
+  const schoolInput = document.getElementById('ls-school');
+  const classSelect = document.getElementById('ls-class');
+  if(isPG){
+    if(classLabel) classLabel.textContent = 'MBBS Status';
+    if(schoolLabel) schoolLabel.textContent = 'Medical College (Optional)';
+    if(schoolInput) schoolInput.placeholder = 'e.g. AIIMS Delhi, JIPMER, MAMC';
+    // Auto-select MBBS Graduate for PG
+    for(let opt of classSelect.options){
+      if(opt.value === 'MBBS Graduate'){ opt.selected = true; break; }
+    }
+  } else {
+    if(classLabel) classLabel.textContent = 'Class / Stage';
+    if(schoolLabel) schoolLabel.textContent = 'School / Institute (Optional)';
+    if(schoolInput) schoolInput.placeholder = 'e.g. Allen Kota, DPS Delhi';
+  }
+}
+
+// Full NEET PG Subject Data
+const PG_SUBJECTS = [
+  // ---- PRE-CLINICAL ----
+  {
+    id:'anatomy', name:'Anatomy', icon:'🦴', cat:'pre', catLabel:'Pre-Clinical',
+    color:'#5B8FE8', wt:9, totalQs:18, highYield:true,
+    topics:['Upper Limb — Brachial Plexus, Rotator Cuff','Lower Limb — Femoral/Sciatic nerve','Thorax — Heart borders, Pericardium','Abdomen — Peritoneum, Portal system','Head & Neck — Cranial nerves, Sinuses','Neuroanatomy — Blood-brain barrier, Tracts','Embryology — Derivatives, Congenital anomalies','Histology — Epithelium types, Glands','Joints & Ligaments','Vertebral Column'],
+    highYieldFacts:['Brachial plexus — roots, trunks, divisions, cords, branches (mnemonic: Real Texans Drink Cold Beer)','McBurney\'s point — 1/3rd from ASIS to umbilicus (appendix)','Circle of Willis — most common site of berry aneurysm: anterior communicating artery','Coronary artery dominance — 70% right dominant','Thyroid — blood supply from superior/inferior thyroid arteries; isthmus at C6','Inguinal canal — MALT (roof), PILL (floor)','Waldeyer\'s ring — palatine + lingual + nasopharyngeal + tubal tonsils'],
+    prevQs:['Q: Which nerve is most commonly injured in fracture neck of humerus? (NEET PG 2023)','Q: Which part of brain is last to myelinate? (INICET 2022)','Q: Boundaries of Triangle of Calot? (NEET PG 2022)']
+  },
+  {
+    id:'physiology', name:'Physiology', icon:'❤️', cat:'pre', catLabel:'Pre-Clinical',
+    color:'#E85B6E', wt:9, totalQs:18, highYield:true,
+    topics:['General — Cell physiology, Homeostasis','Blood — Haemoglobin, Blood groups, Coagulation','Cardiovascular — Cardiac cycle, ECG, Murmurs','Respiratory — Spirometry values, Oxygen transport','GIT — Secretions, Absorption, Motility','Renal — GFR, Tubular transport, Acid-base','Endocrine — Feedback loops, Hormones','Nervous — Neurotransmitters, Reflexes, Sleep','Reproductive — Menstrual cycle, Hormones','Muscle — NMJ, Smooth vs skeletal'],
+    highYieldFacts:['Normal values: PaO2 80-100, PaCO2 35-45, pH 7.35-7.45, HCO3 22-26','Dead space = Anatomical (150ml) + Alveolar = Physiological','FRC = ERV + RV; TLC = VC + RV (can\'t measure RV by spirometry)','Einthoven\'s triangle — Lead I + III = Lead II','RAAS: Low BP → Renin → Angiotensin I → ACE → Angiotensin II → Aldosterone','Osmolality of plasma = 2(Na) + Glucose/18 + BUN/2.8 = ~290 mOsm','Brown-Séquard syndrome — ipsilateral motor + proprioception loss; contralateral pain + temp loss'],
+    prevQs:['Q: Enzyme deficient in type I Crigler-Najjar? (NEET PG 2023)','Q: Which wave of JVP corresponds to tricuspid valve closure? (2022)','Q: Vomiting centre is located in? (2021)']
+  },
+  {
+    id:'biochemistry', name:'Biochemistry', icon:'⚗️', cat:'pre', catLabel:'Pre-Clinical',
+    color:'#8B5CF6', wt:7, totalQs:14,
+    topics:['Biomolecules — Amino acids, Proteins, Enzymes','Carbohydrate Metabolism — Glycolysis, TCA, Gluconeogenesis','Lipid Metabolism — Beta-oxidation, Ketone bodies, Cholesterol','Protein Metabolism — Urea cycle, Amino acid catabolism','Molecular Biology — DNA replication, Transcription, Translation','Vitamins — Fat soluble (A,D,E,K) + Water soluble (B complex, C)','Minerals & Trace elements','Hormones — Mechanism of action','Clinical Biochemistry — LFT, RFT, LDH, markers','Nutrition — BMR, Caloric values'],
+    highYieldFacts:['HMP shunt (Pentose phosphate pathway) — produces NADPH + ribose-5-phosphate; important for RBCs','Enzyme kinetics: Km = substrate conc at ½ Vmax; low Km = high affinity','Vitamin B12 deficiency → Methylmalonyl CoA ↑ (urine test); Pernicious anaemia','Vitamin K — needed for factors II, VII, IX, X, Protein C & S (mnemonic: 1972)','Phenylketonuria — deficiency of phenylalanine hydroxylase → musty odour, fair skin, intellectual disability','Collagen — proline & hydroxyproline; Vitamin C needed for hydroxylation','Insulin: only hormone that lowers blood glucose; promotes glycogenesis, lipogenesis'],
+    prevQs:['Q: Which enzyme is deficient in Gaucher\'s disease? (NEET PG 2023)','Q: Bohr effect — rightward shift of O2 dissociation curve due to? (2022)','Q: Essential fatty acids? (INICET 2022)']
+  },
+
+  // ---- PARA-CLINICAL ----
+  {
+    id:'pathology', name:'Pathology', icon:'🔬', cat:'para', catLabel:'Para-Clinical',
+    color:'#E85B9A', wt:18, totalQs:36, highYield:true,
+    topics:['Cell Injury & Death — Necrosis, Apoptosis','Inflammation — Acute, Chronic, Granuloma','Healing & Repair','Haemodynamic disorders — Oedema, Thrombosis, Embolism, Infarction','Neoplasia — Carcinogenesis, Tumour markers, Grading/Staging','Cardiovascular Pathology — IHD, Cardiomyopathies, Endocarditis','Respiratory Pathology — Pneumonias, COPD, Lung cancers','GIT Pathology — Ulcers, IBD, GI tumours','Liver, GB & Pancreas — Hepatitis, Cirrhosis, Pancreatitis','Haematology — Anaemias, Leukaemias, Lymphomas','Renal Pathology — GN, Nephrotic, AKI/CKD','Bone & Soft Tissue Tumours'],
+    highYieldFacts:['Most common cause of death in IHD: arrhythmia (acute) / CCF (chronic)','Leukocyte adhesion deficiency — CD18 deficiency; delayed umbilical cord separation','Reed-Sternberg cells — Hodgkin\'s lymphoma (binucleate, owl-eye appearance)','Psammoma bodies: Papillary thyroid CA, Serous cystadenocarcinoma, Meningioma, Mesothelioma (mnemonic: PSAM)','Mallory bodies (alcoholic hyaline) — alcoholic hepatitis; intermediate filaments','Virchow\'s triad — stasis + hypercoagulability + endothelial injury → thrombosis','Oat cell (small cell) carcinoma lung — ACTH, ADH production; associated with smoking'],
+    prevQs:['Q: Which type of necrosis occurs in TB? (NEET PG 2023)','Q: Marker for hepatocellular carcinoma? (2022)','Q: Reed-Sternberg cell is derived from? (INICET 2023)']
+  },
+  {
+    id:'microbiology', name:'Microbiology', icon:'🦠', cat:'para', catLabel:'Para-Clinical',
+    color:'#3AB8A0', wt:13, totalQs:26, highYield:true,
+    topics:['Bacteriology — Gram +ve & -ve bacteria, Special bacteria','Virology — DNA & RNA viruses, Hepatitis, HIV, Herpes','Mycology — Candida, Aspergillus, Dermatophytes','Parasitology — Protozoa, Helminths, Arthropods','Immunology — Innate/Adaptive immunity, Hypersensitivity, Autoimmunity','Sterilization & Disinfection','Serology & Lab diagnosis techniques','Hospital-acquired infections','Antimicrobial resistance mechanisms','Vaccine-preventable diseases'],
+    highYieldFacts:['TORCH infections — Toxoplasma, Others (syphilis, VZV, parvovirus), Rubella, CMV, Herpes; cause congenital defects','CD4 count in HIV: <200 → AIDS defining; <100 → MAC, Cryptosporidiosis; <50 → CMV retinitis, Toxoplasma','Hypersensitivity types: Type I (IgE, immediate), Type II (cytotoxic), Type III (immune complex), Type IV (cell mediated, delayed)','Most common nosocomial infection: UTI; most common pathogen: E. coli','Gram-positive cocci in clusters: Staph aureus; in chains: Streptococcus; diplococci: Pneumococcus/Neisseria','All hepatitis viruses cause acute hepatitis; only B, C, D cause chronic; only E causes fulminant in pregnancy','HBsAg appears first; Anti-HBs = recovery and immunity; HBeAg = high infectivity'],
+    prevQs:['Q: Most common cause of meningitis in neonates? (NEET PG 2023)','Q: Donovan bodies seen in? (2022)','Q: Safety pin appearance on staining seen in? (INICET 2022)']
+  },
+  {
+    id:'pharmacology', name:'Pharmacology', icon:'💊', cat:'para', catLabel:'Para-Clinical',
+    color:'#F5A623', wt:17, totalQs:34, highYield:true,
+    topics:['General Pharmacology — Pharmacokinetics, Pharmacodynamics','ANS — Cholinergics, Anticholinergics, Adrenergics','CNS — Sedatives, Antiepileptics, Antipsychotics, Opioids','Cardiovascular — Antihypertensives, Antiarrhythmics, Antianginals','GIT — Antiulcer, Antiemetics, Laxatives','Antimicrobials — Antibiotics, Antifungals, Antivirals, Antiparasitics','Chemotherapy — Anticancer drugs, MOA, Toxicities','Endocrine Pharmacology — Diabetes, Thyroid, Corticosteroids','Analgesics & NSAIDs','Autacoids — Histamine, 5-HT, Prostaglandins'],
+    highYieldFacts:['Zero-order kinetics drugs: Phenytoin, Ethanol, Aspirin (high dose), Warfarin (mnemonic: PAWS)','Drugs safe in pregnancy: Penicillins, Cephalosporins, Clindamycin, Erythromycin, Metronidazole (2nd/3rd tri)','Warfarin antidote: Vitamin K (slow) or Fresh Frozen Plasma (immediate); Heparin antidote: Protamine sulphate','Most nephrotoxic antibiotic: Aminoglycosides (gentamicin); most ototoxic: Vancomycin','Enzyme inducers: RIPCBGSC (Rifampicin, Isoniazid, Phenytoin, Carbamazepine, Barbiturates, Griseofulvin, Smoking, Chronic alcohol)','Organophosphate poisoning: Muscarinic + Nicotinic effects; antidote: Atropine + Pralidoxime','DOC in malaria in pregnancy: Chloroquine (1st tri) / Quinine'],
+    prevQs:['Q: Drug of choice for MRSA? (NEET PG 2023)','Q: Anticholinesterase used in Alzheimer\'s? (2022)','Q: Drug causing grey baby syndrome? (INICET 2022)']
+  },
+  {
+    id:'forensic', name:'Forensic Medicine & Toxicology', icon:'⚖️', cat:'para', catLabel:'Para-Clinical',
+    color:'#6B7280', wt:7, totalQs:14,
+    topics:['Medical Jurisprudence — MCI Act, Consent, Dying declaration','Thanatology — Death changes, Time since death','Injury — Wounds, Blunt/Sharp trauma, Firearm injuries','Asphyxia — Hanging, Drowning, Smothering','Sexual offences — Rape, POCSO Act','Forensic Psychiatry — Insanity plea, MNaghten rules','Toxicology — General toxicology, Alcohol, Narcotics','Corrosives — Acid/Alkali burns','Metallic poisons — Arsenic, Lead, Mercury, Iron','Organic poisons — Organophosphates, Barbiturates'],
+    highYieldFacts:['Cadaveric spasm — immediate rigidity after death; seen in drowning, firearms (hand grips object)','Rigor mortis: starts 2-6hr, complete by 12hr, disappears by 36hr (rule of 12)','Putrefaction: summer 24hr, winter 3 days; marbling first seen on abdomen','Age of consent in India: 18 years (POCSO Act, 2012)','Mees lines — transverse white bands on nails; seen in Arsenic, Thallium poisoning','Gettler\'s test — chloride level in heart chambers; right > left = drowning','Signs of ante-mortem drowning: diatoms in bone marrow, cutis anserina (goose skin)'],
+    prevQs:['Q: Putrefaction starts first in which organ? (NEET PG 2023)','Q: Rigor mortis is due to? (2022)','Q: Lucid interval is seen in? (INICET 2023)']
+  },
+
+  // ---- CLINICAL ----
+  {
+    id:'medicine', name:'General Medicine', icon:'🩺', cat:'clinical', catLabel:'Clinical',
+    color:'#3A7A6C', wt:20, totalQs:40, highYield:true,
+    topics:['Infectious Diseases — Typhoid, Malaria, TB, Meningitis','Cardiovascular — Hypertension, IHD, Heart failure, Valvular','Respiratory — Pneumonia, COPD, Asthma, Pleural effusion','GIT — Peptic ulcer, Cirrhosis, IBD, GI bleed','Neurology — Stroke, Epilepsy, Parkinson\'s, Dementia','Endocrinology — Diabetes, Thyroid, Adrenal, Pituitary','Rheumatology — RA, SLE, Vasculitis, Spondyloarthritis','Nephrology — AKI, CKD, Nephrotic, GN','Haematology — Anaemia types, Leukaemia, Lymphoma, Coagulation disorders','Dermatology overlap — Skin manifestations of systemic disease'],
+    highYieldFacts:['Wells score for DVT: clinical probability ≥2 = high (Homan\'s sign unreliable)','Cushingoid features: "ABCDEFG" — Adiposity/Acne, BP↑, Cataracts, DM, Electrolyte imbalance, Fat pads, Growth retardation','JVP vs Carotid: JVP non-palpable, fills from above, varies with respiration','RA: Anti-CCP most specific; RF sensitive; HLA-DR4 association','Criteria for diagnosis of DM: FBS ≥126, PPBS ≥200, HbA1c ≥6.5%, RBS ≥200 + symptoms','INR > 1.5 in cirrhosis (synthetic liver function) — poor prognosis','Neurological levels: UMN vs LMN — exaggerated vs diminished reflexes, spasticity vs flaccidity'],
+    prevQs:['Q: Most common cause of community acquired pneumonia? (NEET PG 2023)','Q: Best initial test for SLE? (2022)','Q: Nephrotic syndrome: most common cause in adults? (INICET 2023)']
+  },
+  {
+    id:'surgery', name:'General Surgery', icon:'🔪', cat:'clinical', catLabel:'Clinical',
+    color:'#2563EB', wt:18, totalQs:36, highYield:true,
+    topics:['Preoperative assessment & surgical risk','Fluid & electrolytes, Shock','Wound healing & infection','Head & Neck — Thyroid, Parathyroid, Salivary glands','Breast — Benign/Malignant tumours, Staging','GIT Surgery — Hernia, Appendix, Intestinal obstruction, GI bleed','Hepatobiliary — Cholelithiasis, Cholecystitis, Hepatic surgery','Pancreas — Pancreatitis, Pancreatic tumours','Vascular Surgery — Varicose veins, PAD, Aneurysm','Urology — BPH, Prostate cancer, Renal calculi, Bladder tumours','Colorectal — Piles, Fissure, Fistula, Rectal carcinoma','Neurosurgery basics — Head injury, SDH/EDH, Brain tumours'],
+    highYieldFacts:['Glasgow Coma Scale: Eye (4) + Verbal (5) + Motor (6) = max 15; <8 = intubate','Richter\'s hernia — only one wall of bowel in sac; can strangulate without obstruction','Battle\'s sign (mastoid bruising) + Raccoon eyes = Basal skull fracture','MC site of carcinoma rectum: rectosigmoid junction; Duke\'s staging (A→D)','Virchow\'s triad — stasis, endothelial injury, hypercoagulability (DVT)','FAST scan (Focused Abdominal Sonography in Trauma) — free fluid assessment','Hartmann\'s solution (Ringer\'s Lactate) is isotonic; best for burns resuscitation'],
+    prevQs:['Q: Courvoisier\'s law — palpable GB with jaundice due to? (NEET PG 2023)','Q: Most common hernia in females? (2022)','Q: First symptom of Ca rectum? (2021)']
+  },
+  {
+    id:'obg', name:'Obstetrics & Gynaecology', icon:'👶', cat:'clinical', catLabel:'Clinical',
+    color:'#EC4899', wt:16, totalQs:32, highYield:true,
+    topics:['Obstetrics — Normal labour, Antepartum haemorrhage, PIH, Puerperium','Abnormal Obstetrics — Ectopic, Abortion, PROM, Postpartum haemorrhage','Foetal monitoring — CTG, Bishop score, APGAR','Gynaecology — Menstrual disorders, PCOD, Endometriosis','Gynaecological tumours — Ca cervix, Ca ovary, Ca endometrium, Trophoblastic disease','Family planning — OCPs, IUCDs, Sterilisation','Infertility — Evaluation, ART','Infections — STIs, TORCH, Vaginal discharge','Puberty & menopause','Ultrasound in obstetrics'],
+    highYieldFacts:['Placenta praevia: painless bleeding; placental abruption: painful bleeding with board-like abdomen','Pre-eclampsia criteria (2013): BP ≥140/90 after 20 wks + proteinuria OR severe features WITHOUT proteinuria','Ca cervix: most common gynae cancer in India; HPV 16 & 18 (70%); screening by Pap smear','APGAR score at 1 min & 5 min: 0-3 critical, 4-6 moderate, 7-10 normal','PPH: most common cause — uterine atony (Tone); 4 Ts = Tone, Trauma, Tissue, Thrombin','Ectopic pregnancy: most common site — ampulla of fallopian tube; risk factor — PID, IUCD','Gestational hypertension: BP rise without proteinuria; pre-eclampsia: with proteinuria'],
+    prevQs:['Q: First line investigation in ectopic pregnancy? (NEET PG 2023)','Q: MC cause of PPH? (2022)','Q: Drug used in medical management of ectopic pregnancy? (INICET 2022)']
+  },
+  {
+    id:'paediatrics', name:'Paediatrics', icon:'🧒', cat:'clinical', catLabel:'Clinical',
+    color:'#F59E0B', wt:10, totalQs:20,
+    topics:['Growth & Development — Milestones, Nutritional assessment','Neonatology — Prematurity, NEC, RDS, Neonatal jaundice','Nutrition — PEM, Micronutrient deficiencies, Complementary feeding','Immunisation — NPI schedule, Cold chain','Infectious diseases — Measles, Diphtheria, Whooping cough, Typhoid','Respiratory — Pneumonia, Asthma, Croup, Bronchiolitis','GIT — Diarrhoea, Intussusception, Pyloric stenosis','Haematology — IDA, Sickle cell, Thalassaemia','Genetics & Congenital — Down\'s, Turner\'s, Congenital heart disease','Neurology — Febrile seizures, Cerebral palsy, Meningitis'],
+    highYieldFacts:['Denver developmental milestones: Social smile 6 wk, Head control 3 mo, Sits with support 6 mo, Stands 9 mo, Walks 12-15 mo, Words 12 mo','Physiological jaundice: appears day 2-3, disappears by day 7-10 (term) / 14 days (preterm)','Kwashiorkor: protein deficiency → oedema, fatty liver, moon face, flag sign in hair; Marasmus: calorie deficiency → severe wasting','BCG at birth, OPV+IPV at 6,10,14 wks; MMR at 9 mo & 15 mo','Febrile seizures: 6 months to 5 years; no treatment for simple; no long-term sequelae','Down\'s syndrome: Trisomy 21, IQ 25-50, simian crease, brushfield spots, AV canal defect','Weight: doubles at 5 mo, triples at 1 yr, quadruples at 2 yr'],
+    prevQs:['Q: Age of immunisation with MMR? (NEET PG 2023)','Q: MC congenital heart disease? (2022)','Q: Earliest sign of VitA deficiency? (2021)']
+  },
+  {
+    id:'orthopedics', name:'Orthopedics', icon:'🦴', cat:'clinical', catLabel:'Clinical',
+    color:'#78716C', wt:8, totalQs:16,
+    topics:['Fractures — Types, Healing, Complications','Dislocations — Hip, Shoulder, Knee','Spine — Disc prolapse, Scoliosis, TB spine','Congenital — CTEV, CDH, Torticollis','Infections — Osteomyelitis, Septic arthritis, TB bone/joint','Tumours — Benign (osteoid osteoma, GCT) & Malignant (osteosarcoma, Ewing\'s)','Nerve injuries — Wrist drop, Foot drop, Claw hand','Metabolic bone — Osteoporosis, Rickets, Osteomalacia, Paget\'s','Joint replacement — Indications, Complications','Sports medicine & overuse injuries'],
+    highYieldFacts:['Colles\' fracture — "Dinner fork deformity"; fracture distal radius with dorsal displacement; MC wrist fracture','Osteosarcoma — MC primary malignant bone tumour; distal femur metaphysis; sunburst pattern on X-ray','Ewing\'s sarcoma — diaphysis; onion peel periosteal reaction; translocation t(11;22)','Most common site of osteomyelitis: metaphysis (rich blood supply); haematogenous in children','Posterior dislocation hip: flexion, adduction, internal rotation; Sciatic nerve injury common','Carpal tunnel syndrome: median nerve compression; tingling thumb, index, middle, half ring; positive Phalen\'s & Tinel\'s','Fat embolism syndrome after long bone fracture: Gurd\'s criteria — petechiae, respiratory distress, confusion'],
+    prevQs:['Q: MC site for pathological fracture? (NEET PG 2023)','Q: Froment\'s sign is positive in which nerve injury? (2022)','Q: Kocher\'s method is for reduction of? (2021)']
+  },
+  {
+    id:'ophthalmology', name:'Ophthalmology', icon:'👁️', cat:'clinical', catLabel:'Clinical',
+    color:'#06B6D4', wt:7, totalQs:14,
+    topics:['Anatomy — Eyeball layers, Extraocular muscles, Visual pathway','Refractive errors — Myopia, Hypermetropia, Astigmatism, Presbyopia','Cornea — Keratoconus, Corneal ulcer, Dry eye','Glaucoma — POAG, PACG, IOP, Optic disc changes','Cataract — Types, Surgery, IOL','Retina — DR, ARMD, RD, CRVO/CRAO','Squint & Amblyopia','Uveitis & Scleritis','Neuro-ophthalmology — Visual field defects, Papilloedema','Trauma — Chemical injury, Hyphema, Blow-out fracture'],
+    highYieldFacts:['Bitemporal hemianopia — pituitary tumour (chiasmal compression); homonymous = post-chiasmal','Normal IOP: 10-21 mmHg; cupping (C/D ratio >0.6) in glaucoma','Diabetic retinopathy: most common cause of blindness in working-age adults; early sign — microaneurysms','Argyll Robertson pupil: accommodates but does not react (syphilis); reverse = Holmes-Adie pupil','Cotton wool spots = nerve fibre layer infarcts (hypertension, DM)','Central retinal artery occlusion: sudden painless visual loss, cherry red spot at macula','Trachoma: Chlamydia trachomatis; leading cause of preventable blindness worldwide'],
+    prevQs:['Q: Kayser-Fleischer ring is seen in? (NEET PG 2023)','Q: Hutchinson\'s pupil in? (2022)','Q: Tonometry measures? (INICET 2022)']
+  },
+  {
+    id:'ent', name:'ENT (Ear, Nose & Throat)', icon:'👂', cat:'clinical', catLabel:'Clinical',
+    color:'#7C3AED', wt:7, totalQs:14,
+    topics:['Ear — Anatomy, Otitis media (acute/chronic), CSOM, Otosclerosis, SNHL','Hearing loss — Audiometry, Tuning fork tests, Types','Nose & Sinuses — Sinusitis, Nasal polyps, Epistaxis, Septum','Throat — Tonsillitis, Pharyngitis, Ludwig\'s angina','Larynx — Laryngitis, Vocal cord palsy, Carcinoma larynx','Head & Neck — Salivary gland, Thyroid (ENT perspective), Neck masses','Vertigo — BPPV, Meniere\'s, Labyrinthitis','Tracheostomy & Complications','Audiological rehabilitation','Paediatric ENT — Adenoid hypertrophy, Atresia'],
+    highYieldFacts:['Rinne positive = AC > BC (normal); Rinne negative = BC > AC (conductive loss)','Weber lateralises to AFFECTED ear in conductive; to NORMAL ear in sensorineural','Cholesteatoma: squamous epithelium in middle ear; "attic perforation" (pars flaccida); can erode ossicles','Meniere\'s disease: triad — episodic vertigo + tinnitus + fluctuating SNHL; ↑ endolymph','Most common cause of epistaxis: Little\'s area (Kiesselbach\'s plexus) in anterior septum','Otosclerosis: fixation of stapes footplate; autosomal dominant; surgical stapedectomy','Vocal cord polyp — bilateral, hoarse voice; nodules from overuse; carcinoma — unilateral, painless'],
+    prevQs:['Q: Nerve supply of anterior 2/3rd tongue? (NEET PG 2023)','Q: Glue ear is? (2022)','Q: Trotter\'s triad? (2021)']
+  },
+  {
+    id:'psychiatry', name:'Psychiatry', icon:'🧠', cat:'clinical', catLabel:'Clinical',
+    color:'#4F46E5', wt:7, totalQs:14,
+    topics:['Classification — DSM-5 vs ICD-11','Psychosis — Schizophrenia, Delusional disorder','Mood disorders — MDD, Bipolar I & II, Cyclothymia','Anxiety disorders — GAD, Panic, Phobias, OCD, PTSD','Personality disorders — Clusters A, B, C','Substance use disorders — Alcohol, Opioids, Nicotine','Childhood disorders — ADHD, Autism, Conduct disorder','Eating disorders — Anorexia, Bulimia','Sleep disorders — Insomnia, Narcolepsy','Treatment — Antipsychotics, Antidepressants, Mood stabilisers'],
+    highYieldFacts:['Schneider\'s first rank symptoms of schizophrenia: thought insertion/withdrawal/broadcasting, passivity phenomena, auditory hallucinations (running commentary)','Schizophrenia: positive symptoms (hallucinations, delusions) respond to typical antipsychotics; negative symptoms (flat affect, alogia) to atypicals','Lithium therapeutic range: 0.6-1.2 mEq/L; toxicity: tremor, polyuria, polydipsia, ataxia; teratogenic (Ebstein anomaly)','OCD: obsession = ego-dystonic thought; compulsion = repetitive act to reduce anxiety; DOC = SSRIs or clomipramine','ECT: absolute indication — severe suicidal depression + refusal of food, neuroleptic malignant syndrome','NMS (Neuroleptic Malignant Syndrome): hyperthermia + rigidity + autonomic instability; caused by antipsychotics; Rx: dantrolene, bromocriptine','Alcohol withdrawal: tremors 6-8hr → seizures 12-24hr → delirium tremens 24-72hr; Rx: benzodiazepines'],
+    prevQs:['Q: DOC for bipolar disorder in pregnancy? (NEET PG 2023)','Q: Dissociation is a defence mechanism of which type? (2022)','Q: Folie à deux is? (INICET 2022)']
+  },
+  {
+    id:'dermatology', name:'Dermatology', icon:'🧴', cat:'clinical', catLabel:'Clinical',
+    color:'#D97706', wt:5, totalQs:10,
+    topics:['Morphology of skin lesions — Macule, Papule, Vesicle, Bulla, Pustule','Eczema/Dermatitis — Atopic, Contact, Seborrhoeic','Psoriasis — Types, PASI, Treatment','Fungal infections — Tinea, Candida, Pityriasis versicolor','Bacterial infections — Impetigo, Cellulitis, Leprosy','Viral infections — Herpes, Warts, Molluscum','STIs — Syphilis, Gonorrhoea, Chancroid, LGV','Blistering diseases — Pemphigus, Pemphigoid','Pigmentation disorders — Vitiligo, Melasma','Skin tumours — BCC, SCC, Melanoma'],
+    highYieldFacts:['Pemphigus vulgaris: suprabasal acantholysis; anti-desmoglein 3 Ab; Nikolsky\'s sign positive; involve mucosa','Bullous pemphigoid: subepidermal blister; anti-BP180 Ab; Nikolsky\'s sign NEGATIVE; elderly; no mucosal involvement','Leprosy: Ridley-Jopling classification — TT, BT, BB, BL, LL; AFB positive in multibacillary (LL) form','Syphilis stages: Primary — painless chancre; Secondary — condylomata lata, rash on palms/soles; Tertiary — gumma, Argyll Robertson pupil','Auspitz sign (pinpoint bleeding) — psoriasis; Darier\'s sign (urticaria on stroking) — mastocytosis','Dermatological emergency: Toxic epidermal necrolysis (TEN) / Stevens-Johnson syndrome — due to drugs (sulfa, phenytoin, carbamazepine)','Basal cell carcinoma: MC skin malignancy; rodent ulcer; pearly margin; locally invasive, rarely metastasises'],
+    prevQs:['Q: Burrow in skin is pathognomonic of? (NEET PG 2023)','Q: Onycholysis is seen in? (2022)','Q: Dapsone MOA? (INICET 2022)']
+  },
+  {
+    id:'radiology', name:'Radiology & Imaging', icon:'🩻', cat:'clinical', catLabel:'Clinical',
+    color:'#374151', wt:4, totalQs:8,
+    topics:['X-ray basics — Chest, Abdomen, Bone X-rays','CT scan — Head CT, Chest CT, Abdominal CT','MRI — Brain MRI, Spine MRI, MSK MRI','Ultrasonography — FAST, Obstetric, Abdominal','Nuclear Medicine — Bone scan, PET CT, Thyroid scan','Contrast media — Types, Reactions, Contraindications','Interventional radiology — Drainage, Stenting, TIPS','Radiation safety — Units, Protection, Dose limits','AI & Digital radiology','FNAC & image-guided biopsy'],
+    highYieldFacts:['Air under diaphragm on erect CXR: perforation of hollow viscus (most common — peptic ulcer)','Hampton\'s hump: wedge-shaped opacity in pulmonary embolism; Westermark\'s sign: oligaemia distal to PE','Ground glass opacity in HRCT chest: active alveolitis/infection (e.g., PCP in HIV, COVID pneumonia)','McCune-Albright — polyostotic fibrous dysplasia, café-au-lait spots; shepherd\'s crook deformity of femur','CT of choice for trauma: NCCT head for haemorrhage (hyperdense = acute); MRI better for posterior fossa, spine','USG is first investigation of choice: Biliary colic, Ectopic pregnancy (transvaginal), Renal calculi','PET-CT: staging of malignancy, particularly lymphoma, lung cancer; FDG (F-18) glucose analogue'],
+    prevQs:['Q: Rigler\'s sign on X-ray indicates? (NEET PG 2023)','Q: Earliest change in AVN hip on MRI? (2022)','Q: Double bubble sign in X-ray abdomen indicates? (2021)']
+  },
+  {
+    id:'anaesthesia', name:'Anaesthesia', icon:'😴', cat:'clinical', catLabel:'Clinical',
+    color:'#1E40AF', wt:4, totalQs:8,
+    topics:['Preanaesthetic assessment — ASA grading, Mallampati','Inhalational agents — Halothane, Isoflurane, Sevoflurane, Desflurane','IV induction agents — Thiopentone, Propofol, Ketamine, Etomidate','Muscle relaxants — Succinylcholine, Non-depolarising NMB','Regional anaesthesia — Spinal, Epidural, Nerve blocks','Monitoring — SpO2, ETCO2, Bispectral index','Airway management — LMA, ETT, Difficult airway','ICU & Critical care — Ventilator settings, Sepsis management','Pain management — Acute, Chronic, Cancer pain','Complications — Malignant hyperthermia, Failed intubation'],
+    highYieldFacts:['Mallampati classification: Class I-IV; Class III & IV predict difficult intubation','Succinylcholine: only depolarising NMB; causes fasciculations, hyperkalaemia; CONTRAINDICATED in burns, crush injury, denervation after 24-48hrs','Malignant hyperthermia: triggered by succinylcholine + volatile agents; uncontrolled calcium release; Rx: Dantrolene','Propofol: "milk of anaesthesia"; TIVA; Propofol infusion syndrome (PRIS) — metabolic acidosis, rhabdomyolysis','Minimum alveolar concentration (MAC): measure of potency; lower MAC = more potent (Halothane 0.75, Isoflurane 1.2, N2O 104)','Ketamine: only IV induction agent that bronchodilates + maintains BP (sympathomimetic); causes nightmares — give midazolam','Epidural vs spinal: epidural — segmental block, can top-up; spinal — dural puncture, total spinal if excess dose'],
+    prevQs:['Q: Most common cause of failed intubation? (NEET PG 2023)','Q: Guedel\'s classification for stages of anaesthesia? (2022)','Q: Half life of succinylcholine? (INICET 2022)']
+  },
+  {
+    id:'spm', name:'Community Medicine (SPM)', icon:'🏘️', cat:'clinical', catLabel:'Clinical',
+    color:'#059669', wt:12, totalQs:24, highYield:true,
+    topics:['Concept of health & disease','Epidemiology — Study designs, Bias, Measures of frequency & association','Biostatistics — Mean, Median, SD, Tests of significance, Screening tests','Environmental health — Air, Water, Sanitation','Nutrition — PEM, Micronutrients, National programs','MCH — ANC, Immunisation, IMNCI, Child health programs','National Health Programs — TB (NTEP), Malaria, HIV, Leprosy, Filaria','Family planning & Demography','Health administration — Health indicators, NITI Aayog','Occupational health & workplace hazards'],
+    highYieldFacts:['Sensitivity = TP/(TP+FN); Specificity = TN/(TN+FP); PPV = TP/(TP+FP) — increases with ↑ prevalence','Relative Risk = Incidence in exposed / Incidence in unexposed (used in cohort); Odds Ratio used in case-control','DOTS in NTEP: Category I (new) — 2HRZE + 4HRE; MDR-TB: 6(Km-Lfx-Eto-Cs-Z-PAS) + 18(Lfx-Eto-Cs-Z-PAS)','Infant Mortality Rate = Deaths <1yr / 1000 live births; best indicator of healthcare quality in developing countries','BCG vaccine: live attenuated; intradermal at birth; tests — Mantoux, Heaf test; protective against miliary TB & TB meningitis','Herd immunity threshold: 1 - 1/R0; measles R0 = 12-18 → need 92-95% immunisation','National indicators: IMR <30, MMR <100, Life expectancy >70, full immunisation >85%'],
+    prevQs:['Q: Berkson\'s bias is associated with which study? (NEET PG 2023)','Q: Best measure of central tendency in skewed data? (2022)','Q: Herd immunity level for polio? (INICET 2022)']
+  }
+];
+
+let pgCurrentCat = 'all';
+let pgDoneTopics = {}; // {subjectId: {topicIndex: true}}
+
+function pgInit(){
+  // Load progress from localStorage
+  if(currentUser){
+    try{ pgDoneTopics = JSON.parse(localStorage.getItem(sfKey('pgTopics'))||'{}'); }catch(e){ pgDoneTopics = {}; }
+  }
+  pgRenderSubjects();
+  pgUpdateStats();
+}
+
+function pgFilterCat(btn){
+  document.querySelectorAll('.pg-cat-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  pgCurrentCat = btn.dataset.cat;
+  pgRenderSubjects();
+}
+
+function pgRenderSubjects(){
+  const grid = document.getElementById('pgSubjectGrid');
+  if(!grid) return;
+  let subjects = PG_SUBJECTS;
+  if(pgCurrentCat === 'pre') subjects = subjects.filter(s=>s.cat==='pre');
+  else if(pgCurrentCat === 'para') subjects = subjects.filter(s=>s.cat==='para');
+  else if(pgCurrentCat === 'clinical') subjects = subjects.filter(s=>s.cat==='clinical');
+  else if(pgCurrentCat === 'high') subjects = subjects.filter(s=>s.highYield);
+
+  grid.innerHTML = subjects.map(s => {
+    const done = pgDoneTopics[s.id] || {};
+    const doneCt = Object.keys(done).length;
+    const pct = s.topics.length ? Math.round(doneCt/s.topics.length*100) : 0;
+    return `<div class="pg-subj-card" onclick="pgOpenSubject('${s.id}')">
+      <div class="pg-subj-card-top">
+        <div class="pg-subj-icon" style="background:${s.color}22;">${s.icon}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <div class="pg-subj-name">${s.name}</div>
+            ${s.highYield?'<span style="font-size:10px;background:#FBF3E2;color:#8A5A00;padding:1px 7px;border-radius:20px;font-weight:700;border:1px solid #E8D0A0;">⭐ High Yield</span>':''}
+          </div>
+          <div class="pg-subj-cat ${s.cat}">${s.catLabel}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;color:${s.color};line-height:1;">~${s.totalQs}</div>
+          <div style="font-size:10px;color:var(--text3);">Qs in exam</div>
+        </div>
+      </div>
+      <div class="pg-wt-bar">
+        <div class="pg-wt-fill" style="width:${pct}%;background:${s.color};"></div>
+      </div>
+      <div class="pg-subj-meta">
+        <span class="pg-meta-chip">${pct}% topics done</span>
+        <span class="pg-meta-chip">${s.topics.length} topics</span>
+        <span class="pg-meta-chip">~${s.wt}% weightage</span>
+      </div>
+      <div class="pg-hy-tags">
+        ${s.topics.slice(0,3).map(t=>`<span class="pg-hy-tag">${t.split(' — ')[0].substring(0,25)}</span>`).join('')}
+        ${s.topics.length>3?`<span class="pg-hy-tag">+${s.topics.length-3} more</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function pgOpenSubject(id){
+  const s = PG_SUBJECTS.find(x=>x.id===id);
+  if(!s) return;
+  const done = pgDoneTopics[s.id] || {};
+  const modal = document.getElementById('pgSubjectModal');
+  modal.style.display = 'block';
+  document.getElementById('pgSubjectModalContent').innerHTML = `
+    <div class="pg-modal-header" style="border-bottom:3px solid ${s.color};">
+      <div style="width:52px;height:52px;border-radius:14px;background:${s.color}22;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">${s.icon}</div>
+      <div style="flex:1;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;">${s.name}</div>
+        <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;">
+          <span class="pg-subj-cat ${s.cat}" style="font-size:11px;">${s.catLabel}</span>
+          <span style="font-size:12px;background:${s.color}22;color:${s.color};padding:2px 10px;border-radius:20px;font-weight:600;">~${s.totalQs} questions in NEET PG</span>
+          <span style="font-size:12px;background:var(--bg);color:var(--text2);padding:2px 10px;border-radius:20px;">~${s.wt}% weightage</span>
+        </div>
+      </div>
+      <button onclick="pgCloseSubject()" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:16px;color:var(--text2);transition:all .18s;flex-shrink:0;" onmouseover="this.style.background='var(--primary-light)'" onmouseout="this.style.background='var(--bg)'">✕</button>
+    </div>
+    <div class="pg-modal-body">
+      <div class="pg-topic-section">
+        <div class="pg-topic-title">📚 Topics / Chapters <span style="font-weight:400;font-size:11px;color:var(--text3);">(click to mark done)</span></div>
+        <div class="pg-topic-grid" id="pgTopicGrid_${s.id}">
+          ${s.topics.map((t,i)=>`
+            <div class="pg-topic-chip ${done[i]?'done':''}" onclick="pgToggleTopic('${s.id}',${i},this)">
+              <div class="pg-tc-check">${done[i]?'<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>':''}</div>
+              <span style="font-size:12px;">${t.split(' — ')[0]}</span>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <div class="pg-hy-section" style="margin-bottom:18px;">
+        <div class="pg-hy-title">⭐ HIGH-YIELD FACTS — Must Know for NEET PG / INICET</div>
+        <div class="pg-hy-list">
+          ${s.highYieldFacts.map(f=>`<div class="pg-hy-item">${f}</div>`).join('')}
+        </div>
+      </div>
+
+      <div class="pg-prev-qs">
+        <div class="pg-prev-title">📝 PREVIOUS YEAR QUESTIONS</div>
+        ${s.prevQs.map(q=>`<div class="pg-prev-item">• ${q}</div>`).join('')}
+      </div>
+
+      <div style="margin-top:18px;display:flex;gap:10px;">
+        <button onclick="pgOpenInAI('${s.name}')" style="flex:1;padding:10px;background:var(--primary);color:white;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='#2E6358'" onmouseout="this.style.background='var(--primary)'">🧠 Ask AI Tutor about ${s.name}</button>
+        <button onclick="pgCloseSubject()" style="padding:10px 18px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13.5px;cursor:pointer;color:var(--text2);">Close</button>
+      </div>
+    </div>`;
+}
+
+function pgCloseSubject(){
+  document.getElementById('pgSubjectModal').style.display = 'none';
+}
+
+function pgToggleTopic(subjectId, topicIdx, el){
+  if(!currentUser) return;
+  if(!pgDoneTopics[subjectId]) pgDoneTopics[subjectId] = {};
+  const isDone = pgDoneTopics[subjectId][topicIdx];
+  if(isDone){ delete pgDoneTopics[subjectId][topicIdx]; }
+  else { pgDoneTopics[subjectId][topicIdx] = true; }
+  try{ localStorage.setItem(sfKey('pgTopics'), JSON.stringify(pgDoneTopics)); }catch(e){}
+  el.classList.toggle('done', !isDone);
+  el.querySelector('.pg-tc-check').innerHTML = !isDone ? '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' : '';
+  pgUpdateStats();
+  pgRenderSubjects();
+}
+
+function pgUpdateStats(){
+  const totalTopics = PG_SUBJECTS.reduce((s,sub)=>s+sub.topics.length,0);
+  const doneSubs = PG_SUBJECTS.filter(s=>Object.keys(pgDoneTopics[s.id]||{}).length>0).length;
+  const el1 = document.getElementById('pgSubjectsDone');
+  const el2 = document.getElementById('pgSubjectsDoneSub');
+  if(el1) el1.textContent = doneSubs;
+  if(el2) el2.textContent = doneSubs > 0 ? `${doneSubs} of 19 subjects started` : 'Add targets to track';
+}
+
+function pgOpenInAI(subjectName){
+  pgCloseSubject();
+  navigate('aidoubt', document.querySelector('[onclick*=aidoubt]'));
+  setTimeout(()=>{
+    const input = document.getElementById('aiInput');
+    if(input){ input.value = `Give me the most high-yield topics and NEET PG questions for ${subjectName}. Focus on what's most likely to appear in NEET PG and INICET.`; }
+  }, 400);
+}
+
+// Apply PG-aware UI changes when user logs in
+function applyPGAwareness(){
+  if(!profileData) return;
+  const isPG = isNEETPG();
+  // Timer subject pills
+  const timerSubjRow = document.getElementById('timerSubjRow');
+  if(timerSubjRow && isPG){
+    timerSubjRow.innerHTML = ['Pathology','Pharmacology','Medicine','Surgery','Microbiology','OBG','Community Med','Anatomy'].map((s,i)=>`
+      <div class="timer-pill ${i===0?'active':''}" onclick="timerSelSubj(this)" style="cursor:pointer;">${s}</div>`).join('');
+  }
+  // Update dashboard greeting
+  const salEl = document.getElementById('greetingSalutation');
+  // Sidebar logo sub
+  const logoSub = document.querySelector('.logo-sub');
+  if(logoSub && isPG) logoSub.textContent = profileData.exam || 'NEET PG';
+}
+
+// =========================================================
 
 // ---- Boot sequence ----
 (function sfBoot(){
