@@ -3267,6 +3267,10 @@ let ftVisible=true;
 let ftExpanded=false;
 let ftInfinityMode=false;
 let ftInfSeconds=0;
+// Wall-clock precision timer variables (prevents drift over long sessions)
+let ftWallStart=0;       // Date.now() when timer was last started/resumed
+let ftSecondsAtStart=0;  // ftSeconds value at the moment of last start
+let ftInfSecsAtStart=0;  // ftInfSeconds value at the moment of last start (infinity mode)
 const ftSubjects=['Physics','Chem','Bio'];
 const ftSubjFull={'Physics':'Physics','Chem':'Chemistry','Bio':'Biology'};
 
@@ -3299,6 +3303,7 @@ function ftSetMode(el){
     ftSeconds=dur*60;ftTotal=dur*60;
   }
   if(ftRunning){clearInterval(ftInterval);ftRunning=false;ftUpdatePlayBtn();}
+  ftWallStart=0;ftSecondsAtStart=ftSeconds;ftInfSecsAtStart=0;
   ftUpdateDisplay();
   const ring=document.getElementById('ftRing');
   if(ring)ring.classList.toggle('break-ring',ftBreakMode);
@@ -3325,8 +3330,11 @@ function ftSaveSessionEntry(durMins, subjectKey){
 }
 
 function ftTick(){
+  // ── WALL-CLOCK CORRECTION (eliminates all drift even after 10–12 hr sessions) ──
+  const elapsed = Math.floor((Date.now() - ftWallStart) / 1000);
+
   if(ftInfinityMode){
-    ftInfSeconds++;
+    ftInfSeconds = ftInfSecsAtStart + elapsed;
     const m=Math.floor(ftInfSeconds/60);const s=ftInfSeconds%60;
     const timeStr=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
     ['ftPillTime','ftExpTime','timerDisplay'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=timeStr;});
@@ -3334,8 +3342,10 @@ function ftTick(){
     document.title=`${timeStr} ∞ — StudyFlow`;
     return;
   }
-  ftSeconds--;
+  // Compute true remaining seconds from wall clock (no drift ever)
+  ftSeconds = ftSecondsAtStart - elapsed;
   if(ftSeconds<=0){
+    ftSeconds=0;
     clearInterval(ftInterval);ftInterval=null;ftRunning=false;
     document.getElementById('ftStatusDot').className='ft-status-dot paused';
     ftPomDone=Math.min(ftPomDone+1,4);
@@ -3356,7 +3366,7 @@ function ftTick(){
       document.querySelectorAll('.ft-mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.dur===String(breakDur)));
       document.querySelectorAll('.tm-tab').forEach(b=>b.classList.toggle('active',b.dataset.dur===String(breakDur)));
       ftUpdateDisplay();
-      if(autoBreak){setTimeout(()=>{if(!ftRunning){ftRunning=true;document.getElementById('ftStatusDot').className='ft-status-dot running';ftInterval=setInterval(ftTick,1000);ftUpdatePlayBtn();}},400);}
+      if(autoBreak){setTimeout(()=>{if(!ftRunning){ftRunning=true;ftWallStart=Date.now();ftSecondsAtStart=ftSeconds;ftInfSecsAtStart=0;document.getElementById('ftStatusDot').className='ft-status-dot running';ftInterval=setInterval(ftTick,500);ftUpdatePlayBtn();}},400);}
     } else {
       ftBreakMode=false;ftPhase='Focus';
       ftSeconds=timerSettings.focus*60;ftTotal=timerSettings.focus*60;
@@ -3366,7 +3376,7 @@ function ftTick(){
       document.querySelectorAll('.tm-tab').forEach(b=>b.classList.toggle('active',b.dataset.dur===String(timerSettings.focus)));
       ftUpdateDisplay();
       showToast('🎯 Break done! Focus session ready.');
-      if(autoFocus){setTimeout(()=>{if(!ftRunning){ftRunning=true;document.getElementById('ftStatusDot').className='ft-status-dot running';ftInterval=setInterval(ftTick,1000);ftUpdatePlayBtn();}},400);}
+      if(autoFocus){setTimeout(()=>{if(!ftRunning){ftRunning=true;ftWallStart=Date.now();ftSecondsAtStart=ftSeconds;ftInfSecsAtStart=0;document.getElementById('ftStatusDot').className='ft-status-dot running';ftInterval=setInterval(ftTick,500);ftUpdatePlayBtn();}},400);}
     }
     return;
   }
@@ -3379,15 +3389,24 @@ function ftToggle(e){
   if(e)e.stopPropagation();
   if(ftRunning){
     clearInterval(ftInterval);ftInterval=null;ftRunning=false;
+    // Sync ftSeconds/ftInfSeconds from wall clock before pausing
+    if(ftInfinityMode){
+      ftInfSeconds = ftInfSecsAtStart + Math.floor((Date.now()-ftWallStart)/1000);
+    } else {
+      ftSeconds = Math.max(0, ftSecondsAtStart - Math.floor((Date.now()-ftWallStart)/1000));
+    }
     document.getElementById('ftStatusDot').className='ft-status-dot paused';
     if(ftInfinityMode){document.title='StudyFlow — Premium Learning Platform';}
     // Show "Save & Switch" button when paused mid-session
     ftShowMidSaveBtn(true);
   } else {
-    if(ftInfinityMode)ftInfSeconds=0;
+    // Record wall-clock start point
+    ftWallStart = Date.now();
+    ftSecondsAtStart = ftSeconds;
+    ftInfSecsAtStart = ftInfSeconds;
     ftRunning=true;
     document.getElementById('ftStatusDot').className='ft-status-dot running';
-    ftInterval=setInterval(ftTick,1000);
+    ftInterval=setInterval(ftTick,500); // poll every 500ms for responsiveness, wall-clock corrects accuracy
     ftShowMidSaveBtn(false);
   }
   ftUpdatePlayBtn();
@@ -3412,13 +3431,19 @@ function ftShowMidSaveBtn(show){
 // Save current elapsed time as a session and optionally reset for new subject
 function ftSaveMidSession(){
   let elapsed = 0;
-  if(ftInfinityMode){ elapsed = Math.round(ftInfSeconds/60); }
-  else { elapsed = Math.round((ftTotal - ftSeconds)/60); }
+  if(ftInfinityMode){
+    // If running, compute from wall clock; if paused, use last synced value
+    elapsed = Math.round((ftRunning ? ftInfSecsAtStart + Math.floor((Date.now()-ftWallStart)/1000) : ftInfSeconds) / 60);
+  } else {
+    const curSecs = ftRunning ? Math.max(0, ftSecondsAtStart - Math.floor((Date.now()-ftWallStart)/1000)) : ftSeconds;
+    elapsed = Math.round((ftTotal - curSecs) / 60);
+  }
   if(elapsed < 1){ showToast('⚠ At least 1 minute needed to save'); return; }
   ftSaveSessionEntry(elapsed, ftSubject);
   // Reset timer state for new session
-  if(ftInfinityMode){ ftInfSeconds=0; }
-  else { ftSeconds=ftTotal; }
+  if(ftInfinityMode){ ftInfSeconds=0; ftInfSecsAtStart=0; }
+  else { ftSeconds=ftTotal; ftSecondsAtStart=ftTotal; }
+  ftWallStart = ftRunning ? Date.now() : 0;
   ftUpdateDisplay();
   ftShowMidSaveBtn(false);
   showToast(`✅ ${elapsed} min ${ftSubjFull[ftSubject]||ftSubject} saved! Start new session.`, 3000);
@@ -3459,15 +3484,16 @@ function ftUpdateDisplay(){
 function ftReset(e){
   if(e)e.stopPropagation();
   clearInterval(ftInterval);ftInterval=null;ftRunning=false;
-  if(ftInfinityMode){ftInfSeconds=0;}
-  else{ftSeconds=ftTotal;}
+  if(ftInfinityMode){ftInfSeconds=0;ftInfSecsAtStart=0;}
+  else{ftSeconds=ftTotal;ftSecondsAtStart=ftTotal;}
+  ftWallStart=0;
   document.getElementById('ftStatusDot').className='ft-status-dot';
   ftUpdateDisplay();ftUpdatePlayBtn();
   ftShowMidSaveBtn(false);
 }
 function ftSkip(e){
   if(e)e.stopPropagation();
-  clearInterval(ftInterval);ftRunning=false;ftSeconds=ftTotal;
+  clearInterval(ftInterval);ftRunning=false;ftSeconds=ftTotal;ftSecondsAtStart=ftTotal;ftWallStart=0;
   document.getElementById('ftStatusDot').className='ft-status-dot';
   ftUpdateDisplay();ftUpdatePlayBtn();showToast('Session skipped');
 }
@@ -3487,7 +3513,7 @@ function ftMinimize(e){
 }
 function ftClose(e){
   if(e)e.stopPropagation();
-  clearInterval(ftInterval);ftRunning=false;
+  clearInterval(ftInterval);ftInterval=null;ftRunning=false;ftWallStart=0;
   document.title='StudyFlow — Premium Learning Platform';
   document.getElementById('floatTimer').style.display='none';
 }
@@ -3496,6 +3522,17 @@ function renderFtPomDots(){
   el.innerHTML=Array.from({length:4},(_,i)=>`<div class="ft-pom-dot ${i<ftPomDone?'done':i===ftPomDone?'current':''}"></div>`).join('');
 }
 ftInit();
+
+// ── PAGE VISIBILITY: re-sync timer when tab wakes from background ──────────
+// This is the PRIMARY fix for "3-4 seconds tick per second" bug.
+// When the browser throttles a hidden tab, setInterval firings queue up.
+// On becoming visible, the wall-clock calculation corrects everything instantly.
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'visible' && ftRunning){
+    // Force an immediate tick to re-sync display from wall clock
+    ftTick();
+  }
+});
 
 // NAVIGATION — lazy page init
 function getGreeting(name){const h=new Date().getHours();let g=h<12?'Good Morning':h<17?'Good Afternoon':h<21?'Good Evening':'Good Night';return `${g}, <span>${name.split(' ')[0]}</span> ✦`;}
@@ -4297,7 +4334,7 @@ function adjustSetting(k,d){
   const idx=keys.indexOf(k);if(idx<0)return;
   timerSettings[k]=Math.max(1,timerSettings[k]+d);
   const el=document.getElementById(ids[idx]);if(el)el.textContent=timerSettings[k];
-  if(k==='focus'){ftTotal=timerSettings.focus*60;ftSeconds=ftTotal;ftUpdateDisplay();}
+  if(k==='focus'){ftTotal=timerSettings.focus*60;ftSeconds=ftTotal;ftSecondsAtStart=ftTotal;ftWallStart=0;ftUpdateDisplay();}
 }
 
 // ===== PART 5: NOTES =====
@@ -5241,6 +5278,35 @@ setInterval(function(){
   }
 }, 60000);
 
+// ── LONG-SESSION STABILITY MANAGER ───────────────────────────────────────────
+// Prevents memory bloat during 10–12 hour continuous sessions.
+// Runs every 30 minutes: syncs open data to localStorage, clears orphaned timers.
+(function(){
+  const STABILITY_INTERVAL = 30 * 60 * 1000; // 30 minutes
+  setInterval(function(){
+    // 1. Persist all live data to localStorage (prevents data loss)
+    if(currentUser){
+      try{ sfSave('timerLog', timerLog); }catch(e){}
+      try{ sfSave('schSessions', schSessions); }catch(e){}
+      try{ sfSave('notes', notes); }catch(e){}
+      try{ sfSave('targets', targets); }catch(e){}
+    }
+    // 2. Trim in-memory timerLog to last 500 entries (prevents RAM growth)
+    if(timerLog.length > 500){ timerLog = timerLog.slice(-500); }
+    // 3. Purge any stale SpeechSynthesis queue to prevent TTS memory leaks
+    if(window.speechSynthesis && window.speechSynthesis.speaking){
+      window.speechSynthesis.cancel();
+    }
+    // 4. If voice control is running but recognition silently died, revive it
+    if(!vcManuallyDisabled && vcEnabled && !vcRestarting){
+      try{
+        // If recognition object is in a dead state, restart it
+        if(!vcRecognition){ vcStartListening(); }
+      }catch(e){}
+    }
+  }, STABILITY_INTERVAL);
+})();
+
 // ===== PDF EXTRACTOR =====
 (function(){
   const PDFJS_CDN='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
@@ -5669,8 +5735,37 @@ function initAppForUser(){
 
   showToast(`Welcome back, ${profileData.name.split(' ')[0]}! 👋`);
 
-  // ✅ FIX: Schedule browser notifications for today's scheduled sessions
+  // ── JARVIS-STYLE VOICE GREETING ──────────────────────────────
+  jarvisGreet(profileData.name);
+}
+
+// ── JARVIS GREETING ENGINE ────────────────────────────────────
+function jarvisGreet(fullName){
   scheduleSchSessionNotifications();
+  if(!window.speechSynthesis) return;
+  const firstName = fullName.split(' ')[0];
+  const hour = new Date().getHours();
+  const timeGreet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const lines = [
+    `${timeGreet}, ${firstName}. All systems are online. StudyFlow is ready.`,
+    `${timeGreet}, ${firstName}. Welcome back. Your study dashboard is loaded and ready.`,
+    `${timeGreet}, ${firstName}. All your data is synced. Ready to begin when you are.`,
+    `${timeGreet}, ${firstName}. Systems nominal. Let's make today count.`,
+  ];
+  const line = lines[Math.floor(Math.random() * lines.length)];
+  // Wait briefly so page renders first
+  setTimeout(() => {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(line);
+    utter.rate = 0.92;
+    utter.pitch = 0.85;
+    utter.volume = 0.88;
+    // Prefer a deep English voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const preferred = voices.find(v => /google us english|daniel|alex|en-gb|en-us/i.test(v.name + v.lang));
+    if(preferred) utter.voice = preferred;
+    window.speechSynthesis.speak(utter);
+  }, 900);
 }
 
 // Schedule browser notifications for today's schSessions
@@ -7279,6 +7374,8 @@ let vcState = 'idle';    // idle | listening | command
 let vcCmdTimer = null;
 let vcEnabled = false;
 let vcManuallyDisabled = false;
+let vcRestarting = false;  // Guard: prevent multiple simultaneous restarts
+let vcRestartTimer = null; // Debounce restart timer
 
 // Subject keyword map
 const VC_SUBJECTS = {
@@ -7392,19 +7489,25 @@ function vcBuildRecognition(){
   };
 
   r.onerror = (e) => {
-    if(e.error === 'not-allowed') {
+    if(e.error === 'not-allowed' || e.error === 'service-not-allowed') {
       vcEnabled = false;
+      vcRestarting = false;
       document.getElementById('vcLabel').textContent = 'Mic blocked';
       return;
     }
-    // For 'no-speech', 'aborted', 'network' — restart silently
-    if(!vcManuallyDisabled) setTimeout(vcStartListening, 800);
+    // For 'no-speech', 'aborted', 'network' — schedule restart with guard
+    if(!vcManuallyDisabled){
+      clearTimeout(vcRestartTimer);
+      vcRestartTimer = setTimeout(vcStartListening, 1200);
+    }
   };
 
   r.onend = () => {
+    vcRestarting = false;
     if(!vcManuallyDisabled && vcEnabled) {
-      // Auto-restart to keep always-on
-      setTimeout(vcStartListening, 300);
+      // Debounced auto-restart — prevents rapid restart loop
+      clearTimeout(vcRestartTimer);
+      vcRestartTimer = setTimeout(vcStartListening, 400);
     }
   };
 
@@ -7412,15 +7515,24 @@ function vcBuildRecognition(){
 }
 
 function vcStartListening(){
-  if(vcManuallyDisabled) return;
+  if(vcManuallyDisabled || vcRestarting) return;
+  vcRestarting = true;
+  clearTimeout(vcRestartTimer);
+  // Fully destroy old instance before creating new one
+  if(vcRecognition){
+    try{ vcRecognition.onend = null; vcRecognition.onerror = null; vcRecognition.onresult = null; vcRecognition.abort(); }catch(e){}
+    vcRecognition = null;
+  }
   try {
-    if(vcRecognition){ try{ vcRecognition.stop(); }catch(e){} }
     vcRecognition = vcBuildRecognition();
     vcRecognition.start();
     vcEnabled = true;
+    vcRestarting = false;
     vcSetState('listening', 'Hey Flow');
   } catch(e) {
-    setTimeout(vcStartListening, 1000);
+    vcRestarting = false;
+    clearTimeout(vcRestartTimer);
+    vcRestartTimer = setTimeout(vcStartListening, 1500);
   }
 }
 
@@ -7444,12 +7556,18 @@ function vcStripWakeWord(text){
 function vcToggleManual(){
   if(vcManuallyDisabled){
     vcManuallyDisabled = false;
+    vcRestarting = false;
     vcStartListening();
     showToast('🎙 Voice control ON — say "Hey Flow"');
   } else {
     vcManuallyDisabled = true;
     vcEnabled = false;
-    if(vcRecognition){ try{ vcRecognition.stop(); }catch(e){} }
+    vcRestarting = false;
+    clearTimeout(vcRestartTimer);
+    if(vcRecognition){
+      try{ vcRecognition.onend=null; vcRecognition.onerror=null; vcRecognition.onresult=null; vcRecognition.abort(); }catch(e){}
+      vcRecognition = null;
+    }
     vcSetState('idle', 'Voice off');
     showToast('🔇 Voice control OFF');
   }
@@ -7523,6 +7641,8 @@ function vcProcessCommand(rawText){
       ftInfinityMode = false;
       ftSeconds = durFound * 60;
       ftTotal   = durFound * 60;
+      ftSecondsAtStart = durFound * 60;
+      ftWallStart = 0;
       ftPhase   = 'Focus';
       ftBreakMode = false;
       ftUpdateDisplay();
