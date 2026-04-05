@@ -195,6 +195,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 #missedTasksCard .session-item{border-left:3px solid #D4563A;background:#FEF7F7;}
 body.dark #missedTasksCard .session-item{background:#2D1A1A;}
 
+/* DELETE CHOICE MODAL — dark mode */
+body.dark #deleteChoiceOverlay > div,
+body.dark #clearAllOverlay > div{background:var(--card);color:var(--text);}
+body.dark #deleteChoiceOverlay button:first-of-type,
+body.dark #clearAllOverlay button:first-of-type{background:var(--bg);border-color:var(--border);color:var(--text);}
+
 /* PLACEHOLDER PAGES */
 .coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;}
 .coming-soon .big-icon{font-size:64px;margin-bottom:16px;opacity:0.3;}
@@ -2222,6 +2228,10 @@ body.dark .stat-card::before{background:linear-gradient(135deg,rgba(255,255,255,
         <button class="btn-primary" onclick="openSchModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Add Session
+        </button>
+        <button onclick="clearAllSessions()" title="Delete all sessions" style="padding:9px 14px;border-radius:10px;border:1.5px solid #D4563A;background:#FDECEA;color:#C0392B;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:6px;" onmouseover="this.style.background='#C0392B';this.style.color='white'" onmouseout="this.style.background='#FDECEA';this.style.color='#C0392B'">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          Clear All
         </button>
       </div>
     </div>
@@ -4347,7 +4357,7 @@ function renderWeekGrid(){
           <div class="sb-name">${s.subject}</div>
           <div class="sb-time">${fmt12(s.startSlot)}</div>
           <div class="sb-type">${s.type}</div>
-          <div onclick="event.stopPropagation();if(confirm('Delete this session?')){schSessions=schSessions.filter(x=>x.id!==${s.id});sfSave('schSessions',schSessions);renderWeekGrid();showToast('Deleted');}" style="position:absolute;top:3px;right:4px;width:16px;height:16px;border-radius:50%;background:rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;font-size:9px;cursor:pointer;opacity:0;transition:opacity .15s;" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='0'">✕</div>
+          <div onclick="event.stopPropagation();quickDeleteSession(${s.id})" title="Delete session" style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:5px;background:rgba(192,57,43,0.15);display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;opacity:0.55;transition:all .15s;color:#C0392B;font-weight:700;line-height:1;" onmouseenter="this.style.opacity='1';this.style.background='rgba(192,57,43,0.85)';this.style.color='white'" onmouseleave="this.style.opacity='0.55';this.style.background='rgba(192,57,43,0.15)';this.style.color='#C0392B'">✕</div>
         </div>`;
       });
       const hasSess=sess.length>0;
@@ -4361,9 +4371,10 @@ function renderWeekGrid(){
       let inner='';
       sess.forEach(s=>{
         const c=TYPE_COLORS[s.type]||TYPE_COLORS.study;
-        inner+=`<div class="session-block" style="top:2px;height:${Math.min(s.dur,2)*58-4}px;background:${c.bg};border-left-color:${c.border};color:${c.text};" onclick="editSchSession(${s.id})">
+        inner+=`<div class="session-block" style="top:2px;height:${Math.min(s.dur,2)*58-4}px;background:${c.bg};border-left-color:${c.border};color:${c.text};position:relative;" onclick="editSchSession(${s.id})">
           <div class="sb-name">${s.subject}</div>
           <div class="sb-time">${fmt12(s.startSlot)}</div>
+          <div onclick="event.stopPropagation();quickDeleteSession(${s.id})" title="Delete session" style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:5px;background:rgba(192,57,43,0.15);display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;opacity:0.55;transition:all .15s;color:#C0392B;font-weight:700;line-height:1;" onmouseenter="this.style.opacity='1';this.style.background='rgba(192,57,43,0.85)';this.style.color='white'" onmouseleave="this.style.opacity='0.55';this.style.background='rgba(192,57,43,0.15)';this.style.color='#C0392B'">✕</div>
         </div>`;
       });
       bHtml+=`<div class="wg-cell${sess.length?' has-session':''}" onclick="cellClick(${di},${slot2})">${inner}</div>`;
@@ -4554,14 +4565,16 @@ function smSelectAllDays(){
 
 function deleteSchSession(){
   if(!smEditId) return;
-  if(!confirm('Delete this session?')) return;
-  schSessions=schSessions.filter(s=>s.id!==smEditId);
-  sfSave('schSessions',schSessions);
+  const s = schSessions.find(x=>x.id===smEditId);
+  if(!s) return;
+  const siblings = schSessions.filter(x=>x.id!==smEditId && x.subject===s.subject && x.type===s.type && x.startSlot===s.startSlot);
   closeSchModal();
-  renderDashTodaySessions();
-  updateDashboardStats();
-  if(schView==='week')renderWeekGrid();else renderDayView();
-  showToast('Session deleted');
+  if(siblings.length > 0){
+    showDeleteChoiceModal(smEditId, siblings.length);
+  } else {
+    if(!confirm('Delete this session?')) return;
+    deleteSingleSession(smEditId);
+  }
 }
 
 function duplicateSchSession(){
@@ -4577,6 +4590,103 @@ function duplicateSchSession(){
   renderDashTodaySessions();
   if(schView==='week')renderWeekGrid();else renderDayView();
   showToast('⧉ Session duplicated');
+}
+
+// Quick delete from session block — asks: this day only or all days?
+function quickDeleteSession(id){
+  const s = schSessions.find(x=>x.id===id);
+  if(!s) return;
+  // Find siblings: same subject, type, startSlot on other days
+  const siblings = schSessions.filter(x=>x.id!==id && x.subject===s.subject && x.type===s.type && x.startSlot===s.startSlot);
+  if(siblings.length > 0){
+    showDeleteChoiceModal(id, siblings.length);
+  } else {
+    if(!confirm('Delete this session?')) return;
+    schSessions = schSessions.filter(x=>x.id!==id);
+    sfSave('schSessions', schSessions);
+    renderDashTodaySessions(); updateDashboardStats();
+    if(schView==='week')renderWeekGrid();else renderDayView();
+    showToast('🗑 Session deleted');
+  }
+}
+
+function showDeleteChoiceModal(id, sibCount){
+  const s = schSessions.find(x=>x.id===id);
+  if(!s) return;
+  const overlay = document.createElement('div');
+  overlay.id = 'deleteChoiceOverlay';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(10,25,20,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);';
+  overlay.innerHTML=`
+    <div style="background:white;border-radius:18px;padding:28px 30px;max-width:380px;width:90%;box-shadow:0 24px 80px rgba(10,25,20,0.2);text-align:center;">
+      <div style="font-size:28px;margin-bottom:10px;">🗑</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:var(--text);margin-bottom:6px;">Delete Session</div>
+      <div style="font-size:13.5px;color:var(--text2);margin-bottom:22px;line-height:1.5;">
+        <strong>${s.subject}</strong> · ${s.type}<br>
+        Found <strong>${sibCount+1} copies</strong> across multiple days.
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <button onclick="deleteSingleSession(${id})" style="padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;color:var(--text);transition:all .2s;" onmouseover="this.style.background='var(--primary-light)';this.style.borderColor='var(--primary)'" onmouseout="this.style.background='var(--bg)';this.style.borderColor='var(--border)'">
+          Delete this day only
+        </button>
+        <button onclick="deleteAllSimilarSessions(${id})" style="padding:12px;border-radius:10px;border:1.5px solid #D4563A;background:#FDECEA;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;color:#C0392B;transition:all .2s;" onmouseover="this.style.background='#C0392B';this.style.color='white'" onmouseout="this.style.background='#FDECEA';this.style.color='#C0392B'">
+          Delete all ${sibCount+1} days ⚠
+        </button>
+        <button onclick="document.getElementById('deleteChoiceOverlay').remove()" style="padding:10px;border-radius:10px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;color:var(--text3);">
+          Cancel
+        </button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
+}
+
+function deleteSingleSession(id){
+  schSessions = schSessions.filter(x=>x.id!==id);
+  sfSave('schSessions', schSessions);
+  const ov=document.getElementById('deleteChoiceOverlay'); if(ov)ov.remove();
+  renderDashTodaySessions(); updateDashboardStats();
+  if(schView==='week')renderWeekGrid();else renderDayView();
+  showToast('🗑 Session deleted (this day only)');
+}
+
+function deleteAllSimilarSessions(id){
+  const s = schSessions.find(x=>x.id===id);
+  if(!s) return;
+  const countBefore = schSessions.length;
+  schSessions = schSessions.filter(x=>!(x.subject===s.subject && x.type===s.type && x.startSlot===s.startSlot));
+  sfSave('schSessions', schSessions);
+  const ov=document.getElementById('deleteChoiceOverlay'); if(ov)ov.remove();
+  renderDashTodaySessions(); updateDashboardStats();
+  if(schView==='week')renderWeekGrid();else renderDayView();
+  showToast(`🗑 Deleted ${countBefore-schSessions.length} sessions across all days`);
+}
+
+function clearAllSessions(){
+  if(!schSessions.length){ showToast('No sessions to clear'); return; }
+  const overlay = document.createElement('div');
+  overlay.id = 'clearAllOverlay';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(10,25,20,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);';
+  overlay.innerHTML=`
+    <div style="background:white;border-radius:18px;padding:28px 30px;max-width:360px;width:90%;box-shadow:0 24px 80px rgba(10,25,20,0.2);text-align:center;">
+      <div style="font-size:32px;margin-bottom:10px;">⚠️</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;margin-bottom:8px;">Clear All Sessions?</div>
+      <div style="font-size:13.5px;color:var(--text2);margin-bottom:22px;line-height:1.5;">This will permanently delete all <strong>${schSessions.length} scheduled sessions</strong>. This cannot be undone.</div>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button onclick="document.getElementById('clearAllOverlay').remove()" style="flex:1;padding:11px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;color:var(--text);">Cancel</button>
+        <button onclick="confirmClearAll()" style="flex:1;padding:11px;border-radius:10px;border:none;background:#C0392B;color:white;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;">Delete All</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
+}
+
+function confirmClearAll(){
+  schSessions=[];
+  sfSave('schSessions', schSessions);
+  const ov=document.getElementById('clearAllOverlay'); if(ov)ov.remove();
+  renderDashTodaySessions(); updateDashboardStats();
+  if(schView==='week')renderWeekGrid();else renderDayView();
+  showToast('🗑 All sessions cleared');
 }
 function saveSchSession(){
   const selectedDayChips=[...document.querySelectorAll('.sm-day-chip.selected')];
