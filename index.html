@@ -201,6 +201,20 @@ body.dark #clearAllOverlay > div{background:var(--card);color:var(--text);}
 body.dark #deleteChoiceOverlay button:first-of-type,
 body.dark #clearAllOverlay button:first-of-type{background:var(--bg);border-color:var(--border);color:var(--text);}
 
+/* CURRENT TIME LINE in week grid */
+.wg-now-line{position:absolute;left:0;right:0;height:2px;background:#E8394A;z-index:5;pointer-events:none;}
+.wg-now-line::before{content:'';position:absolute;left:-1px;top:-4px;width:10px;height:10px;border-radius:50%;background:#E8394A;}
+
+/* MIDNIGHT ROW highlight */
+.wg-time-label.wg-midnight{color:var(--primary)!important;font-weight:700;border-top:1.5px dashed var(--primary);padding-top:4px;}
+.wg-cell-midnight{border-top:1.5px dashed var(--border)!important;}
+
+/* DAY VIEW now indicator */
+.dv-now-time{color:var(--primary)!important;font-weight:700;position:relative;}
+.dv-now-dot{position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:#E8394A;}
+.dv-slot-midnight{border-top:1.5px dashed var(--border);}
+.dv-slot-midnight .dv-slot-time{color:var(--primary);font-weight:700;}
+
 /* PLACEHOLDER PAGES */
 .coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;}
 .coming-soon .big-icon{font-size:64px;margin-bottom:16px;opacity:0.3;}
@@ -538,9 +552,9 @@ body.dark .notif-item.unread{background:#1C3028;}
 .wg-day-head.today .wg-day-num{background:var(--primary);color:white;}
 .wg-day-head.today .wg-day-name{color:var(--primary);}
 
-.wg-body{display:grid;grid-template-columns:60px repeat(7,1fr);max-height:520px;overflow-y:auto;}
-.wg-time-label{height:60px;display:flex;align-items:flex-start;justify-content:flex-end;padding:6px 8px 0 0;font-size:11px;color:var(--text3);border-bottom:1px solid var(--bg);}
-.wg-cell{height:60px;border-left:1px solid var(--border);border-bottom:1px solid var(--bg);position:relative;cursor:pointer;transition:background .15s;}
+.wg-body{display:grid;grid-template-columns:60px repeat(7,1fr);max-height:580px;overflow-y:auto;}
+.wg-time-label{height:29px;display:flex;align-items:flex-start;justify-content:flex-end;padding:4px 8px 0 0;font-size:10px;color:var(--text3);border-bottom:1px solid var(--bg);}
+.wg-cell{height:29px;border-left:1px solid var(--border);border-bottom:1px solid var(--bg);position:relative;cursor:pointer;transition:background .15s;}
 .wg-cell:hover{background:var(--primary-light);}
 .wg-cell:hover::after{content:'+ Add';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:11px;color:var(--primary);font-weight:500;pointer-events:none;}
 .wg-cell.has-session{cursor:default;}
@@ -2835,6 +2849,28 @@ body.dark .stat-card::before{background:linear-gradient(135deg,rgba(255,255,255,
             <div id="customSubjColorList" style="display:flex;flex-direction:column;gap:10px;"></div>
           </div>
 
+          <!-- Day Start Time -->
+          <div class="setting-group">
+            <div class="sg-title">Day Start Time</div>
+            <div class="sr-desc" style="margin-bottom:12px;font-size:12.5px;color:var(--text3);">Your schedule grid will always begin at this time. Sessions wrap around midnight correctly.</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <select id="cust-daystart" class="form-input" onchange="saveDayStartHour(this.value)" style="flex:1;padding:10px 14px;font-size:14px;font-weight:500;max-width:220px;">
+                <option value="0">12:00 AM (Midnight)</option>
+                <option value="4">4:00 AM</option>
+                <option value="5">5:00 AM</option>
+                <option value="6" selected>6:00 AM (Default)</option>
+                <option value="7">7:00 AM</option>
+                <option value="8">8:00 AM</option>
+                <option value="9">9:00 AM</option>
+                <option value="10">10:00 AM</option>
+                <option value="12">12:00 PM (Noon)</option>
+              </select>
+              <div style="display:flex;align-items:center;gap:8px;background:var(--primary-light);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text2);">
+                <span>🕐</span> Grid shows <strong id="dayStartPreview">6:00 AM → 5:59 AM</strong>
+              </div>
+            </div>
+          </div>
+
           <!-- Timer Presets -->
           <div class="setting-group">
             <div class="sg-title">Timer Presets</div>
@@ -4306,7 +4342,7 @@ function nextMonth(){calDate=new Date(calDate.getFullYear(),calDate.getMonth()+1
 
 
 // ===== PART 3: SCHEDULE =====
-const HOURS=Array.from({length:18},(_,i)=>i+6); // 6AM-11PM
+// Slots are absolute 30-min intervals from midnight: slot 0=12:00AM, slot 1=12:30AM, ..., slot 47=11:30PM
 const DAYS_SHORT=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const DAYS_FULL=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 const TYPE_COLORS={study:{bg:'#E6F2EF',border:'#3A7A6C',text:'#1E4A40'},revision:{bg:'#FBF3E2',border:'#C4922A',text:'#5A3A00'},practice:{bg:'#EEF0FA',border:'#5A5AC4',text:'#2A2A80'},mock:{bg:'#FDECEA',border:'#C0392B',text:'#5A1010'}};
@@ -4320,6 +4356,59 @@ let smSelType='study';
 let smSelSubj='Physics';
 let schSessions=[]; // loaded per-user from localStorage
 let schNextId=200;
+let dayStartHour=6; // user-defined day start (0-23), default 6AM
+
+/* ── TIME UTILITIES ── */
+// Returns 48 absolute slots (0-47) in rolling order starting from dayStartHour
+function getDaySlots(){
+  const base=dayStartHour*2;
+  return Array.from({length:48},(_,i)=>(base+i)%48);
+}
+// Convert absolute slot → display string "7:30 AM"
+function absSlotToTime(slot){
+  const h=Math.floor(slot/2)%24;
+  const m=slot%2?'30':'00';
+  const ap=h>=12?'PM':'AM';
+  const h12=h===0?12:h>12?h-12:h;
+  return `${h12}:${m} ${ap}`;
+}
+// Hour-only label for grid rows e.g. "7 AM"
+function absSlotHourLabel(slot){
+  const h=Math.floor(slot/2)%24;
+  const ap=h>=12?'PM':'AM';
+  const h12=h===0?12:h>12?h-12:h;
+  return `${h12}${ap}`;
+}
+// Keep fmt12 working (now treats slot as absolute)
+function fmt12(slot){return absSlotToTime(slot);}
+function slotH(slot){return Math.floor(slot/2)%24;}
+function slotM(slot){return slot%2?30:0;}
+
+// Relative position of a session in today's rolling day (for sorting)
+function relSlot(absSlot){
+  const base=dayStartHour*2;
+  return (absSlot-base+48)%48;
+}
+
+// Current time → absolute slot (nearest 30-min)
+function nowAbsSlot(){
+  const n=new Date();
+  return n.getHours()*2+(n.getMinutes()>=30?1:0);
+}
+
+// Migrate sessions from old format (slot 0=6AM) → absolute (slot 12=6AM)
+function migrateSchSessions(){
+  const v=localStorage.getItem('schSlotVersion');
+  if(v==='2') return; // already migrated
+  schSessions=schSessions.map(s=>{
+    // Old system: slot 0=6AM. New: slot 12=6AM. Shift by +12.
+    // Guard: if already large (>=24) it's probably already absolute-ish; still shift only <48-12
+    const shifted=(s.startSlot+12)%48;
+    return Object.assign({},s,{startSlot:shifted});
+  });
+  sfSave('schSessions',schSessions);
+  localStorage.setItem('schSlotVersion','2');
+}
 
 function getWeekDates(offset){
   const today=new Date();
@@ -4327,9 +4416,6 @@ function getWeekDates(offset){
   const mon=new Date(today);mon.setDate(today.getDate()-dow+offset*7);
   return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d;});
 }
-function fmt12(slot){const h=Math.floor(slot/2)+6;const m=slot%2?'30':'00';const ap=h>=12?'PM':'AM';return `${h>12?h-12:h}:${m} ${ap}`;}
-function slotH(slot){return Math.floor(slot/2)+6;}
-function slotM(slot){return slot%2?30:0;}
 
 function renderWeekGrid(){
   const dates=getWeekDates(schWeekOffset);
@@ -4342,46 +4428,76 @@ function renderWeekGrid(){
   });
   document.getElementById('wgDayHeaders').innerHTML=hHtml;
 
-  // body
+  // build 48 rolling slots in pairs (on-the-hour + half-hour)
+  const slots=getDaySlots(); // 48 absolute slots in rolling order
+  const currentSlot=nowAbsSlot();
+  const currentRel=relSlot(currentSlot);
+  // fractional position within the current slot for the time line
+  const nowMin=new Date().getMinutes();
+  const nowFrac=(nowMin%30)/30; // 0.0–1.0 within the 30-min slot
+
   let bHtml='';
-  HOURS.forEach((h,hi)=>{
-    const slot=hi*2;
-    bHtml+=`<div class="wg-time-label">${h>12?h-12:h}${h>=12?'PM':'AM'}</div>`;
+  // Iterate in pairs: hour row + half-hour row
+  for(let ri=0;ri<48;ri+=2){
+    const slotA=slots[ri];   // on-the-hour slot
+    const slotB=slots[ri+1]; // half-hour slot
+    const isHourMidnight=(slotA===0); // midnight crossing highlight
+
+    // On-the-hour row
+    bHtml+=`<div class="wg-time-label${isHourMidnight?' wg-midnight':''}">${absSlotHourLabel(slotA)}</div>`;
     dates.forEach((_,di)=>{
-      const sess=schSessions.filter(s=>s.day===di&&s.startSlot===slot);
+      const sess=schSessions.filter(s=>s.day===di&&s.startSlot===slotA);
       let inner='';
+      // current-time line
+      if(di===( todayD.getDay()===0?6:todayD.getDay()-1 ) && ri===currentRel && schWeekOffset===0){
+        const topPct=Math.round(nowFrac*58);
+        inner+=`<div class="wg-now-line" style="top:${topPct}px;"></div>`;
+      }
       sess.forEach(s=>{
         const c=TYPE_COLORS[s.type]||TYPE_COLORS.study;
-        const ht=Math.min(s.dur,3);
-        inner+=`<div class="session-block" style="top:2px;height:${ht*58-4}px;background:${c.bg};border-left-color:${c.border};color:${c.text};position:relative;" onclick="editSchSession(${s.id})">
+        const ht=Math.min(s.dur,6); // dur in 30-min units, max 3h shown
+        inner+=`<div class="session-block" style="top:2px;height:${ht*29-2}px;background:${c.bg};border-left-color:${c.border};color:${c.text};position:relative;" onclick="editSchSession(${s.id})">
           <div class="sb-name">${s.subject}</div>
-          <div class="sb-time">${fmt12(s.startSlot)}</div>
+          <div class="sb-time">${absSlotToTime(s.startSlot)}</div>
           <div class="sb-type">${s.type}</div>
           <div onclick="event.stopPropagation();quickDeleteSession(${s.id})" title="Delete session" style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:5px;background:rgba(192,57,43,0.15);display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;opacity:0.55;transition:all .15s;color:#C0392B;font-weight:700;line-height:1;" onmouseenter="this.style.opacity='1';this.style.background='rgba(192,57,43,0.85)';this.style.color='white'" onmouseleave="this.style.opacity='0.55';this.style.background='rgba(192,57,43,0.15)';this.style.color='#C0392B'">✕</div>
         </div>`;
       });
       const hasSess=sess.length>0;
-      bHtml+=`<div class="wg-cell${hasSess?' has-session':''}" onclick="cellClick(${di},${slot})">${inner}</div>`;
+      bHtml+=`<div class="wg-cell${hasSess?' has-session':''}${isHourMidnight?' wg-cell-midnight':''}" onclick="cellClick(${di},${slotA})">${inner}</div>`;
     });
-    // half-hour row
-    const slot2=hi*2+1;
+
+    // Half-hour row
     bHtml+=`<div class="wg-time-label" style="color:transparent;">·</div>`;
     dates.forEach((_,di)=>{
-      const sess=schSessions.filter(s=>s.day===di&&s.startSlot===slot2);
+      const sess=schSessions.filter(s=>s.day===di&&s.startSlot===slotB);
       let inner='';
+      if(di===( todayD.getDay()===0?6:todayD.getDay()-1 ) && ri+1===currentRel && schWeekOffset===0){
+        const topPct=Math.round(nowFrac*29);
+        inner+=`<div class="wg-now-line" style="top:${topPct}px;"></div>`;
+      }
       sess.forEach(s=>{
         const c=TYPE_COLORS[s.type]||TYPE_COLORS.study;
-        inner+=`<div class="session-block" style="top:2px;height:${Math.min(s.dur,2)*58-4}px;background:${c.bg};border-left-color:${c.border};color:${c.text};position:relative;" onclick="editSchSession(${s.id})">
+        inner+=`<div class="session-block" style="top:2px;height:${Math.min(s.dur,4)*29-2}px;background:${c.bg};border-left-color:${c.border};color:${c.text};position:relative;" onclick="editSchSession(${s.id})">
           <div class="sb-name">${s.subject}</div>
-          <div class="sb-time">${fmt12(s.startSlot)}</div>
+          <div class="sb-time">${absSlotToTime(s.startSlot)}</div>
           <div onclick="event.stopPropagation();quickDeleteSession(${s.id})" title="Delete session" style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:5px;background:rgba(192,57,43,0.15);display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;opacity:0.55;transition:all .15s;color:#C0392B;font-weight:700;line-height:1;" onmouseenter="this.style.opacity='1';this.style.background='rgba(192,57,43,0.85)';this.style.color='white'" onmouseleave="this.style.opacity='0.55';this.style.background='rgba(192,57,43,0.15)';this.style.color='#C0392B'">✕</div>
         </div>`;
       });
-      bHtml+=`<div class="wg-cell${sess.length?' has-session':''}" onclick="cellClick(${di},${slot2})">${inner}</div>`;
+      bHtml+=`<div class="wg-cell${sess.length?' has-session':''}" onclick="cellClick(${di},${slotB})">${inner}</div>`;
     });
-  });
+  }
   document.getElementById('wgBody').innerHTML=bHtml;
   updateSchSummary();
+  // auto-scroll to current time
+  if(schWeekOffset===0){
+    const body=document.getElementById('wgBody');
+    if(body){
+      const rowH=29;
+      const scrollTo=Math.max(0,currentRel*rowH-120);
+      setTimeout(()=>body.scrollTop=scrollTo,80);
+    }
+  }
 }
 
 function renderDayView(){
@@ -4390,35 +4506,50 @@ function renderDayView(){
   const dayNames=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
   document.getElementById('dvDayLabel').textContent=dayNames[schDayOffset];
   document.getElementById('dvDaySub').textContent=d.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
-  const sess=schSessions.filter(s=>s.day===schDayOffset).sort((a,b)=>a.startSlot-b.startSlot);
+  const sess=schSessions.filter(s=>s.day===schDayOffset).sort((a,b)=>relSlot(a.startSlot)-relSlot(b.startSlot));
+  const slots=getDaySlots();
+  const currentSlot=nowAbsSlot();
+  const isToday=schDayOffset===(new Date().getDay()===0?6:new Date().getDay()-1) && schWeekOffset===0;
   let html='';
-  HOURS.forEach((h,hi)=>{
-    const slot=hi*2;
-    const s=sess.find(x=>x.startSlot===slot||x.startSlot===slot+1);
-    html+=`<div class="dv-slot">
-      <div class="dv-slot-time">${h>12?h-12:h}${h>=12?'pm':'am'}</div>
+  // Show only on-the-hour slots for day view (24 rows)
+  for(let ri=0;ri<48;ri+=2){
+    const slotA=slots[ri];
+    const isHourMidnight=(slotA===0);
+    const s=sess.find(x=>x.startSlot===slotA||x.startSlot===slots[ri+1]);
+    const isNowRow=isToday&&(slotA===currentSlot||(ri<47&&slots[ri+1]===currentSlot));
+    html+=`<div class="dv-slot${isHourMidnight?' dv-slot-midnight':''}">
+      <div class="dv-slot-time${isNowRow?' dv-now-time':''}">${absSlotHourLabel(slotA)}${isNowRow?'<div class="dv-now-dot"></div>':''}</div>
       <div class="dv-slot-content">
         ${s?`<div class="dv-session-card" style="border-left-color:${TYPE_COLORS[s.type]?.border||'#3A7A6C'};position:relative;" onclick="editSchSession(${s.id})">
           <div class="dv-sc-title">${s.subject} — ${s.topic}</div>
-          <div class="dv-sc-meta">${fmt12(s.startSlot)} · ${s.dur*30} min · ${s.type}</div>
-          <div onclick="event.stopPropagation();if(confirm('Delete this session?')){schSessions=schSessions.filter(x=>x.id!==${s.id});sfSave('schSessions',schSessions);renderDayView();showToast('Deleted');}" style="position:absolute;top:8px;right:10px;padding:3px 8px;border-radius:6px;background:#FDECEA;color:#C0392B;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #F5C6C0;">🗑</div>
-        </div>`:`<div class="dv-add-slot" onclick="openSchModal(${schDayOffset},${slot})">+ Add session</div>`}
+          <div class="dv-sc-meta">${absSlotToTime(s.startSlot)} · ${s.dur*30} min · ${s.type}</div>
+          <div onclick="event.stopPropagation();quickDeleteSession(${s.id})" style="position:absolute;top:8px;right:10px;padding:3px 8px;border-radius:6px;background:#FDECEA;color:#C0392B;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #F5C6C0;">🗑</div>
+        </div>`:`<div class="dv-add-slot" onclick="openSchModal(${schDayOffset},${slotA})">+ Add session</div>`}
       </div>
     </div>`;
-  });
+  }
   document.getElementById('dvBody').innerHTML=html;
+  // auto-scroll to current time in day view
+  if(isToday){
+    const body=document.getElementById('dvBody');
+    if(body){
+      const rowH=60;
+      const scrollTo=Math.max(0,(relSlot(currentSlot)/2)*rowH-120);
+      setTimeout(()=>body.scrollTop=scrollTo,80);
+    }
+  }
 }
 
 function renderAgenda(){
-  const todayDay=(new Date().getDay()===0?6:new Date().getDay()-1); // real today
-  const sess=schSessions.filter(s=>s.day===todayDay).sort((a,b)=>a.startSlot-b.startSlot);
+  const todayDay=(new Date().getDay()===0?6:new Date().getDay()-1);
+  const sess=schSessions.filter(s=>s.day===todayDay).sort((a,b)=>relSlot(a.startSlot)-relSlot(b.startSlot));
   document.getElementById('agendaDate').textContent=new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   if(!sess.length){document.getElementById('agendaList').innerHTML='<div style="text-align:center;font-size:13px;color:var(--text3);padding:20px 0;">No sessions today</div>';return;}
   document.getElementById('agendaList').innerHTML=sess.map(s=>{
     const c=SUBJ_COLORS[s.subject]||'#3A7A6C';
     return `<div class="agenda-item">
       <div class="ag-time-col">
-        <div class="ag-time">${fmt12(s.startSlot)}</div>
+        <div class="ag-time">${absSlotToTime(s.startSlot)}</div>
         <div class="ag-line" style="background:${c};"></div>
         <div class="ag-dur">${s.dur*30}m</div>
       </div>
@@ -4433,7 +4564,7 @@ function renderAgenda(){
   // Subject hours
   const subjectMap={};
   schSessions.forEach(s=>{subjectMap[s.subject]=(subjectMap[s.subject]||0)+s.dur*0.5;});
-  const maxH=Math.max(...Object.values(subjectMap));
+  const maxH=Math.max(...Object.values(subjectMap),1);
   document.getElementById('subjectHours').innerHTML=Object.entries(subjectMap).map(([name,hrs])=>`
     <div class="sbs-item">
       <div class="sbs-dot" style="background:${SUBJ_COLORS[name]||'#3A7A6C'};"></div>
@@ -4480,7 +4611,11 @@ function buildSubjPills(){
     <div class="subj-pill${s===smSelSubj?' selected':''}" data-s="${s}" style="${s===smSelSubj?`background:${SUBJ_COLORS[s]};`:''}" onclick="selectSmSubj(this)">${s}</div>`).join('');
   // populate times
   let tHtml='';
-  for(let slot=0;slot<36;slot++)tHtml+=`<option value="${slot}">${fmt12(slot)}</option>`;
+  let tHtml='';
+  const slots=getDaySlots();
+  slots.forEach(slot=>{
+    tHtml+=`<option value="${slot}">${absSlotToTime(slot)}</option>`;
+  });
   document.getElementById('sm-start').innerHTML=tHtml;
 }
 function selectSmSubj(el){
@@ -5282,6 +5417,28 @@ function highlightActivePreset(){
   });
 }
 
+function saveDayStartHour(val){
+  dayStartHour=parseInt(val)||6;
+  localStorage.setItem('dayStartHour', dayStartHour);
+  updateDayStartPreview();
+  // rebuild start-time dropdown in session modal
+  buildSubjPills();
+  // re-render schedule if visible
+  if(document.getElementById('page-schedule')?.classList.contains('active')){
+    if(schView==='week') renderWeekGrid(); else renderDayView();
+  }
+  showToast(`✓ Day starts at ${absSlotHourLabel(dayStartHour*2)}`);
+}
+
+function updateDayStartPreview(){
+  const el=document.getElementById('dayStartPreview');
+  if(!el) return;
+  const endH=(dayStartHour+23)%24;
+  const endMin=30;
+  const fmt=h=>{const ap=h>=12?'PM':'AM';const h12=h===0?12:h>12?h-12:h;return `${h12}:00 ${ap}`;};
+  const fmtEnd=h=>{const ap=h>=12?'PM':'AM';const h12=h===0?12:h>12?h-12:h;return `${h12}:59 ${ap}`;};
+  el.textContent=`${fmt(dayStartHour)} → ${fmtEnd(endH)}`;
+}
 function restorePresetBtn(btn, id){
   const presets={classic:{f:25,s:5},deep:{f:50,s:10},ultra:{f:90,s:20}};
   const p=presets[id];
@@ -5570,6 +5727,10 @@ function loadCustomisations(){
     if(inp) inp.value=timerSettings[k];
   });
   setTimeout(highlightActivePreset,100);
+  // Sync day start dropdown
+  const dsSel=document.getElementById('cust-daystart');
+  if(dsSel){ dsSel.value=String(dayStartHour); }
+  updateDayStartPreview();
 }
 
 function selectTheme(el,color){
@@ -6693,6 +6854,12 @@ function initAppForUser(){
   schSessions = sfLoad('schSessions', []);
   schNextId = Math.max(200, ...schSessions.map(s=>s.id+1), 200);
 
+  // Load user-defined day start hour (default 6 AM)
+  const savedDayStart = localStorage.getItem('dayStartHour');
+  if(savedDayStart !== null) dayStartHour = parseInt(savedDayStart)||6;
+  // Migrate old slot format (slot 0=6AM) → absolute midnight-based slots
+  migrateSchSessions();
+
   timerLog = sfLoad('timerLog', []);
   sgSharedSlots = sfLoad('sgSharedSlots', []);
 
@@ -6872,7 +7039,7 @@ function calcStreak(){
 function getTodaySessions(){
   const today = new Date();
   const todayDow = today.getDay()===0?6:today.getDay()-1; // Mon=0..Sun=6
-  return schSessions.filter(s=>s.day===todayDow);
+  return schSessions.filter(s=>s.day===todayDow).sort((a,b)=>relSlot(a.startSlot)-relSlot(b.startSlot));
 }
 
 function renderDashTodaySessions(){
@@ -6904,7 +7071,7 @@ function renderDashTodaySessions(){
         <div class="session-subject">${s.subject} — ${s.topic} ${stateLabel}</div>
         <div class="session-meta">${s.type.charAt(0).toUpperCase()+s.type.slice(1)} · ${s.dur*30} min</div>
       </div>
-      <div class="session-time">${HOURS[s.startSlot]||''}</div>
+      <div class="session-time">${absSlotToTime(s.startSlot)}</div>
       <div style="display:flex;align-items:center;gap:5px;">
         ${!isSkipped ? `<button onclick="skipDashSession('${s.id}')" title="Skip session" style="width:22px;height:22px;border-radius:6px;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:12px;color:var(--text3);transition:all .18s;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='#FDECEA';this.style.borderColor='#D4563A';this.style.color='#C0392B'" onmouseout="this.style.background='transparent';this.style.borderColor='var(--border)';this.style.color='var(--text3)'">↷</button>` : ''}
         <div class="session-check" onclick="toggleDashSessionDone('${s.id}')" style="cursor:pointer;" title="Mark as done">
