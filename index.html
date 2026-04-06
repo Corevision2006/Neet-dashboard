@@ -4611,7 +4611,6 @@ function buildSubjPills(){
     <div class="subj-pill${s===smSelSubj?' selected':''}" data-s="${s}" style="${s===smSelSubj?`background:${SUBJ_COLORS[s]};`:''}" onclick="selectSmSubj(this)">${s}</div>`).join('');
   // populate times
   let tHtml='';
-  let tHtml='';
   const slots=getDaySlots();
   slots.forEach(slot=>{
     tHtml+=`<option value="${slot}">${absSlotToTime(slot)}</option>`;
