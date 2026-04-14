@@ -1,0 +1,242 @@
+/* ============================================================
+   dashboard.css  — Dashboard page, stat cards, charts
+   ============================================================ */
+
+/* ── Greeting row ────────────────────────────────────────── */
+.greeting-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.greeting-text .salutation  { font-size: 13px; color: var(--text3); letter-spacing: 0.5px; margin-bottom: 4px; }
+.greeting-text h1           { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 400; color: var(--text); line-height: 1.2; }
+.greeting-text h1 em        { font-style: italic; color: var(--primary); }
+.greeting-text .subtitle    { font-size: 14px; color: var(--text2); margin-top: 6px; }
+
+.streak-card {
+  background: linear-gradient(135deg, var(--sidebar) 0%, #2D4F47 100%);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  display: flex; align-items: center; gap: 14px;
+  min-width: 200px;
+  cursor: default;
+}
+.streak-icon { font-size: 28px; }
+.streak-info .streak-num   { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 500; color: var(--accent); line-height: 1; }
+.streak-info .streak-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+/* ── Stat cards grid ─────────────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  position: relative; overflow: hidden;
+  transition: all 0.25s;
+  cursor: default;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.stat-card::after {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  width: 80px; height: 80px;
+  background: var(--stat-color, #3A7A6C);
+  opacity: 0.06;
+  border-radius: 50%;
+  transform: translate(20px,-20px);
+}
+.stat-card .stat-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--stat-bg, #E6F2EF);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 12px;
+}
+.stat-card .stat-icon svg { width: 20px; height: 20px; }
+.stat-card .stat-val       { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 500; color: var(--text); line-height: 1; }
+.stat-card .stat-label     { font-size: 12.5px; color: var(--text3); margin-top: 3px; }
+.stat-card .stat-change    { font-size: 11.5px; margin-top: 8px; display: flex; align-items: center; gap: 4px; }
+.stat-change.up   { color: #3A9E6C; }
+.stat-change.down { color: #D4563A; }
+
+/* ── Dashboard 2-col grid ────────────────────────────────── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+}
+
+/* ── Card shared ─────────────────────────────────────────── */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+.card-header {
+  padding: 20px 22px 0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card-title  { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--text); }
+.card-action { font-size: 12.5px; color: var(--primary); cursor: pointer; font-weight: 500; }
+.card-action:hover { opacity: 0.7; }
+.card-body   { padding: 16px 22px 20px; }
+
+/* ── Session list ────────────────────────────────────────── */
+.session-list { display: flex; flex-direction: column; gap: 10px; }
+.session-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.session-item:hover   { background: var(--primary-light); border-color: var(--border); }
+.session-item.done    { opacity: 0.55; }
+.session-item.skipped { opacity: 0.45; text-decoration: line-through; }
+.session-dot    { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.session-info   { flex: 1; }
+.session-subject{ font-size: 14px; font-weight: 500; color: var(--text); }
+.session-meta   { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.session-time   { font-size: 12px; color: var(--text2); white-space: nowrap; }
+.session-check {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all 0.2s; cursor: pointer;
+}
+.session-check:hover              { border-color: var(--primary); background: var(--primary-light); }
+.session-item.done .session-check { background: var(--primary); border-color: var(--primary); }
+body.dark .session-item           { background: var(--bg); }
+
+/* ── Subject progress bars ───────────────────────────────── */
+.subject-progress     { display: flex; flex-direction: column; gap: 14px; }
+.sp-header            { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.sp-name              { font-size: 13.5px; font-weight: 500; color: var(--text); }
+.sp-pct               { font-size: 13px; color: var(--text2); }
+.sp-track             { height: 6px; background: var(--bg); border-radius: 20px; overflow: hidden; }
+.sp-fill              { height: 100%; border-radius: 20px; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
+
+/* ── Mini Calendar ───────────────────────────────────────── */
+.mini-cal  { padding: 16px 22px 20px; }
+.cal-nav   { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.cal-month { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 400; }
+.cal-arrow {
+  width: 28px; height: 28px;
+  border: 1px solid var(--border); border-radius: 7px;
+  background: white;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text2); font-size: 13px;
+  transition: all 0.2s;
+}
+body.dark .cal-arrow { background: var(--card); border-color: var(--border); }
+.cal-arrow:hover { background: var(--primary-light); color: var(--primary); }
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+.cal-day-name {
+  text-align: center; font-size: 10px; color: var(--text3);
+  letter-spacing: 0.5px; padding: 4px 0; text-transform: uppercase;
+}
+.cal-day {
+  text-align: center; padding: 6px 2px;
+  border-radius: 7px; font-size: 12.5px; color: var(--text2);
+  cursor: pointer; transition: all 0.18s;
+}
+.cal-day:hover        { background: var(--primary-light); color: var(--primary); }
+.cal-day.today        { background: var(--primary); color: white; font-weight: 500; }
+.cal-day.has-event    { position: relative; }
+.cal-day.has-event::after {
+  content: ''; position: absolute; bottom: 2px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 4px; border-radius: 50%; background: var(--accent);
+}
+.cal-day.other-month  { color: var(--border); }
+
+/* ── Quick actions ───────────────────────────────────────── */
+.quick-actions {
+  display: grid; grid-template-columns: repeat(2,1fr); gap: 10px;
+  padding: 0 22px 20px;
+}
+.qa-btn {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer; transition: all 0.2s; color: var(--text);
+}
+.qa-btn:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+body.dark .qa-btn { background: var(--bg); border-color: var(--border); }
+.qa-icon  { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.qa-label { font-size: 13px; font-weight: 500; }
+
+/* ── Quote card ──────────────────────────────────────────── */
+.quote-card {
+  background: linear-gradient(135deg, #E6F4F0 0%, #EDF6F2 100%);
+  border: 1px solid #C8E6DE;
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: 20px;
+}
+.quote-text   { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; color: var(--text); line-height: 1.6; }
+.quote-author { font-size: 12px; color: var(--text3); margin-top: 8px; }
+
+/* ── Activity feed ───────────────────────────────────────── */
+.activity-list { display: flex; flex-direction: column; gap: 0; }
+.activity-item {
+  display: flex; gap: 12px;
+  padding: 12px 0; border-bottom: 1px solid var(--bg);
+}
+.activity-item:last-child { border-bottom: none; }
+.act-dot  { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); margin-top: 5px; flex-shrink: 0; }
+.act-text { font-size: 13.5px; color: var(--text); }
+.act-time { font-size: 11.5px; color: var(--text3); margin-top: 2px; }
+
+/* ── Productivity score ring ─────────────────────────────── */
+#prodScoreRing { transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1); }
+
+/* ── Missed tasks ────────────────────────────────────────── */
+#missedTasksCard .card-title { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; }
+#missedTasksCard .session-item { border-left: 3px solid #D4563A; background: #FEF7F7; }
+body.dark #missedTasksCard .session-item { background: #2D1A1A; }
+
+/* ── Group leaderboard card ──────────────────────────────── */
+.leaderboard-list { display: flex; flex-direction: column; gap: 8px; }
+.lb-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  transition: all 0.18s;
+}
+.lb-item:hover { background: var(--primary-light); }
+.lb-rank       { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 500; color: var(--text3); width: 22px; flex-shrink: 0; }
+.lb-rank.gold   { color: #E8C17A; }
+.lb-rank.silver { color: #A8B8C8; }
+.lb-rank.bronze { color: #C4886A; }
+.lb-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--sage));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; color: white; flex-shrink: 0;
+}
+.lb-name  { font-size: 14px; font-weight: 500; color: var(--text); flex: 1; }
+.lb-hours { font-size: 13px; color: var(--primary); font-weight: 600; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .stats-grid    { grid-template-columns: repeat(2,1fr); }
+  .dashboard-grid{ grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .stats-grid    { grid-template-columns: 1fr; }
+  .greeting-text h1 { font-size: 26px; }
+}
