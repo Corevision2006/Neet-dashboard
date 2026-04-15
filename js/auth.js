@@ -96,8 +96,7 @@ export async function logout() {
     await StudyTracker.recordLogout(user.uid);
   }
   await auth.signOut();
-  // Use relative path so it works regardless of deployment location
-  const base = window.location.pathname.replace(/\/[^/]*$/, '/');
+  const base = window.location.href.replace(/index\.html.*$/, '').replace(/[^/]*$/, '');
   window.location.href = base + 'login.html';
 }
 

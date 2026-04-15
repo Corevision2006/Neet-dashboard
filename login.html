@@ -5,7 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>StudyFlow — Sign In</title>
 
-  <!-- Firebase SDK (compat) — loaded only when needed; mock bypasses these -->
+  <!-- Offline mock — same as index.html; ensures login page works without Firebase -->
+  <script>
+  (function(){
+    var LS_KEY='sf_mock_fs';
+    var _load=function(){try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch(e){return{}}};
+    var _save=function(s){try{localStorage.setItem(LS_KEY,JSON.stringify(s))}catch(e){}};
+    function _apply(ex,up){var r=Object.assign({},ex);Object.keys(up).forEach(function(k){var v=up[k];if(v&&v._arrayUnion)r[k]=(r[k]||[]).concat(v._arrayUnion.filter(function(x){return(r[k]||[]).indexOf(x)===-1}));else if(v&&v._arrayRemove)r[k]=(r[k]||[]).filter(function(x){return v._arrayRemove.indexOf(x)===-1});else if(v&&v._increment!==undefined)r[k]=(r[k]||0)+v._increment;else r[k]=v});return r;}
+    function _doc(col,id){return{id:id,get:function(){var s=_load(),d=(s[col]||{})[id];return Promise.resolve({exists:d!=null,id:id,data:function(){return d||null}})},set:function(data,opts){var s=_load();s[col]=s[col]||{};s[col][id]=(opts&&opts.merge&&s[col][id])?_apply(s[col][id],data):Object.assign({},data);_save(s);return Promise.resolve()},update:function(data){var s=_load();s[col]=s[col]||{};s[col][id]=_apply(s[col][id]||{},data);_save(s);return Promise.resolve()},delete:function(){var s=_load();if(s[col])delete s[col][id];_save(s);return Promise.resolve()}};}
+    var _eq={get:function(){return Promise.resolve({empty:true,docs:[],forEach:function(){}})},limit:function(){return _eq},orderBy:function(){return _eq},where:function(){return _eq}};
+    function _coll(name){return{doc:function(id){return _doc(name,id||(Math.random().toString(36).slice(2)))},add:function(data){var id=Math.random().toString(36).slice(2);_doc(name,id).set(data);return Promise.resolve({id:id})},where:function(){return _eq},orderBy:function(){return _eq},limit:function(){return _eq},get:function(){var s=_load(),docs=Object.keys(s[name]||{}).map(function(id){return{exists:true,id:id,data:function(){return s[name][id]}}}); return Promise.resolve({empty:docs.length===0,docs:docs,forEach:function(fn){docs.forEach(fn)}})}};}
+    var _mockDb={collection:_coll,enablePersistence:function(){return Promise.resolve()},batch:function(){return{set:function(){},update:function(){},delete:function(){},commit:function(){return Promise.resolve()}}}};
+    var _FV={serverTimestamp:function(){return new Date().toISOString()},arrayUnion:function(){return{_arrayUnion:Array.prototype.slice.call(arguments)}},arrayRemove:function(){return{_arrayRemove:Array.prototype.slice.call(arguments)}},increment:function(n){return{_increment:n}}};
+    var _TS={now:function(){return{seconds:Math.floor(Date.now()/1000),toDate:function(){return new Date()}}}};
+    var _user={uid:'demo-user-local',displayName:'Demo Scholar',email:'demo@studyflow.app',photoURL:null,updateProfile:function(d){if(d&&d.displayName)_user.displayName=d.displayName;return Promise.resolve()}};
+    var _ls=[];
+    var _mockAuth={currentUser:_user,onAuthStateChanged:function(cb){_ls.push(cb);setTimeout(function(){cb(_user)},0);return function(){_ls=_ls.filter(function(l){return l!==cb})}},signInWithEmailAndPassword:function(e){_user.email=e;_user.displayName=e.split('@')[0];_ls.forEach(function(l){l(_user)});return Promise.resolve({user:_user})},createUserWithEmailAndPassword:function(e){_user.email=e;return Promise.resolve({user:_user})},signInWithPopup:function(){return Promise.resolve({user:_user})},signOut:function(){_mockAuth.currentUser=null;_ls.forEach(function(l){l(null)});return Promise.resolve()}};
+    window.__SF_MOCK_AUTH=_mockAuth; window.__SF_MOCK_DB=_mockDb; window.__SF_FIELD_VALUE=_FV; window.__SF_TIMESTAMP=_TS; window.__SF_NEED_MOCK=true;
+    if(!window.firebase){window.firebase={apps:['mock'],auth:function(){return _mockAuth},firestore:function(){return _mockDb},initializeApp:function(){}};window.firebase.auth.GoogleAuthProvider=function(){};window.firebase.firestore.FieldValue=_FV;window.firebase.firestore.Timestamp=_TS;}
+  })();
+  </script>
+
+  <!-- Firebase SDK (compat) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>

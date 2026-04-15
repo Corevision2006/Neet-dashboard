@@ -27,10 +27,22 @@ let router;
    BOOT
    ══════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
+  // ── Safety net: if JS fails to run navigate(), keep dashboard visible ──
+  // The HTML already has class="page active" on #page-dashboard.
+  // This timeout checks 3 seconds after load — if no page is active,
+  // it force-activates the dashboard.
+  setTimeout(() => {
+    const anyActive = document.querySelector('.page.active');
+    if (!anyActive) {
+      const dash = document.getElementById('page-dashboard');
+      if (dash) dash.classList.add('active');
+    }
+  }, 3000);
+
   initAuth({
     onLogin:  user => _startApp(user),
-    onLogout: ()   => {
-      const base = window.location.pathname.replace(/\/[^/]*$/, '/');
+    onLogout: () => {
+      const base = window.location.href.replace(/index\.html.*$/, '');
       window.location.href = base + 'login.html';
     }
   });

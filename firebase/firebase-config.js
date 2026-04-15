@@ -1,129 +1,71 @@
 /**
  * firebase-config.js
- * Firebase initialization — supports both real credentials and offline/demo mode.
  *
- * To use real Firebase: replace the placeholder values below with your
- * actual Firebase project credentials from console.firebase.google.com
+ * ┌─ TO USE REAL FIREBASE ────────────────────────────────────────────┐
+ * │ Replace the placeholder values below with your actual credentials │
+ * │ from https://console.firebase.google.com → Project Settings.      │
+ * └───────────────────────────────────────────────────────────────────┘
  *
- * If credentials are still placeholders, the app switches to OFFLINE DEMO MODE
- * where all data is stored in localStorage and a demo user is used.
+ * Without real credentials the app runs in Offline Demo Mode —
+ * all data is saved in localStorage, no account required.
  */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCx5dxenYxfqqiYZVVV3E15kt3UTEZEBuU",
-  authDomain: "neet25032006.firebaseapp.com",
-  databaseURL: "https://neet25032006-default-rtdb.firebaseio.com",
-  projectId: "neet25032006",
-  storageBucket: "neet25032006.firebasestorage.app",
-  messagingSenderId: "491795804146",
-  appId: "1:491795804146:web:ab742a28f521fb961e056b"
+  apiKey:            "YOUR_API_KEY",
+  authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId:         "YOUR_PROJECT_ID",
+  storageBucket:     "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId:             "YOUR_APP_ID"
 };
 
-// Detect placeholder credentials
-const _isPlaceholder = !firebaseConfig.apiKey
-  || firebaseConfig.apiKey === "AIzaSyCx5dxenYxfqqiYZVVV3E15kt3UTEZEBuU"
-  || firebaseConfig.projectId === "neet25032006";
+// ── Detect real vs placeholder credentials ────────────────────────────
+const _hasRealCreds = !!(
+  firebaseConfig.apiKey &&
+  firebaseConfig.apiKey !== "YOUR_API_KEY" &&
+  firebaseConfig.projectId !== "YOUR_PROJECT_ID"
+);
 
-// ─── OFFLINE DEMO MODE ────────────────────────────────────────────────────────
-function _buildMocks() {
-  const _demoUser = {
-    uid: 'demo-user-local',
-    displayName: 'Demo Scholar',
-    email: 'demo@studyflow.app',
-    photoURL: null,
-    updateProfile: async (d) => { if (d.displayName) _demoUser.displayName = d.displayName; }
-  };
+window.__SF_NEED_MOCK = !_hasRealCreds;
 
-  const FieldValue = {
-    serverTimestamp: () => new Date().toISOString(),
-    arrayUnion:  (...items) => ({ _arrayUnion: items }),
-    arrayRemove: (...items) => ({ _arrayRemove: items }),
-    increment:    (n)       => ({ _increment: n }),
-  };
-  const Timestamp = {
-    now: () => ({ seconds: Math.floor(Date.now()/1000), toDate: () => new Date() })
-  };
+// ── Build auth and db references ──────────────────────────────────────
+let _auth, _db;
 
-  const _LS_KEY = 'sf_mock_firestore';
-  const _load  = () => { try { return JSON.parse(localStorage.getItem(_LS_KEY)||'{}'); } catch { return {}; } };
-  const _save  = s  => { try { localStorage.setItem(_LS_KEY, JSON.stringify(s)); } catch {} };
-  function _applyUpdate(existing, updates) {
-    const r = { ...existing };
-    for (const [k, v] of Object.entries(updates)) {
-      if (v && v._arrayUnion) r[k] = [...new Set([...(r[k]||[]), ...v._arrayUnion])];
-      else if (v && v._arrayRemove) r[k] = (r[k]||[]).filter(x => !v._arrayRemove.includes(x));
-      else if (v && v._increment !== undefined) r[k] = (r[k] || 0) + v._increment;
-      else r[k] = v;
-    }
-    return r;
+if (_hasRealCreds) {
+  // Real Firebase
+  if (!window.firebase.apps.length) {
+    window.firebase.initializeApp(firebaseConfig);
   }
-  function _docRef(col, id) {
-    return {
-      id,
-      get: async () => { const s=_load(); const d=s[col]?.[id]??null; return { exists:d!==null, id, data:()=>d }; },
-      set: async (data, opts={}) => { const s=_load(); s[col]=s[col]||{}; s[col][id]=opts.merge&&s[col][id]?_applyUpdate(s[col][id],data):{...data}; _save(s); },
-      update: async (data) => { const s=_load(); s[col]=s[col]||{}; s[col][id]=_applyUpdate(s[col][id]||{},data); _save(s); },
-      delete: async () => { const s=_load(); if(s[col]) delete s[col][id]; _save(s); }
-    };
-  }
-  const _emptyQ = { get: async()=>({empty:true,docs:[],forEach:()=>{}}), limit:()=>_emptyQ, orderBy:()=>_emptyQ, where:()=>_emptyQ };
-  function _collRef(name) {
-    return {
-      doc: (id) => _docRef(name, id||Math.random().toString(36).slice(2)),
-      add: async (data) => { const id=Math.random().toString(36).slice(2); await _docRef(name,id).set(data); return {id}; },
-      where: ()=>_emptyQ, orderBy:()=>_emptyQ, limit:()=>_emptyQ,
-      get: async () => { const s=_load(); const docs=Object.entries(s[name]||{}).map(([id,data])=>({exists:true,id,data:()=>data})); return {empty:docs.length===0,docs,forEach:(fn)=>docs.forEach(fn)}; }
-    };
-  }
-  const mockDb = {
-    collection: _collRef,
-    enablePersistence: () => Promise.resolve(),
-    batch: () => ({ set:()=>{}, update:()=>{}, delete:()=>{}, commit: async()=>{} })
-  };
+  _db   = window.firebase.firestore();
+  _auth = window.firebase.auth();
+  _db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
 
-  let _listeners = [];
-  const mockAuth = {
-    currentUser: _demoUser,
-    onAuthStateChanged: (cb) => {
-      _listeners.push(cb);
-      setTimeout(() => cb(_demoUser), 0);
-      return () => { _listeners = _listeners.filter(l => l !== cb); };
-    },
-    signInWithEmailAndPassword: async (email) => { _demoUser.email=email; _demoUser.displayName=email.split('@')[0]; return { user: _demoUser }; },
-    createUserWithEmailAndPassword: async (email) => { _demoUser.email=email; return { user: _demoUser }; },
-    signInWithPopup: async () => ({ user: _demoUser }),
-    signOut: async () => { mockAuth.currentUser=null; _listeners.forEach(l=>l(null)); }
-  };
+  console.log('%c StudyFlow %c 🔥 Firebase Connected ', 
+    'background:#1C3833;color:#8AADA5;font-weight:bold;padding:2px 6px;border-radius:3px 0 0 3px;',
+    'background:#3A7A6C;color:#fff;padding:2px 6px;border-radius:0 3px 3px 0;');
 
-  // Patch global firebase object
-  window.firebase = window.firebase || {};
-  window.firebase.apps = ['mock'];
-  window.firebase.auth = () => mockAuth;
-  window.firebase.auth.GoogleAuthProvider = class {};
-  window.firebase.firestore = () => mockDb;
-  window.firebase.firestore.FieldValue = FieldValue;
-  window.firebase.firestore.Timestamp  = Timestamp;
-  window.firebase.initializeApp = () => {};
+} else {
+  // Offline Demo Mode — use the mock installed by the inline script in index.html
+  _auth = window.__SF_MOCK_AUTH;
+  _db   = window.__SF_MOCK_DB;
 
-  return { db: mockDb, auth: mockAuth };
+  const _FV = window.__SF_FIELD_VALUE;
+  const _TS = window.__SF_TIMESTAMP;
+
+  // Re-patch window.firebase in case CDN scripts overwrote the inline mock
+  try {
+    window.firebase.auth      = () => _auth;
+    window.firebase.firestore = () => _db;
+    if (window.firebase.auth)      window.firebase.auth.GoogleAuthProvider      = class {};
+    if (window.firebase.firestore) window.firebase.firestore.FieldValue = _FV;
+    if (window.firebase.firestore) window.firebase.firestore.Timestamp  = _TS;
+  } catch(e) { /* read-only props — ignore */ }
+
+  console.log('%c StudyFlow %c 🔧 Offline Demo Mode — add Firebase credentials to go live ',
+    'background:#1C3833;color:#8AADA5;font-weight:bold;padding:2px 6px;border-radius:3px 0 0 3px;',
+    'background:#3A7A6C;color:#fff;padding:2px 6px;border-radius:0 3px 3px 0;');
 }
 
-// ─── REAL FIREBASE MODE ───────────────────────────────────────────────────────
-function _buildReal() {
-  if (!window.firebase.apps.length) window.firebase.initializeApp(firebaseConfig);
-  const db   = window.firebase.firestore();
-  const auth = window.firebase.auth();
-  db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
-  return { db, auth };
-}
-
-const { db, auth } = _isPlaceholder ? _buildMocks() : _buildReal();
-
-if (_isPlaceholder) {
-  console.log('%c StudyFlow %c 🔧 OFFLINE DEMO MODE — Add Firebase credentials to go live ',
-    'background:#1C3833;color:#8AADA5;font-weight:bold;padding:2px 4px;border-radius:3px 0 0 3px;',
-    'background:#3A7A6C;color:#fff;padding:2px 4px;border-radius:0 3px 3px 0;');
-}
-
-export { db, auth };
+export const db      = _db;
+export const auth    = _auth;
 export const firebase = window.firebase;
