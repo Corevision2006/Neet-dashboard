@@ -29,7 +29,10 @@ let router;
 document.addEventListener('DOMContentLoaded', () => {
   initAuth({
     onLogin:  user => _startApp(user),
-    onLogout: ()   => { window.location.href = '/login.html'; }
+    onLogout: ()   => {
+      const base = window.location.pathname.replace(/\/[^/]*$/, '/');
+      window.location.href = base + 'login.html';
+    }
   });
 });
 
@@ -215,7 +218,13 @@ function _initFloatingTimer() {
 
   // Expose for timer.js synchronisation
   window._ftGetState = () => ({ running: _ftRunning, seconds: _ftSeconds, total: _ftTotal, phase: _ftPhase });
-  window._ftSetState = (s) => { Object.assign({ _ftSeconds: s.seconds, _ftRunning: s.running, _ftTotal: s.total, _ftPhase: s.phase }); _updateFtDisplay(); };
+  window._ftSetState = (s) => {
+    if (s.seconds  !== undefined) _ftSeconds = s.seconds;
+    if (s.running  !== undefined) _ftRunning = s.running;
+    if (s.total    !== undefined) _ftTotal   = s.total;
+    if (s.phase    !== undefined) _ftPhase   = s.phase;
+    _updateFtDisplay();
+  };
 }
 
 function _toggleFt() {

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>StudyFlow — Sign In</title>
 
-  <!-- Firebase SDK (compat) -->
+  <!-- Firebase SDK (compat) — loaded only when needed; mock bypasses these -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -21,6 +21,23 @@
   <style>
     body { min-height: 100vh; background: var(--bg); }
     .login-page { min-height: 100vh; display: flex; }
+    .demo-notice {
+      position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+      background: #1C3833; color: #8AADA5; border: 1px solid #2D5548;
+      border-radius: 24px; padding: 8px 18px; font-size: 12px;
+      font-family: 'DM Sans', sans-serif; white-space: nowrap;
+      display: flex; align-items: center; gap: 8px; z-index: 999;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .demo-notice span { color: #5ABF9A; font-weight: 600; }
+    .demo-go-btn {
+      background: var(--primary, #3A7A6C); color: #fff;
+      border: none; border-radius: 16px; padding: 7px 16px;
+      font-size: 12px; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; font-weight: 600; margin-top: 12px;
+      width: 100%; letter-spacing: 0.3px;
+    }
+    .demo-go-btn:hover { background: #2D6A5C; }
   </style>
 </head>
 <body>
@@ -63,11 +80,18 @@
     </div>
   </div>
 
-  <!-- RIGHT PANEL (form) -->
+  <!-- RIGHT PANEL -->
   <div class="ls-right">
     <div class="ls-form-wrap">
       <div class="ls-form-title" id="formTitle">Welcome back</div>
       <div class="ls-form-sub"  id="formSub">Sign in to continue your journey</div>
+
+      <!-- Demo Mode Banner (shown when no Firebase configured) -->
+      <div id="demoBanner" style="display:none; background:#E6F2EF; border:1px solid #B2D8CF; border-radius:10px; padding:12px 14px; margin-bottom:18px; font-size:13px; color:#1C3833; font-family:'DM Sans',sans-serif;">
+        🔧 <strong>Offline Demo Mode</strong> — Firebase credentials not configured.<br/>
+        All data saves locally in your browser.
+        <button class="demo-go-btn" id="demoEnterBtn">Enter as Demo Scholar →</button>
+      </div>
 
       <!-- Sign In Step -->
       <div class="ls-step active" id="stepSignin">
@@ -118,12 +142,29 @@
 
 <!-- Firebase + auth init -->
 <script type="module">
-  import { auth, db } from './firebase/firebase-config.js';
+  import { auth, db, firebase } from './firebase/firebase-config.js';
+
+  // ── Detect demo/offline mode ───────────────────────────────
+  const isDemo = !window.firebase?.apps?.length
+    || (window.firebase.apps.length === 1 && window.firebase.apps[0] === 'mock');
+
+  if (isDemo) {
+    document.getElementById('demoBanner').style.display = 'block';
+  }
+
+  // ── Relative redirect helper ───────────────────────────────
+  function goToApp() {
+    const base = window.location.href.replace(/login\.html.*$/, '');
+    window.location.href = base + 'index.html';
+  }
 
   // ── Auth state: redirect if already signed in ──────────────
   auth.onAuthStateChanged(user => {
-    if (user) window.location.href = '/index.html';
+    if (user) goToApp();
   });
+
+  // ── Demo quick-enter ───────────────────────────────────────
+  document.getElementById('demoEnterBtn')?.addEventListener('click', () => goToApp());
 
   // ── Step toggle ────────────────────────────────────────────
   const show = (id) => {
@@ -144,8 +185,8 @@
   // ── Google Sign In ─────────────────────────────────────────
   document.getElementById('googleBtn').addEventListener('click', async () => {
     try {
-      await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-      // onAuthStateChanged handles redirect
+      const Provider = window.firebase?.auth?.GoogleAuthProvider || auth.constructor;
+      await auth.signInWithPopup(new Provider());
     } catch (e) {
       _showErr('signinError', e.message);
     }
@@ -171,18 +212,21 @@
     const email    = document.getElementById('signupEmail').value.trim();
     const password = document.getElementById('signupPassword').value;
     if (!name || !email || !password) { _showErr('signupError', 'Please fill in all fields.'); return; }
+    if (password.length < 6) { _showErr('signupError', 'Password must be at least 6 characters.'); return; }
     try {
       document.getElementById('signupBtn').textContent = 'Creating…';
       const cred = await auth.createUserWithEmailAndPassword(email, password);
       await cred.user.updateProfile({ displayName: name });
-      // Create Firestore doc
+      const FV = window.firebase?.firestore?.FieldValue || {
+        serverTimestamp: () => new Date().toISOString()
+      };
       await db.collection('users').doc(cred.user.uid).set({
         name, email,
         totalStudyHours: 0,
-        lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
-        streak: 0,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        groupIds: []
+        lastLogin:  FV.serverTimestamp(),
+        streak:     0,
+        createdAt:  FV.serverTimestamp(),
+        groupIds:   []
       });
     } catch (e) {
       document.getElementById('signupBtn').textContent = 'Create Account →';
@@ -191,8 +235,12 @@
   });
 
   // ── Enter key support ──────────────────────────────────────
-  document.getElementById('signinPassword').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('signinBtn').click(); });
-  document.getElementById('signupPassword').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('signupBtn').click(); });
+  document.getElementById('signinPassword').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('signinBtn').click();
+  });
+  document.getElementById('signupPassword').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('signupBtn').click();
+  });
 
   function _showErr(id, msg) {
     const el = document.getElementById(id);

@@ -16,7 +16,17 @@
 import { db, firebase } from '../firebase/firebase-config.js';
 import { LS, getToday } from '../js/utils.js';
 
-const TS = firebase.firestore.Timestamp;
+// Safe shims — work with both real Firebase and offline mock mode
+const TS = (firebase && firebase.firestore && firebase.firestore.Timestamp)
+  || { now: () => ({ seconds: Math.floor(Date.now()/1000), toDate: () => new Date() }) };
+
+const FieldValue = (firebase && firebase.firestore && firebase.firestore.FieldValue)
+  || {
+    serverTimestamp: () => new Date().toISOString(),
+    arrayUnion:  (...i) => ({ _arrayUnion: i }),
+    arrayRemove: (...i) => ({ _arrayRemove: i }),
+    increment:    (n)  => ({ _increment: n })
+  };
 
 export const StudyTracker = {
 
@@ -58,7 +68,7 @@ export const StudyTracker = {
       }, { merge: true });
       // Increment user's cumulative totalStudyHours
       await db.collection('users').doc(uid).update({
-        totalStudyHours: firebase.firestore.FieldValue.increment(totalMins / 60),
+        totalStudyHours: FieldValue.increment(totalMins / 60),
         lastLogout: TS.now()
       });
     } catch (err) {
@@ -104,7 +114,7 @@ export const StudyTracker = {
       });
       // Increment user's totalStudyHours
       await db.collection('users').doc(uid).update({
-        totalStudyHours: firebase.firestore.FieldValue.increment(durationMins / 60)
+        totalStudyHours: FieldValue.increment(durationMins / 60)
       });
     } catch (err) {
       console.warn('StudyTracker.endSession:', err);

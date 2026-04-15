@@ -16,7 +16,7 @@
  *  - requireAuth()      → redirects to login if not authenticated
  */
 
-import { auth, db } from '../firebase/firebase-config.js';
+import { auth, db, firebase } from '../firebase/firebase-config.js';
 import { StudyTracker } from '../modules/study-tracker.js';
 
 /* ── Re-export for convenience ──────────────────────────── */
@@ -79,7 +79,9 @@ export async function signupEmail(email, password, displayName) {
 /* ── Google sign-in popup ───────────────────────────────── */
 export async function loginGoogle() {
   try {
-    const provider = new firebase.auth.GoogleAuthProvider();
+    const GoogleProvider = (firebase && firebase.auth && firebase.auth.GoogleAuthProvider)
+      || class { constructor() {} };
+    const provider = new GoogleProvider();
     const cred     = await auth.signInWithPopup(provider);
     return { user: cred.user, error: null };
   } catch (err) {
@@ -94,12 +96,18 @@ export async function logout() {
     await StudyTracker.recordLogout(user.uid);
   }
   await auth.signOut();
-  window.location.href = '/login.html';
+  // Use relative path so it works regardless of deployment location
+  const base = window.location.pathname.replace(/\/[^/]*$/, '/');
+  window.location.href = base + 'login.html';
 }
 
 /* ── Upsert Firestore user doc ──────────────────────────── */
 async function _upsertUserDoc(user) {
-  const ref = db.collection('users').doc(user.uid);
+  // Safe FieldValue shim — works with real Firebase and offline mock
+  const FV = (firebase && firebase.firestore && firebase.firestore.FieldValue)
+    || { serverTimestamp: () => new Date().toISOString() };
+
+  const ref  = db.collection('users').doc(user.uid);
   const snap = await ref.get();
   if (!snap.exists) {
     await ref.set({
@@ -107,14 +115,14 @@ async function _upsertUserDoc(user) {
       email:           user.email,
       photoURL:        user.photoURL || null,
       totalStudyHours: 0,
-      lastLogin:       firebase.firestore.FieldValue.serverTimestamp(),
+      lastLogin:       FV.serverTimestamp(),
       streak:          0,
-      createdAt:       firebase.firestore.FieldValue.serverTimestamp(),
+      createdAt:       FV.serverTimestamp(),
       groupIds:        []
     });
   } else {
     await ref.update({
-      lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+      lastLogin: FV.serverTimestamp()
     });
   }
 }

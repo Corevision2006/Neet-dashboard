@@ -355,6 +355,11 @@
 <!-- Toast container -->
 <div class="toast-container" id="toastContainer"></div>
 
+<!-- Demo mode indicator (shown only when Firebase not configured) -->
+<div id="demoModeBadge" style="display:none;position:fixed;bottom:16px;right:16px;background:#1C3833;color:#8AADA5;border:1px solid #2D5548;border-radius:20px;padding:6px 14px;font-size:11px;font-family:'DM Sans',sans-serif;z-index:9999;box-shadow:0 2px 12px rgba(0,0,0,0.3);">
+  🔧 Offline Demo Mode
+</div>
+
 <!-- ════════════════════════════════════════════════════════
      APP BOOTSTRAP (ES module)
      ════════════════════════════════════════════════════════ -->
@@ -365,6 +370,16 @@
   window.showToast = showToast;
 
   import './js/app.js';
+
+  // Show demo mode badge if Firebase not configured
+  window.addEventListener('load', () => {
+    const isDemo = window.firebase?.apps?.[0] === 'mock'
+      || !window.firebase?.apps?.length;
+    if (isDemo) {
+      const badge = document.getElementById('demoModeBadge');
+      if (badge) badge.style.display = 'block';
+    }
+  });
 
   // Quick-action / card-action nav wiring (data-page attributes)
   document.addEventListener('click', e => {

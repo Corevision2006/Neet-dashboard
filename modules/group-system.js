@@ -14,7 +14,16 @@
 import { db, firebase, auth } from '../firebase/firebase-config.js';
 import { LS, showToast, genId } from '../js/utils.js';
 
-const TS = firebase.firestore.Timestamp;
+// Safe shims — work with both real Firebase and offline mock
+const TS = (firebase && firebase.firestore && firebase.firestore.Timestamp)
+  || { now: () => ({ seconds: Math.floor(Date.now()/1000), toDate: () => new Date() }) };
+
+const FieldValue = (firebase && firebase.firestore && firebase.firestore.FieldValue)
+  || {
+    arrayUnion:  (...items) => ({ _arrayUnion: items }),
+    arrayRemove: (...items) => ({ _arrayRemove: items }),
+    serverTimestamp: () => new Date().toISOString()
+  };
 
 export const GroupSystem = {
   _user:    null,
@@ -287,7 +296,7 @@ export const GroupSystem = {
     try {
       const ref = await db.collection('groups').add(groupData);
       await db.collection('users').doc(uid).update({
-        groupIds: firebase.firestore.FieldValue.arrayUnion(ref.id)
+        groupIds: FieldValue.arrayUnion(ref.id)
       });
       document.getElementById('createGroupModal').classList.remove('open');
       showToast('✅ Group created! Share code: ' + inviteCode);
@@ -317,8 +326,8 @@ export const GroupSystem = {
       if (group.members.includes(uid)) { errEl.textContent = 'You are already in this group.'; errEl.classList.add('show'); return; }
       if ((group.members || []).length >= (group.maxMembers || 10)) { errEl.textContent = 'This group is full.'; errEl.classList.add('show'); return; }
 
-      await groupDoc.ref.update({ members: firebase.firestore.FieldValue.arrayUnion(uid) });
-      await db.collection('users').doc(uid).update({ groupIds: firebase.firestore.FieldValue.arrayUnion(groupDoc.id) });
+      await groupDoc.ref.update({ members: FieldValue.arrayUnion(uid) });
+      await db.collection('users').doc(uid).update({ groupIds: FieldValue.arrayUnion(groupDoc.id) });
       document.getElementById('joinGroupModal').classList.remove('open');
       showToast('🎉 Joined "' + group.name + '"!');
       await this._loadUserGroups();
@@ -336,8 +345,8 @@ export const GroupSystem = {
     const uid = this._user.uid;
     if (!confirm('Are you sure you want to leave this group?')) return;
     try {
-      await db.collection('groups').doc(groupId).update({ members: firebase.firestore.FieldValue.arrayRemove(uid) });
-      await db.collection('users').doc(uid).update({ groupIds: firebase.firestore.FieldValue.arrayRemove(groupId) });
+      await db.collection('groups').doc(groupId).update({ members: FieldValue.arrayRemove(uid) });
+      await db.collection('users').doc(uid).update({ groupIds: FieldValue.arrayRemove(groupId) });
       document.getElementById('groupDetailModal').classList.remove('open');
       showToast('Left the group.');
       await this._loadUserGroups();
@@ -354,7 +363,7 @@ export const GroupSystem = {
       await db.collection('groups').doc(groupId).delete();
       // Remove from all members
       await Promise.all((group?.members || []).map(mid =>
-        db.collection('users').doc(mid).update({ groupIds: firebase.firestore.FieldValue.arrayRemove(groupId) })
+        db.collection('users').doc(mid).update({ groupIds: FieldValue.arrayRemove(groupId) })
       ));
       document.getElementById('groupDetailModal').classList.remove('open');
       showToast('Group deleted.');
