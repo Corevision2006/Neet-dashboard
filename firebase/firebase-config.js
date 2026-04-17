@@ -45,7 +45,15 @@ if (_hasRealCreds) {
   _auth = window.firebase.auth();
   // Maintain session across page reloads
   _auth.setPersistence(window.firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
-  _db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+  try {
+    _db.settings({
+      localCache: window.firebase.firestore.persistentLocalCache({
+        tabManager: window.firebase.firestore.persistentMultipleTabManager()
+      })
+    });
+  } catch (e) {
+    console.warn("Could not enable Firestore persistence:", e);
+  }
 
   console.log('%c StudyFlow %c 🔥 Firebase Connected ',
     'background:#1C3833;color:#8AADA5;font-weight:bold;padding:2px 6px;border-radius:3px 0 0 3px;',
