@@ -9,14 +9,17 @@
  * Without real credentials the app runs in Offline Demo Mode —
  * all data is saved in localStorage, no account required.
  */
+import { mockAuth, mockDb, FieldValue, Timestamp } from './mock-firebase.js';
+import { ENV } from './env.js';
 
 const firebaseConfig = {
-  apiKey:            "YOUR_API_KEY",
-  authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId:         "YOUR_PROJECT_ID",
-  storageBucket:     "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId:             "YOUR_APP_ID"
+  apiKey:            ENV.FIREBASE_API_KEY,
+  authDomain:        ENV.FIREBASE_AUTH_DOMAIN,
+  databaseURL:       ENV.FIREBASE_DATABASE_URL,
+  projectId:         ENV.FIREBASE_PROJECT_ID,
+  storageBucket:     ENV.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: ENV.FIREBASE_MESSAGING_SENDER_ID,
+  appId:             ENV.FIREBASE_APP_ID
 };
 
 // ── Detect real vs placeholder credentials ────────────────────────────
@@ -26,46 +29,50 @@ const _hasRealCreds = !!(
   firebaseConfig.projectId !== "YOUR_PROJECT_ID"
 );
 
-window.__SF_NEED_MOCK = !_hasRealCreds;
+// Export demo mode flag for use across the app
+export const isDemo = !_hasRealCreds;
+window.__SF_IS_DEMO = !_hasRealCreds;
 
 // ── Build auth and db references ──────────────────────────────────────
 let _auth, _db;
 
 if (_hasRealCreds) {
   // Real Firebase
-  if (!window.firebase.apps.length) {
+  if (window.firebase && !window.firebase.apps.length) {
     window.firebase.initializeApp(firebaseConfig);
   }
   _db   = window.firebase.firestore();
   _auth = window.firebase.auth();
+  // Maintain session across page reloads
+  _auth.setPersistence(window.firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
   _db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
 
-  console.log('%c StudyFlow %c 🔥 Firebase Connected ', 
+  console.log('%c StudyFlow %c 🔥 Firebase Connected ',
     'background:#1C3833;color:#8AADA5;font-weight:bold;padding:2px 6px;border-radius:3px 0 0 3px;',
     'background:#3A7A6C;color:#fff;padding:2px 6px;border-radius:0 3px 3px 0;');
 
 } else {
-  // Offline Demo Mode — use the mock installed by the inline script in index.html
-  _auth = window.__SF_MOCK_AUTH;
-  _db   = window.__SF_MOCK_DB;
+  // Offline Demo Mode
+  _auth = mockAuth;
+  _db   = mockDb;
 
-  const _FV = window.__SF_FIELD_VALUE;
-  const _TS = window.__SF_TIMESTAMP;
-
-  // Re-patch window.firebase in case CDN scripts overwrote the inline mock
-  try {
-    window.firebase.auth      = () => _auth;
-    window.firebase.firestore = () => _db;
-    if (window.firebase.auth)      window.firebase.auth.GoogleAuthProvider      = class {};
-    if (window.firebase.firestore) window.firebase.firestore.FieldValue = _FV;
-    if (window.firebase.firestore) window.firebase.firestore.Timestamp  = _TS;
-  } catch(e) { /* read-only props — ignore */ }
+  // Initialize fake global firebase object for plugins
+  if (!window.firebase) {
+    window.firebase = {
+      apps: ['mock'],
+      auth: () => _auth,
+      firestore: () => _db,
+    };
+    window.firebase.auth.GoogleAuthProvider = class { addScope(){} };
+    window.firebase.firestore.FieldValue = FieldValue;
+    window.firebase.firestore.Timestamp  = Timestamp;
+  }
 
   console.log('%c StudyFlow %c 🔧 Offline Demo Mode — add Firebase credentials to go live ',
     'background:#1C3833;color:#8AADA5;font-weight:bold;padding:2px 6px;border-radius:3px 0 0 3px;',
     'background:#3A7A6C;color:#fff;padding:2px 6px;border-radius:0 3px 3px 0;');
 }
 
-export const db      = _db;
-export const auth    = _auth;
+export const db       = _db;
+export const auth     = _auth;
 export const firebase = window.firebase;

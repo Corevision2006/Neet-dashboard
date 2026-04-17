@@ -5,7 +5,7 @@
  * Pure CSS/SVG charts — no external chart libraries.
  */
 
-import { LS, calcStreak, SUBJ_COLORS, formatDuration, formatDate } from './utils.js';
+import { LS, calcStreak, SUBJ_COLORS, formatDuration, formatDate, showToast } from './utils.js';
 
 let _timerLog    = [];
 let _testEntries = [];
@@ -22,6 +22,16 @@ export function initProgress() {
   _renderHeatmap();
   _renderSubjectScores();
   _renderRecentTests();
+
+  // ── Auto-refresh when a focus session completes (from timer.js) ──
+  window.addEventListener('sf:sessionComplete', (e) => {
+    _timerLog = LS.get('sf_timerLog', []);
+    _renderKPIs();
+    _renderBarChart();
+    _renderHeatmap();
+    _renderSubjectScores();
+    showToast(`📊 Progress updated: +${e.detail?.dur || 0} min`);
+  });
 }
 
 /* ══════════════════════════════════════════════════════════
