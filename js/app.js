@@ -9,7 +9,7 @@
  *  ✦ Floating timer pill stays in sync with timer.js presets
  */
 
-import { initAuth, logout, getCurrentUser, isDemo } from './auth.js';
+import { initAuth, logout, getCurrentUser } from './auth.js';
 import { Router }   from './router.js';
 import { showToast } from './utils.js';
 
@@ -34,10 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initAuth({
     onLogin:  user => _startApp(user),
     onLogout: () => {
-      // In demo mode, don't auto-redirect on logout — let user stay or re-enter
-      if (isDemo) return;
-      const base = window.location.href.replace(/index\.html.*$/, '').replace(/(?<=[/])[^/]*$/, '');
-      window.location.href = (base || './') + 'login.html';
+      // Redirect to login.html — works on GitHub Pages, Firebase Hosting, localhost
+      const base = window.location.href.split('/').slice(0, -1).join('/') + '/';
+      window.location.href = base + 'login.html';
     }
   });
 });
@@ -93,6 +92,10 @@ async function _startApp(user) {
   });
 
   router.exposeGlobal();
+
+  // Flush any clicks that arrived before router was ready
+  (window._sfNavQueue || []).forEach(({ page, el }) => router.navigate(page, el));
+  window._sfNavQueue = [];
 
   _wireSidebarNav();
   _wireDarkToggle();

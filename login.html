@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>StudyFlow — Sign In</title>
 
-
+  <!-- Offline mock — same as index.html; ensures login page works without Firebase -->
 
   <!-- Firebase SDK (compat) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -144,12 +144,7 @@
 
 <!-- Firebase + auth init -->
 <script type="module">
-  import { auth, db, firebase, isDemo } from './firebase/firebase-config.js';
-
-  // ── Detect demo/offline mode ───────────────────────────────
-  if (isDemo) {
-    document.getElementById('demoBanner').style.display = 'block';
-  }
+  import { auth, db, firebase } from './firebase/firebase-config.js';
 
   // ── Relative redirect helper ───────────────────────────────
   function goToApp() {
@@ -157,38 +152,18 @@
     window.location.href = base + 'index.html';
   }
 
-  // ── Auth state: ONLY redirect if a REAL (non-demo) user is signed in ──
-  // This prevents the demo mock from auto-redirecting after sign-out.
+  // ── Auth state: redirect if already signed in ──────────────
   let _authResolved = false;
-  auth.onAuthStateChanged(async user => {
-    if (_authResolved) return; // ignore subsequent fires during session
-    if (user && !isDemo) {
-      const btn = document.getElementById('signinBtn');
-      if (btn) {
-        btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"><g fill="none" fill-rule="evenodd"><g transform="translate(1 1)" stroke-width="2"><circle stroke-opacity=".4" cx="18" cy="18" r="18"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/></path></g></g></svg> Restoring session…</span>';
-        btn.disabled = true;
-      }
-      try {
-        // Force token refresh to validate session BEFORE navigating!
-        // This prevents the infinite redirect loop if the local cached token was invalidated.
-        await user.getIdToken(true);
-        _authResolved = true;
-        goToApp();
-      } catch (err) {
-        console.warn('Cached session invalid. Staying on login page.', err);
-        auth.signOut();
-        if (btn) {
-          btn.textContent = 'Sign In →';
-          btn.disabled = false;
-        }
-      }
+  auth.onAuthStateChanged(user => {
+    if (_authResolved) return;
+    if (user) {
+      _authResolved = true;
+      goToApp();
     }
-    // Demo mode: user must explicitly click "Enter as Demo Scholar"
   });
 
-  // ── Demo quick-enter ───────────────────────────────────────
+  // Demo quick-enter (hidden in real Firebase mode but kept as fallback)
   document.getElementById('demoEnterBtn')?.addEventListener('click', () => {
-    sessionStorage.setItem('sf_demo_entered', '1');
     goToApp();
   });
 
@@ -210,8 +185,6 @@
 
   // ── Google Sign In ─────────────────────────────────────────
   document.getElementById('googleBtn').addEventListener('click', async () => {
-    if (isDemo) { sessionStorage.setItem('sf_demo_entered','1'); goToApp(); return; }
-
     const btn = document.getElementById('googleBtn');
     const origHTML = btn.innerHTML;
     btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"><g fill="none" fill-rule="evenodd"><g transform="translate(1 1)" stroke-width="2"><circle stroke-opacity=".4" cx="18" cy="18" r="18"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/></path></g></g></svg> Signing in…</span>';
@@ -241,15 +214,8 @@
     try {
       document.getElementById('signinBtn').textContent = 'Signing in…';
       document.getElementById('signinBtn').disabled = true;
-      if (isDemo) {
-        // Demo email sign-in
-        await auth.signInWithEmailAndPassword(email, password);
-        sessionStorage.setItem('sf_demo_entered','1');
-        goToApp();
-        return;
-      }
       await auth.signInWithEmailAndPassword(email, password);
-      // onAuthStateChanged → goToApp() fires automatically for real Firebase
+      // onAuthStateChanged → goToApp() fires automatically
     } catch (e) {
       document.getElementById('signinBtn').textContent = 'Sign In →';
       document.getElementById('signinBtn').disabled = false;

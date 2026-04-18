@@ -118,59 +118,30 @@ export async function logout() {
   window.location.href = _base + 'login.html';
 }
 
+/* ── Upsert Firestore user doc ──────────────────────────── */
 async function _upsertUserDoc(user) {
-  if (!user || !auth.currentUser || auth.currentUser.uid !== user.uid) return;
   const FV = (firebase && firebase.firestore && firebase.firestore.FieldValue)
     || { serverTimestamp: () => new Date().toISOString() };
 
   try {
-    const ref = db.collection('users').doc(user.uid);
-    let isOffline = false;
-    let exists = false;
-
-    try {
-      const snap = await ref.get();
-      exists = snap.exists;
-    } catch (err) {
-      // 4. Proper Error Handling (Differentiate unavailable vs permission denied)
-      if (err.code === 'unavailable' || err.message.includes('offline')) {
-        isOffline = true;
-        console.warn('⚠️ Network offline or Firestore establishing WebSocket. Queuing safe background write.');
-      } else if (err.code === 'permission-denied') {
-        console.error('❌ Auth valid, but Firestore denied access. Check your Security Rules.');
-        return; // Abort write if explicitly denied
-      } else {
-        throw err;
-      }
-    }
-
-    if (exists) {
-      // Online and exists: safe to just update lastLogin
-      await ref.update({ lastLogin: FV.serverTimestamp() });
+    const ref  = db.collection('users').doc(user.uid);
+    const snap = await ref.get();
+    if (!snap.exists) {
+      await ref.set({
+        name:            user.displayName || user.email?.split('@')[0] || 'Scholar',
+        email:           user.email || '',
+        photoURL:        user.photoURL || null,
+        totalStudyHours: 0,
+        lastLogin:       FV.serverTimestamp(),
+        streak:          0,
+        createdAt:       FV.serverTimestamp(),
+        groupIds:        []
+      });
     } else {
-      // 2. Ensure idempotent user document creation
-      // If we are offline, we cannot know if the doc exists or not, so we use merge: true
-      // to ensure we NEVER overwrite core stats like totalStudyHours if it DID already exist.
-      const payload = {
-        name:      user.displayName || user.email?.split('@')[0] || 'Scholar',
-        email:     user.email || '',
-        photoURL:  user.photoURL || null,
-        lastLogin: FV.serverTimestamp()
-      };
-      
-      // If we are 100% online and know it's a fresh creation, append creation stats
-      if (!isOffline) {
-        payload.totalStudyHours = 0;
-        payload.streak = 0;
-        payload.createdAt = FV.serverTimestamp();
-        payload.groupIds = [];
-      }
-
-      // Merge true prevents overwrite of stats if we were offline but the doc existed
-      await ref.set(payload, { merge: true });
+      await ref.update({ lastLogin: FV.serverTimestamp() });
     }
   } catch(e) {
-    console.error('❌ _upsertUserDoc critical failure:', e);
+    console.warn('_upsertUserDoc:', e);
   }
 }
 

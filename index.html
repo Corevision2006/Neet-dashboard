@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>StudyFlow — Premium Learning Platform</title>
 
-
-
-  <!-- Firebase SDK (compat) — only needed when you configure real credentials -->
+  <!-- Firebase SDK (compat) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -365,20 +363,19 @@
   window.showToast = showToast;
 
   import './js/app.js';
-  import { isDemo } from './firebase/firebase-config.js';
 
-  // Show demo mode badge if Firebase not configured
-  window.addEventListener('load', () => {
-    if (isDemo) {
-      const badge = document.getElementById('demoModeBadge');
-      if (badge) badge.style.display = 'block';
-    }
-  });
+  // Navigate queue: buffer clicks that arrive before router is ready
+  const _navQueue = [];
+  window._sfNavQueue = _navQueue;
 
-  // Quick-action / card-action nav wiring (data-page attributes)
   document.addEventListener('click', e => {
     const el = e.target.closest('[data-page]');
-    if (el && window.navigate) window.navigate(el.dataset.page, el);
+    if (!el) return;
+    if (window.navigate) {
+      window.navigate(el.dataset.page, el);
+    } else {
+      _navQueue.push({ page: el.dataset.page, el });
+    }
   });
 </script>
 </body>
